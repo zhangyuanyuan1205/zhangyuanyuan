@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h2{
+            text-align: center;
+            margin: 20px 0;
+        }
+        .flex{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .flex li{
+            width: 20%;
+            height: 300px;
+            border: 1px solid #333;
+            list-style: none;
+            display: flex;
+        }
+        .box{
+            width: 100px;
+            height: 100px;
+            background-color: #f2f3f4;
+            border:1px solid #aaa;
+            box-sizing: border-box;
+        }
+        /*第1个li：1个方块，水平垂直居中*/
+        .flex li:nth-child(1){
+            align-items: center;
+            justify-content: center;
+        }
+        /*第2个li：上下两个方块，垂直排列居中*/
+        .flex li:nth-child(2){
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex li:nth-child(2) .box{
+            margin: 5px 0;
+        }
+        /* ========== 第3个li：2行2列，4个方块 ========== */
+        .flex li:nth-child(3){
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap:8px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .flex li:nth-child(3) .box{
+            width: calc(50% - 8px);
+            height: 45%;
+        }
+        /* ========== 第4个li：上1个通栏，下面左右两个 ========== */
+        .flex li:nth-child(4){
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap:8px;
+            padding:10px;
+            box-sizing: border-box;
+        }
+        .flex li:nth-child(4) .box{
+            height: 45%;
+        }
+        .flex li:nth-child(4) .box:first-child{
+            width: 100%;
+        }
+        .flex li:nth-child(4) .box:nth-child(2),
+        .flex li:nth-child(4) .box:nth-child(3){
+            width: calc(50% - 8px);
+        }
+    </style>
+</head>
+<body>
+    <h2> Flex布局演示 </h2>
+    <ul class="flex">
+        <!-- 第1个大盒子：1个小方块，水平垂直居中 -->
+        <li><div class="box"></div></li>
+        <!-- 第2个大盒子：2个小方块，上下垂直排列，居中对齐 -->
+        <li>
+            <div class="box"></div>
+            <div class="box"></div>
+        </li>
+        <!-- 第3个大盒子：4个小方块，2行2列网格 -->
+        <li>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </li>
+        <!-- 第4个大盒子：3个小方块，第1行1个占满，第2行2个并排 -->
+        <li>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>526 张圆圆 - 高级网页设计课堂实践</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 顶部横幅 */
+        .banner {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2)),
+                        linear-gradient(45deg, #4a00e0, #8e2de2);
+            color: #fff;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .banner h1 {
+            font-size: 42px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .banner .subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+            letter-spacing: 2px;
+        }
+
+        .banner .meta {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.85;
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+        }
+
+        /* 主体容器 */
+        .container {
+            max-width: 1200px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* 区块标题 */
+        .section-title {
+            color: #fff;
+            font-size: 24px;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 5px solid #ffd700;
+            letter-spacing: 2px;
+        }
+
+        /* 卡片网格 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+            display: block;
+            border-top: 4px solid #667eea;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            border-top-color: #ffd700;
+        }
+
+        .card .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #4a00e0;
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .card .filename {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 3px 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* 信息卡片 */
+        .info-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .info-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-card th, .info-card td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-card th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .info-card tr:hover {
+            background: #f5f7ff;
+        }
+
+        /* 提示词区块 */
+        .prompt-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 15px;
+            line-height: 1.8;
+            position: relative;
+            border-left: 5px solid #ffd700;
+        }
+
+        .prompt-box::before {
+            content: "📋 提示词 Prompt";
+            display: block;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: #fff;
+            padding: 30px 20px;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        footer .heart {
+            color: #ff4757;
+            animation: beat 1s infinite;
+            display: inline-block;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        /* 统计小条 */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-item .num {
+            font-size: 32px;
+            color: #4a00e0;
+            font-weight: bold;
+        }
+
+        .stat-item .label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部横幅 -->
+    <header class="banner">
+        <h1>526 张圆圆</h1>
+        <p class="subtitle">《高级网页设计》课堂实践作品集</p>
+        <p class="meta">计算机24005 班 · 2026 学年</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 学习统计 -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="num">14</div>
+                <div class="label">课堂作品</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">9</div>
+                <div class="label">学习章节</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">∞</div>
+                <div class="label">学习热情</div>
+            </div>
+        </div>
+
+        <!-- 课程简介 -->
+        <h2 class="section-title">课程简介</h2>
+        <div class="info-card">
+            <table>
+                <tr>
+                    <th width="30%">项目</th>
+                    <th>内容</th>
+                </tr>
+                <tr>
+                    <td>课程名称</td>
+                    <td>《高级网页设计》</td>
+                </tr>
+                <tr>
+                    <td>学号</td>
+                    <td>526</td>
+                </tr>
+                <tr>
+                    <td>姓名</td>
+                    <td>张圆圆</td>
+                </tr>
+                <tr>
+                    <td>班级</td>
+                    <td>计算机24005</td>
+                </tr>
+                <tr>
+                    <td>学习难度</td>
+                    <td>难</td>
+                </tr>
+                <tr>
+                    <td>涉及知识点</td>
+                    <td>HTML 基础、表格与表单、CSS 选择器、CSS 盒模型、Flex 布局、图文混排</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 课堂实践作品 -->
+        <h2 class="section-title">课堂实践作品</h2>
+        <div class="card-grid">
+
+            <a href="./1.html" class="card">
+                <div class="icon">01</div>
+                <h3>第一个 HTML 页面</h3>
+                <p>HTML 入门，搭建最基础的网页结构与文档声明。</p>
+                <span class="filename">1.html</span>
+            </a>
+
+            <a href="./2-1.html" class="card">
+                <div class="icon">02</div>
+                <h3>超链接与图片</h3>
+                <p>a 标签、img 标签及相对路径的使用方法。</p>
+                <span class="filename">2-1.html</span>
+            </a>
+
+            <a href="./2-2.html" class="card">
+                <div class="icon">03</div>
+                <h3>图片超链接与表格</h3>
+                <p>图片超链接扩展 + 大国重器四行三列表格。</p>
+                <span class="filename">2-2.html</span>
+            </a>
+
+            <a href="./3-1form.html" class="card">
+                <div class="icon">04</div>
+                <h3>表单练习</h3>
+                <p>form 表单元素：输入框、按钮、单选多选等控件。</p>
+                <span class="filename">3-1form.html</span>
+            </a>
+
+            <a href="./3-2 css.html" class="card">
+                <div class="icon">05</div>
+                <h3>CSS 选择器入门</h3>
+                <p>标签选择器、ID 选择器、类选择器及四个扩展练习。</p>
+                <span class="filename">3-2 css.html</span>
+            </a>
+
+            <a href="./4-1 css2.html" class="card">
+                <div class="icon">06</div>
+                <h3>群组与后代选择器</h3>
+                <p>群组选择器、后代选择器及 CSS 进阶属性的综合应用。</p>
+                <span class="filename">4-1 css2.html</span>
+            </a>
+
+            <a href="./5-1 层叠与继承.html" class="card">
+                <div class="icon">07</div>
+                <h3>CSS 层叠与继承</h3>
+                <p>理解 CSS 的层叠性、继承性与优先级规则。</p>
+                <span class="filename">5-1 层叠与继承.html</span>
+            </a>
+
+            <a href="./5-2 盒模型.html" class="card">
+                <div class="icon">08</div>
+                <h3>CSS 盒模型</h3>
+                <p>盒模型 / 框模型 box model，padding / margin / border 三种盒子对比。</p>
+                <span class="filename">5-2 盒模型.html</span>
+            </a>
+
+            <a href="./6-1 flex.html" class="card">
+                <div class="icon">09</div>
+                <h3>Flex 布局练习</h3>
+                <p>Flex 容器与项目，4 种排布：居中、垂直、2×2 网格、1上2下。</p>
+                <span class="filename">6-1 flex.html</span>
+            </a>
+
+            <a href="./6-2 一左一右.html" class="card">
+                <div class="icon">10</div>
+                <h3>一左一右布局</h3>
+                <p>实现左右两栏布局的多种方式（float、flex）。</p>
+                <span class="filename">6-2 一左一右.html</span>
+            </a>
+
+            <a href="./7-1 上图下文.html" class="card">
+                <div class="icon">11</div>
+                <h3>上图下文布局</h3>
+                <p>图文垂直排列，图片在上、说明文字在下的卡片效果。</p>
+                <span class="filename">7-1 上图下文.html</span>
+            </a>
+
+            <a href="./7-2 左图右文.html" class="card">
+                <div class="icon">12</div>
+                <h3>左图右文布局</h3>
+                <p>图文左右混排，Flex 实现图片与文字的并排展示。</p>
+                <span class="filename">7-2 左图右文.html</span>
+            </a>
+
+            <a href="./8-1 css3 选择器.html" class="card">
+                <div class="icon">13</div>
+                <h3>CSS3 选择器进阶</h3>
+                <p>伪类选择器、伪元素、transform 变换与渐变效果。</p>
+                <span class="filename">8-1 css3 选择器.html</span>
+            </a>
+
+            <a href="./9-1transition.html" class="card">
+                <div class="icon">14</div>
+                <h3>CSS 过渡 transition</h3>
+                <p>transition 属性实现平滑过渡动画效果。</p>
+                <span class="filename">9-1transition.html</span>
+            </a>
+
+            <a href="./11-1.html" class="card">
+                <div class="icon">15</div>
+                <h3>Web 前端长度单位</h3>
+                <p>绝对单位与相对单位的对比展示与实际渲染效果。</p>
+                <span class="filename">11-1.html</span>
+            </a>
+
+            <a href="./11-2.html" class="card">
+                <div class="icon">16</div>
+                <h3>CSS3 3D 动画</h3>
+                <p>3D 旋转立方体、卡片翻转与旋转木马动画演示。</p>
+                <span class="filename">11-2.html</span>
+            </a>
+
+            <a href="./11-3.html" class="card">
+                <div class="icon">17</div>
+                <h3>3D 画廊</h3>
+                <p>CSS 3D Transform 环形画廊，支持拖拽与自动轮播。</p>
+                <span class="filename">11-3.html</span>
+            </a>
+
+        </div>
+
+        <!-- 提示词区块 -->
+        <h2 class="section-title">生成提示词</h2>
+        <div class="prompt-box">
+            更新首页，包括所有html的超链接
+        </div>
+
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2026 526 张圆圆 · 《高级网页设计》课堂实践 <span class="heart">❤</span></p>
+        <a href="#" class="back-home">返回顶部 ↑</a>
+    </footer>
+
+</body>
+</html>

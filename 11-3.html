@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 画廊展示</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <style>
+    .zhang_perspective { perspective: 1200px; }
+    .zhang_preserve-3d { transform-style: preserve-3d; }
+
+    .zhang_gallery-scene {
+      width: 220px;
+      height: 320px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .zhang_gallery-item {
+      position: absolute;
+      width: 220px;
+      height: 320px;
+      border-radius: 12px;
+      overflow: hidden;
+      backface-visibility: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .zhang_gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .zhang_gallery-item .zhang_caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .zhang_gallery-item .zhang_caption h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .zhang_dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .zhang_dot.zhang_active {
+      background: #fff;
+      transform: scale(1.3);
+    }
+
+    .zhang_nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1.1rem;
+    }
+    .zhang_nav-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.1);
+    }
+
+    @keyframes zhang_glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99,102,241,0.3); }
+      50%      { box-shadow: 0 0 40px rgba(139,92,246,0.6); }
+    }
+    .zhang_glow { animation: zhang_glow 2s ease-in-out infinite; }
+
+    .zhang_thumb {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      opacity: 0.5;
+    }
+    .zhang_thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .zhang_thumb.zhang_active {
+      border-color: #818cf8;
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white font-sans min-h-screen">
+  <header class="pt-10 pb-6 text-center">
+    <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 flex items-center justify-center gap-3">
+      <i class="fa fa-picture-o"></i>
+      3D 画廊
+    </h1>
+    <p class="mt-3 text-slate-400">CSS 3D Transform 环形画廊 · 点击下方缩略图或箭头切换</p>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-16">
+    <div class="zhang_perspective flex flex-col items-center">
+      <div id="zhang_gallery" class="zhang_gallery-scene zhang_glow rounded-xl">
+      </div>
+
+      <div class="flex items-center gap-6 mt-10">
+        <button id="zhang_prev" class="zhang_nav-btn" aria-label="上一张">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <div id="zhang_dots" class="flex items-center gap-3"></div>
+        <button id="zhang_next" class="zhang_nav-btn" aria-label="下一张">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div id="zhang_thumbs" class="flex items-center gap-4 mt-8 flex-wrap justify-center"></div>
+
+      <div class="mt-8 text-slate-500 text-sm">
+        <span id="zhang_counter">1</span> / 8
+      </div>
+    </div>
+
+    <section class="mt-16 bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10">
+      <h2 class="text-xl font-semibold text-indigo-300 mb-4">
+        <i class="fa fa-code"></i> 实现要点
+      </h2>
+      <ul class="list-disc list-inside space-y-2 text-slate-300 text-sm">
+        <li><span class="font-mono text-indigo-300">perspective: 1200px</span> — 父元素创建透视景深</li>
+        <li><span class="font-mono text-indigo-300">transform-style: preserve-3d</span> — 保留子元素 3D 空间</li>
+        <li><span class="font-mono text-indigo-300">rotateY(angle) translateZ(radius)</span> — 每张图片沿圆环定位</li>
+        <li>JS 控制整体 <span class="font-mono text-indigo-300">rotateY</span> 角度实现切换动画</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="text-center text-slate-600 text-sm py-8 border-t border-white/5">
+    高级网页设计 · CSS3 3D 画廊演示
+  </footer>
+
+  <script>
+    (function () {
+      var zhang_images = [
+        { color: '#6366f1', label: 'Indigo',  desc: '深邃星空' },
+        { color: '#8b5cf6', label: 'Violet',  desc: '梦幻紫罗兰' },
+        { color: '#ec4899', label: 'Pink',    desc: '樱花飞舞' },
+        { color: '#f59e0b', label: 'Amber',   desc: '落日余晖' },
+        { color: '#10b981', label: 'Emerald', desc: '翡翠森林' },
+        { color: '#06b6d4', label: 'Cyan',    desc: '海洋之心' },
+        { color: '#3b82f6', label: 'Blue',    desc: '湛蓝天空' },
+        { color: '#ef4444', label: 'Red',     desc: '烈焰红唇' }
+      ];
+
+      var zhang_count = zhang_images.length;
+      var zhang_angle = 360 / zhang_count;
+      var zhang_current = 0;
+      var zhang_radius = 300;
+      var zhang_interval = null;
+
+      var zhang_gallery = document.getElementById('zhang_gallery');
+      var zhang_dots = document.getElementById('zhang_dots');
+      var zhang_thumbs = document.getElementById('zhang_thumbs');
+      var zhang_counter = document.getElementById('zhang_counter');
+
+      function zhang_createGallery() {
+        zhang_gallery.innerHTML = '';
+        zhang_images.forEach(function (img, i) {
+          var zhang_item = document.createElement('div');
+          zhang_item.className = 'zhang_gallery-item';
+          zhang_item.style.transform = 'rotateY(' + (i * zhang_angle) + 'deg) translateZ(' + zhang_radius + 'px)';
+
+          var zhang_inner = document.createElement('div');
+          zhang_inner.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,' + img.color + ',' + img.color + 'cc);';
+
+          var zhang_icon = document.createElement('i');
+          zhang_icon.className = 'fa fa-paint-brush';
+          zhang_icon.style.cssText = 'font-size:3rem;opacity:0.5;margin-bottom:12px;';
+          zhang_inner.appendChild(zhang_icon);
+
+          var zhang_title = document.createElement('div');
+          zhang_title.textContent = img.label;
+          zhang_title.style.cssText = 'font-size:1.5rem;font-weight:700;';
+          zhang_inner.appendChild(zhang_title);
+
+          var zhang_sub = document.createElement('div');
+          zhang_sub.textContent = img.desc;
+          zhang_sub.style.cssText = 'font-size:0.85rem;opacity:0.7;margin-top:4px;';
+          zhang_inner.appendChild(zhang_sub);
+
+          zhang_item.appendChild(zhang_inner);
+          zhang_gallery.appendChild(zhang_item);
+        });
+      }
+
+      function zhang_createControls() {
+        zhang_dots.innerHTML = '';
+        zhang_images.forEach(function (_, i) {
+          var zhang_dot = document.createElement('div');
+          zhang_dot.className = 'zhang_dot' + (i === 0 ? ' zhang_active' : '');
+          zhang_dot.addEventListener('click', function () { zhang_goTo(i); });
+          zhang_dots.appendChild(zhang_dot);
+        });
+
+        zhang_thumbs.innerHTML = '';
+        zhang_images.forEach(function (img, i) {
+          var zhang_thumb = document.createElement('div');
+          zhang_thumb.className = 'zhang_thumb' + (i === 0 ? ' zhang_active' : '');
+
+          var zhang_thumbInner = document.createElement('div');
+          zhang_thumbInner.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg,' + img.color + ',' + img.color + 'aa);display:flex;align-items:center;justify-content:center;';
+          var zhang_thumbText = document.createElement('span');
+          zhang_thumbText.textContent = img.label.charAt(0);
+          zhang_thumbText.style.cssText = 'color:#fff;font-weight:700;font-size:1.2rem;';
+          zhang_thumbInner.appendChild(zhang_thumbText);
+
+          zhang_thumb.appendChild(zhang_thumbInner);
+          zhang_thumb.addEventListener('click', function () { zhang_goTo(i); });
+          zhang_thumbs.appendChild(zhang_thumb);
+        });
+      }
+
+      function zhang_updateUI() {
+        var zhang_dotsArr = zhang_dots.querySelectorAll('.zhang_dot');
+        zhang_dotsArr.forEach(function (d, i) {
+          d.classList.toggle('zhang_active', i === zhang_current);
+        });
+        var zhang_thumbsArr = zhang_thumbs.querySelectorAll('.zhang_thumb');
+        zhang_thumbsArr.forEach(function (t, i) {
+          t.classList.toggle('zhang_active', i === zhang_current);
+        });
+        zhang_counter.textContent = zhang_current + 1;
+      }
+
+      function zhang_goTo(index) {
+        zhang_current = index;
+        zhang_gallery.style.transform = 'rotateY(' + (-index * zhang_angle) + 'deg)';
+        zhang_updateUI();
+        zhang_stopAuto();
+        zhang_startAuto();
+      }
+
+      function zhang_next() { zhang_goTo((zhang_current + 1) % zhang_count); }
+      function zhang_prev() { zhang_goTo((zhang_current - 1 + zhang_count) % zhang_count); }
+
+      function zhang_startAuto() {
+        zhang_stopAuto();
+        zhang_interval = setInterval(zhang_next, 3000);
+      }
+      function zhang_stopAuto() {
+        if (zhang_interval) { clearInterval(zhang_interval); zhang_interval = null; }
+      }
+
+      document.getElementById('zhang_next').addEventListener('click', zhang_next);
+      document.getElementById('zhang_prev').addEventListener('click', zhang_prev);
+
+      var zhang_startX = 0;
+      var zhang_startY = 0;
+      var zhang_dragging = false;
+
+      zhang_gallery.addEventListener('mousedown', function (e) {
+        zhang_dragging = true;
+        zhang_startX = e.clientX;
+        zhang_startY = e.clientY;
+        zhang_stopAuto();
+      });
+      document.addEventListener('mousemove', function (e) {
+        if (!zhang_dragging) return;
+        var zhang_dx = e.clientX - zhang_startX;
+        var zhang_dy = e.clientY - zhang_startY;
+        if (Math.abs(zhang_dx) > 5) {
+          zhang_gallery.style.transform = 'rotateY(' + (-zhang_current * zhang_angle + zhang_dx * 0.3) + 'deg)';
+        }
+      });
+      document.addEventListener('mouseup', function (e) {
+        if (!zhang_dragging) return;
+        zhang_dragging = false;
+        var zhang_dx = e.clientX - zhang_startX;
+        if (Math.abs(zhang_dx) > 50) {
+          if (zhang_dx > 0) zhang_prev(); else zhang_next();
+        } else {
+          zhang_goTo(zhang_current);
+        }
+        zhang_startAuto();
+      });
+
+      zhang_createGallery();
+      zhang_createControls();
+      zhang_updateUI();
+      zhang_startAuto();
+    })();
+  </script>
+</body>
+</html>
