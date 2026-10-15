@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-1 CSS 变量 - 张圆圆</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --zhang_primary: #4a00e0;
+            --zhang_secondary: #8e2de2;
+            --zhang_accent: #ffd700;
+            --zhang_bg: #f5f7ff;
+            --zhang_text: #333333;
+            --zhang_light: #ffffff;
+            --zhang_radius: 12px;
+            --zhang_shadow: 0 8px 25px rgba(74, 0, 224, 0.15);
+            --zhang_transition: all 0.3s ease;
+            --zhang_font: "Microsoft YaHei", "PingFang SC", sans-serif;
+            --zhang_gradient: linear-gradient(135deg, #4a00e0, #8e2de2);
+            --zhang_padding: 25px;
+            --zhang_gap: 20px;
+            --zhang_border: 1px solid #e0e0e0;
+        }
+
+        body {
+            font-family: var(--zhang_font);
+            background: var(--zhang_bg);
+            color: var(--zhang_text);
+            line-height: 1.6;
+        }
+
+        .zhang_banner {
+            background: var(--zhang_gradient);
+            color: var(--zhang_light);
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: var(--zhang_shadow);
+        }
+
+        .zhang_banner h1 {
+            font-size: 42px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .zhang_banner .zhang_subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+            letter-spacing: 2px;
+        }
+
+        .zhang_banner .zhang_meta {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.85;
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+        }
+
+        .zhang_container {
+            max-width: 1200px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+        }
+
+        .zhang_card {
+            background: var(--zhang_light);
+            border-radius: var(--zhang_radius);
+            padding: var(--zhang_padding);
+            box-shadow: var(--zhang_shadow);
+            transition: var(--zhang_transition);
+            border-top: 4px solid var(--zhang_primary);
+            margin-bottom: var(--zhang_gap);
+        }
+
+        .zhang_card:hover {
+            transform: translateY(-8px);
+            border-top-color: var(--zhang_accent);
+        }
+
+        .zhang_card h3 {
+            color: var(--zhang_primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .zhang_card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .zhang_code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: var(--zhang_radius);
+            padding: 20px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+            border-left: 5px solid var(--zhang_accent);
+        }
+
+        .zhang_code .zhang_keyword { color: #66d9ef; }
+        .zhang_code .zhang_property { color: #a6e22e; }
+        .zhang_code .zhang_value { color: #e6db74; }
+        .zhang_code .zhang_comment { color: #75715e; }
+        .zhang_code .zhang_selector { color: #f92672; }
+
+        .zhang_demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--zhang-gap);
+            margin-top: 20px;
+        }
+
+        .zhang_demo-item {
+            background: var(--zhang_light);
+            border-radius: var(--zhang_radius);
+            padding: var(--zhang_padding);
+            box-shadow: var(--zhang_shadow);
+            text-align: center;
+            border-top: 4px solid var(--zhang_primary);
+            transition: var(--zhang_transition);
+        }
+
+        .zhang_demo-item:hover {
+            transform: translateY(-5px);
+            border-top-color: var(--zhang_accent);
+        }
+
+        .zhang_demo-item h4 {
+            color: var(--zhang_primary);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .zhang_demo-box {
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zhang_btn {
+            background: var(--zhang_gradient);
+            color: var(--zhang_light);
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--zhang_radius);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--zhang_transition);
+            font-family: var(--zhang_font);
+        }
+
+        .zhang_btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--zhang-shadow);
+        }
+
+        .zhang_tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--zhang_bg);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--zhang_primary);
+            margin: 5px;
+        }
+
+        .zhang_name-display {
+            background: var(--zhang_gradient);
+            color: var(--zhang_light);
+            border-radius: var(--zhang_radius);
+            padding: 30px;
+            text-align: center;
+            font-size: 36px;
+            letter-spacing: 8px;
+            margin: var(--zhang_gap) 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .zhang_back {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: var(--zhang_gradient);
+            color: var(--zhang_light);
+            text-decoration: none;
+            border-radius: var(--zhang_radius);
+            transition: var(--zhang_transition);
+        }
+
+        .zhang_back:hover {
+            transform: scale(1.05);
+            box-shadow: var(--zhang-shadow);
+        }
+
+        .zhang_var-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .zhang_var-list li {
+            padding: 8px 12px;
+            border-bottom: var(--zhang_border);
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13px;
+        }
+
+        .zhang_var-list li:last-child {
+            border-bottom: none;
+        }
+
+        .zhang_var-name {
+            color: var(--zhang_secondary);
+            font-weight: bold;
+        }
+
+        .zhang_var-value {
+            color: var(--zhang_primary);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--zhang_light);
+            padding: 30px 20px;
+            background: var(--zhang_gradient);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="zhang_banner">
+        <h1><i class="fa fa-code"></i> CSS 变量</h1>
+        <p class="zhang_subtitle">CSS Variables / Custom Properties 自定义属性</p>
+        <p class="zhang_meta">526 张圆圆 · 计算机24005 班 · 高级网页设计</p>
+    </header>
+
+    <div class="zhang_container">
+
+        <div class="zhang_card">
+            <h3><i class="fa fa-info-circle"></i> 什么是 CSS 变量？</h3>
+            <p>CSS 变量（又称自定义属性）允许开发者在 <strong>:root</strong> 选择器中定义可重复使用的值，然后通过 <strong>var()</strong> 函数引用它们。当需要修改主题色、字体大小等样式时，只需更改变量值即可全局生效。</p>
+            <div class="zhang_code">
+<span class="zhang_comment">/* 在 :root 中定义变量 */</span>
+<span class="zhang_selector">:root</span> {
+  <span class="zhang_property">--zhang_primary</span>: <span class="zhang-value">#4a00e0</span>;
+  <span class="zhang_property">--zhang_secondary</span>: <span class="zhang-value">#8e2de2</span>;
+  <span class="zhang-property">--zhang_accent</span>: <span class="zhang-value">#ffd700</span>;
+  <span class="zhang-property">--zhang_radius</span>: <span class="zhang-value">12px</span>;
+  <span class="zhang-property">--zhang_padding</span>: <span class="zhang-value">25px</span>;
+}
+
+<span class="zhang-comment">/* 使用 var() 引用变量 */</span>
+<span class="zhang_selector">.zhang_card</span> {
+  <span class="zhang-property">background</span>: <span class="zhang-keyword">var</span>(<span class="zhang-value">--zhang_light</span>);
+  <span class="zhang-property">border-radius</span>: <span class="zhang-keyword">var</span>(<span class="zhang-value">--zhang_radius</span>);
+  <span class="zhang-property">padding</span>: <span class="zhang-keyword">var</span>(<span class="zhang-value">--zhang_padding</span>);
+}
+            </div>
+        </div>
+
+        <div class="zhang_card">
+            <h3><i class="fa fa-paint-brush"></i> 本页使用的 CSS 变量列表</h3>
+            <ul class="zhang_var-list">
+                <li><span class="zhang_var-name">--zhang_primary</span> = <span class="zhang_var-value">#4a00e0</span> — 主色调</li>
+                <li><span class="zhang_var-name">--zhang_secondary</span> = <span class="zhang_var-value">#8e2de2</span> — 辅助色</li>
+                <li><span class="zhang_var-name">--zhang_accent</span> = <span class="zhang_var-value">#ffd700</span> — 强调色</li>
+                <li><span class="zhang_var-name">--zhang_bg</span> = <span class="zhang_var-value">#f5f7ff</span> — 背景色</li>
+                <li><span class="zhang_var-name">--zhang_text</span> = <span class="zhang_var-value">#333333</span> — 文字颜色</li>
+                <li><span class="zhang_var-name">--zhang_light</span> = <span class="zhang_var-value">#ffffff</span> — 亮色</li>
+                <li><span class="zhang_var-name">--zhang_radius</span> = <span class="zhang_var-value">12px</span> — 圆角</li>
+                <li><span class="zhang_var-name">--zhang_shadow</span> = <span class="zhang_var-value">0 8px 25px rgba(74,0,224,0.15)</span> — 阴影</li>
+                <li><span class="zhang_var-name">--zhang_transition</span> = <span class="zhang_var-value">all 0.3s ease</span> — 过渡</li>
+                <li><span class="zhang_var-name">--zhang_gradient</span> = <span class="zhang_var-value">linear-gradient(135deg, #4a00e0, #8e2de2)</span> — 渐变</li>
+            </ul>
+        </div>
+
+        <div class="zhang_card">
+            <h3><i class="fa fa-eye"></i> 变量效果演示</h3>
+            <p>以下元素全部使用 CSS 变量控制样式，修改变量值即可统一修改外观：</p>
+
+            <div class="zhang_demo-grid">
+                <div class="zhang_demo-item">
+                    <h4>按钮组件</h4>
+                    <div class="zhang_demo-box">
+                        <button class="zhang_btn">点击按钮</button>
+                    </div>
+                    <span class="zhang_tag">var(--zhang_gradient)</span>
+                    <span class="zhang_tag">var(--zhang_radius)</span>
+                </div>
+
+                <div class="zhang_demo-item">
+                    <h4>标签组件</h4>
+                    <div class="zhang_demo-box">
+                        <span class="zhang_tag">标签一</span>
+                        <span class="zhang-tag">标签二</span>
+                        <span class="zhang-tag">标签三</span>
+                    </div>
+                    <span class="zhang-tag">var(--zhang_bg)</span>
+                    <span class="zhang-tag">var(--zhang_primary)</span>
+                </div>
+
+                <div class="zhang_demo-item">
+                    <h4>卡片阴影</h4>
+                    <div class="zhang_demo-box">
+                        <div style="width:80px;height:80px;background:var(--zhang_light);border-radius:var(--zhang_radius);box-shadow:var(--zhang_shadow);"></div>
+                    </div>
+                    <span class="zhang-tag">var(--zhang_shadow)</span>
+                    <span class="zhang-tag">var(--zhang_radius)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="zhang_name-display">
+            张圆圆
+        </div>
+
+        <div class="zhang_card">
+            <h3><i class="fa fa-book"></i>  var() 函数的备用值</h3>
+            <p>var() 函数可以指定第二个参数作为备用值，当变量不存在时使用：</p>
+            <div class="zhang_code">
+<span class="zhang-property">color</span>: <span class="zhang-keyword">var</span>(<span class="zhang-value">--zhang_text</span>, <span class="zhang-value">#333</span>);
+<span class="zhang-property">font-size</span>: <span class="zhang-keyword">var</span>(<span class="zhang-value">--zhang-font-size</span>, <span class="zhang-value">16px</span>);
+            </div>
+        </div>
+
+        <div style="text-align:center; margin: 30px 0;">
+            <a href="index.html" class="zhang_back"><i class="fa fa-home"></i> 返回首页</a>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 526 张圆圆 · CSS 变量实践 · 高级网页设计课程</p>
+    </footer>
+
+</body>
+</html>
