@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-22，功能名称：JavaScript六种基础数据类型演示 -->
+    <title>14-2 JavaScript六种基础数据类型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .zyy_container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .zyy_title {
+            color: #fff;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .zyy_intro {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .zyy_card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .zyy_table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .zyy_table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-weight: normal;
+            padding: 12px 10px;
+            letter-spacing: 1px;
+        }
+
+        .zyy_table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .zyy_table tr:hover {
+            background: #f5f7ff;
+        }
+
+        .zyy_type-name {
+            color: #4a00e0;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .zyy_code {
+            font-family: Consolas, Monaco, monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #c7254e;
+        }
+
+        .zyy_typeof {
+            display: inline-block;
+            background: #e8f7ee;
+            color: #1e7e46;
+            border: 1px solid #bfe8cf;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13px;
+        }
+
+        .zyy_note {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .zyy_console {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 12px;
+            padding: 20px 25px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            border-left: 5px solid #ffd700;
+        }
+
+        .zyy_console::before {
+            content: "console 演示结果";
+            display: block;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .zyy_console p {
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        .zyy_tip {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #fff8e1;
+            border-left: 4px solid #ffb300;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #7a5c00;
+        }
+
+        .zyy_back {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .zyy_back:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy_container">
+        <h1 class="zyy_title">JavaScript 六种基础数据类型</h1>
+        <p class="zyy_intro">String、Number、Boolean、Undefined、Null、Object —— 使用 typeof 运算符逐一检测演示</p>
+
+        <div class="zyy_card">
+            <table class="zyy_table">
+                <thead>
+                    <tr>
+                        <th width="18%">数据类型</th>
+                        <th width="30%">示例代码</th>
+                        <th width="14%">示例值</th>
+                        <th width="14%">typeof 结果</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody id="zyy_typeBody"></tbody>
+            </table>
+            <div class="zyy_tip">
+                注意：typeof null 返回 "object" 是 JavaScript 早期设计遗留的历史问题，但 null 本身仍属于基础数据类型，表示"空值"。
+            </div>
+        </div>
+
+        <div class="zyy_console" id="zyy_consoleBox"></div>
+
+        <a class="zyy_back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // 1. String（字符串）类型
+        var zyy_strValue = "张圆圆";
+        // 2. Number（数值）类型
+        var zyy_numValue = 100;
+        // 3. Boolean（布尔）类型
+        var zyy_boolValue = true;
+        // 4. Undefined（未定义）类型：变量声明后未赋值
+        var zyy_undefinedValue;
+        // 5. Null（空值）类型
+        var zyy_nullValue = null;
+        // 6. Object（对象）类型
+        var zyy_objValue = { name: "张圆圆", age: 20 };
+
+        // 六种基础数据类型的演示数据
+        var zyy_types = [
+            {
+                name: "String（字符串）",
+                code: 'var zyy_strValue = "张圆圆";',
+                value: zyy_strValue,
+                note: "由零个或多个字符组成的文本，使用引号包裹"
+            },
+            {
+                name: "Number（数值）",
+                code: "var zyy_numValue = 100;",
+                value: zyy_numValue,
+                note: "整数和浮点数，如 100、3.14、-5"
+            },
+            {
+                name: "Boolean（布尔）",
+                code: "var zyy_boolValue = true;",
+                value: zyy_boolValue,
+                note: "表示真或假，只有 true 和 false 两个值"
+            },
+            {
+                name: "Undefined（未定义）",
+                code: "var zyy_undefinedValue;",
+                value: zyy_undefinedValue,
+                note: "变量声明后未赋值时的默认值"
+            },
+            {
+                name: "Null（空值）",
+                code: "var zyy_nullValue = null;",
+                value: zyy_nullValue,
+                note: '表示"空"，可用于清空对象引用'
+            },
+            {
+                name: "Object（对象）",
+                code: 'var zyy_objValue = { name: "张圆圆", age: 20 };',
+                value: zyy_objValue,
+                note: "由键值对组成的复合类型，属于引用类型"
+            }
+        ];
+
+        // 把值转换为可在页面上显示的字符串
+        function zyy_showValue(zyy_item) {
+            if (zyy_item.value === undefined) {
+                return "undefined";
+            }
+            if (zyy_item.value === null) {
+                return "null";
+            }
+            if (typeof zyy_item.value === "object") {
+                return JSON.stringify(zyy_item.value);
+            }
+            return String(zyy_item.value);
+        }
+
+        // 运行演示：渲染表格并模拟 console 输出
+        function zyy_runDemo() {
+            var zyy_tbody = document.getElementById("zyy_typeBody");
+            var zyy_consoleBox = document.getElementById("zyy_consoleBox");
+            var zyy_rows = "";
+            var zyy_logs = "";
+
+            for (var zyy_i = 0; zyy_i < zyy_types.length; zyy_i++) {
+                var zyy_item = zyy_types[zyy_i];
+                var zyy_typeofResult = typeof zyy_item.value;
+                var zyy_varName = zyy_item.code.replace("var ", "").replace(";", "").split(" = ")[0];
+
+                zyy_rows += "<tr>"
+                    + '<td class="zyy_type-name">' + zyy_item.name + "</td>"
+                    + "<td><span class='zyy_code'>" + zyy_item.code + "</span></td>"
+                    + "<td>" + zyy_showValue(zyy_item) + "</td>"
+                    + '<td><span class="zyy_typeof">' + zyy_typeofResult + "</span></td>"
+                    + '<td class="zyy_note">' + zyy_item.note + "</td>"
+                    + "</tr>";
+
+                zyy_logs += "<p>&gt; typeof " + zyy_varName
+                    + '  →  "' + zyy_typeofResult + '"</p>';
+            }
+
+            zyy_tbody.innerHTML = zyy_rows;
+            zyy_consoleBox.innerHTML += zyy_logs;
+        }
+
+        // 页面加载后自动演示
+        zyy_runDemo();
+    </script>
+</body>
+</html>
