@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>女性友好民宿社区 - SVG图标</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #e5e7eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .zhang_phone-container {
+            width: 100%;
+            max-width: 420px;
+            background: #f7f8fa;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .zhang_search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 999px;
+            padding: 10px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .zhang_banner-card {
+            border-radius: 14px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .zhang_feature-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zhang_feature-icon .iconfont {
+            font-size: 20px;
+        }
+
+        .zhang_house-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .zhang_tag {
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .zhang_bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 100;
+        }
+
+        .zhang_nav-item {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 0 7px;
+            color: #b8b8b8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .zhang_nav-item.zhang_active {
+            color: #7c3aed;
+        }
+
+        .zhang_nav-item .iconfont {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .zhang_nav-label {
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .zhang_badge {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-left: 12px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: #ff3b30;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 10px;
+            line-height: 16px;
+            text-align: center;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .zhang_dot {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-left: 14px;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="zhang_phone-container">
+
+    <header class="sticky top-0 z-50 px-4 pt-4 pb-2" style="background: #f7f8fa;">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-medium text-gray-700">杭州</span>
+            <span class="text-base font-bold text-gray-900">女生民宿</span>
+            <span class="text-sm text-purple-500">客服</span>
+        </div>
+        <div class="zhang_search-bar">
+            <i class="iconfont icon-sousuo text-gray-400 mr-2" style="font-size: 15px;"></i>
+            <span class="text-sm text-gray-400">搜索房源、社区话题</span>
+        </div>
+    </header>
+
+    <main class="px-4 pb-24">
+
+        <div class="zhang_banner-card h-36 flex items-center justify-center mt-2 mb-4">
+            <div class="text-center">
+                <p class="text-lg font-bold text-white">遇见温馨的家</p>
+                <p class="text-xs text-white/80 mt-1">专为女生打造的安全民宿社区</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm">
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="flex flex-col items-center gap-1.5">
+                    <div class="zhang_feature-icon" style="background: #f3e8ff; color: #7c3aed;">
+                        <i class="iconfont icon-gouwuchekong"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">精选房源</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div class="zhang_feature-icon" style="background: #f3e8ff; color: #7c3aed;">
+                        <i class="iconfont icon-xihuan"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">整租优选</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div class="zhang_feature-icon" style="background: #f3e8ff; color: #7c3aed;">
+                        <i class="iconfont icon-guanzhu-weiguanzhu"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">室友匹配</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div class="zhang_feature-icon" style="background: #f3e8ff; color: #7c3aed;">
+                        <i class="iconfont icon-wode"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">短租公寓</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-base font-bold text-gray-900 mb-3">推荐房源</h2>
+
+        <div class="space-y-3">
+            <div class="zhang_house-card">
+                <div class="h-32 flex items-center justify-center" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+                    <i class="iconfont icon-gouwuchekong text-white/50" style="font-size: 30px;"></i>
+                </div>
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-gray-900">loft独立卫浴</span>
+                        <span class="text-sm font-bold text-purple-500">¥268<span class="text-xs text-gray-400">/晚</span></span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">市中心 · 2室1卫 · 可住2人</p>
+                    <div class="flex gap-1.5 mt-2">
+                        <span class="zhang_tag">女生专属</span>
+                        <span class="zhang_tag">独立卫浴</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zhang_house-card">
+                <div class="h-32 flex items-center justify-center" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+                    <i class="iconfont icon-xihuan text-white/50" style="font-size: 30px;"></i>
+                </div>
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-gray-900">ins风落地窗</span>
+                        <span class="text-sm font-bold text-purple-500">¥198<span class="text-xs text-gray-400">/晚</span></span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">近地铁 · 1室1卫 · 可住1人</p>
+                    <div class="flex gap-1.5 mt-2">
+                        <span class="zhang_tag">安全门禁</span>
+                        <span class="zhang_tag">拎包入住</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zhang_house-card">
+                <div class="h-32 flex items-center justify-center" style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);">
+                    <i class="iconfont icon-guanzhu-weiguanzhu text-white/50" style="font-size: 30px;"></i>
+                </div>
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-gray-900">温馨合租小屋</span>
+                        <span class="text-sm font-bold text-purple-500">¥120<span class="text-xs text-gray-400">/晚</span></span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">室友友善 · 2室1卫 · 可住3人</p>
+                    <div class="flex gap-1.5 mt-2">
+                        <span class="zhang_tag">室友好评</span>
+                        <span class="zhang_tag">公共区域</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <nav class="zhang_bottom-nav">
+        <a href="#" class="zhang_nav-item zhang_active">
+            <i class="iconfont icon-shouye"></i>
+            <span class="zhang_nav-label">首页</span>
+        </a>
+        <a href="#" class="zhang_nav-item">
+            <i class="iconfont icon-sousuo"></i>
+            <span class="zhang_nav-label">搜索</span>
+            <i class="zhang_dot"></i>
+        </a>
+        <a href="#" class="zhang_nav-item">
+            <i class="iconfont icon-shequ"></i>
+            <span class="zhang_nav-label">社区</span>
+        </a>
+        <a href="#" class="zhang_nav-item">
+            <i class="iconfont icon-pinglun"></i>
+            <span class="zhang_nav-label">消息</span>
+            <i class="zhang_badge">12</i>
+        </a>
+        <a href="#" class="zhang_nav-item">
+            <i class="iconfont icon-wode"></i>
+            <span class="zhang_nav-label">我的</span>
+            <i class="zhang_dot"></i>
+        </a>
+    </nav>
+
+</div>
+
+</body>
+</html>

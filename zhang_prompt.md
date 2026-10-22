@@ -1,84 +1,25 @@
-# zhang_prompt.md - 提示词记录
----
 
-## 2026-10-12-16-01
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
+2026-10-19-03-57
+模型：longcat-2.5-preview-free
+提示词：
+编写两个网页13-1.html和13-2.html,分别显示font awesome图标和lucide图标，前者采用字体图标的形式，后者使用svg的形式，下载相关cdn文件到当前目录的cdn目录
 
-**提示词内容**:
-在agents.md中设置项目规则
-所有css类名、id名、js变量都以zhang_开始，所有的提示词都在执行之前写入文件zhang_prompt.md，以附加的方式写入，不覆盖之前的内容，写入的内容包括时间yyyy-mm-dd-hh-mm、使用的模型、提示词内容。
+2026-10-19-14-30
+模型：longcat-2.5-preview-free
+提示词：
+根据font目录下的iconfont的图标，分别完成13-3.html和13-4.html，使用字体图标和svg的方法完成移动端的自适应宽度的固定的下导航，下导航有4项内容，导航项包括数字徽章和右上角的红点，全屏宽度。
 
----
+2026-10-19-16-45
+模型：longcat-2.5-preview-free
+提示词：
+13-4.html的社区图标修改为font目录下的iconfont的图标里的社区图标，将整个页面容器限制最大宽度420px，居中在浏览器窗口，模拟手机屏幕效果，不要占满浏览器整个宽度，所有元素按照移动端比例缩小到手机尺寸。
 
-## 2026-10-12-16-32
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
+2026-10-19-17-30
+模型：longcat-2.5-preview-free
+提示词：
+根据font目录下的iconfont的图标，修改13-3.html和13-4.html，导航一共5项：首页、搜索、社区、消息、我的；我修改了iconfont的图标，帮我进行对应标识，其他不用修改。
 
-**提示词内容**:
-自选网页实现，11-3.html,3D画廊
-
----
-
-## 2026-10-12-16-33
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
-
-**提示词内容**:
-（同上）将11-3.html加入index.html首页链接
-
----
-
-## 2026-10-12-16-29
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
-
-**提示词内容**:
-设置规则,写入agents.md：新建的html文件加入超链接到首页index.html
-
----
-
-## 2026-10-12-16-32
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
-
-**提示词内容**:
-自选网页实现，11-3.html,3D画廊
-
----
-
-## 2026-10-12-16-32
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
-
-**提示词内容**:
-自选网页实现，11-3.html,3D画廊
-
----
-
-## 2026-10-15-15-55
-**使用模型**: LongCat 2.5 Preview Free (longcat-2.5-preview-free)
-
-**提示词内容**:
-创建skill:提交项目：使用git commit并push当前项目到https://gitee.com/zyy18698212531/zhangyuanyuan2026
-
----
-
-## 2026-10-15-16-10
-使用的模型: opencode/longcat-2.5-preview-free
-提示词内容: 创建skill：提交项目：使用git commit并push当前项目到ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILJUM4A5yaFBKZ83fUGn3vg8kW+RUhs1CH47BxhUFxcx 3698355008@qq.com
-远程仓库地址: https://gitee.com/zyy18698212531/zhangyuanyuan2026.git
-
-
-
-## 2026-10-15-16-10
-使用的模型: opencode/longcat-2.5-preview-free
-提示词内容: 更新远程仓库地址为SSH协议 git@gitee.com:zyy18698212531/zhangyuanyuan2026.git
-
-
-
-## 2026-10-15-16-10
-使用的模型: opencode/longcat-2.5-preview-free
-提示词内容: 提交项目
-
-
-
-## 2026-10-15-16-10
-使用的模型: opencode/longcat-2.5-preview-free
-提示词内容: 创建网页12-1.html，展示css变量，然后提交项目。页面中包括文字张圆圆
-
-
+2026-10-22-15-55
+模型：GLM-5.3-Flash
+提示词：
+`d:\大三—高级网页设计\1/.opencode\skills`根据给定文件创建trae的skill

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucide SVG 图标</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="cdn/lucide.min.js"></script>
+    <style>
+        .zhang_lucide-card {
+            transition: all 0.3s ease;
+        }
+        .zhang_lucide-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        .zhang_lucide-card svg {
+            width: 32px;
+            height: 32px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-500 min-h-screen">
+
+    <!-- 顶部横幅 -->
+    <header class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-16 px-6 text-center shadow-xl">
+        <h1 class="text-5xl font-bold mb-4 tracking-wide">Lucide SVG 图标</h1>
+        <p class="text-xl opacity-90 tracking-wider">SVG 图标形式 · 矢量图形，清晰锐利</p>
+        <p class="mt-6 text-sm opacity-80 bg-white/20 inline-block px-5 py-2 rounded-full">Lucide · 1500+ 开源图标</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+
+        <!-- 技术说明 -->
+        <section class="mb-12">
+            <div class="bg-white rounded-2xl p-8 shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-teal-700 mb-4">技术原理</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Lucide 是一种 <strong>SVG 图标</strong>方案。每个图标都是一个独立的 SVG 矢量图形，
+                    通过 JavaScript 动态创建 SVG 元素并插入到页面中。与字体图标不同，SVG 图标可以直接通过 CSS 控制颜色、大小和样式。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-teal-50 rounded-lg p-4 text-center">
+                        <div class="mb-2"><i data-lucide="file-code" class="text-teal-500 mx-auto"></i></div>
+                        <p class="text-sm text-gray-700">1. 引入 Lucide JS</p>
+                    </div>
+                    <div class="bg-teal-50 rounded-lg p-4 text-center">
+                        <div class="mb-2"><i data-lucide="code" class="text-teal-500 mx-auto"></i></div>
+                        <p class="text-sm text-gray-700">2. 使用 data-lucide 属性</p>
+                    </div>
+                    <div class="bg-teal-50 rounded-lg p-4 text-center">
+                        <div class="mb-2"><i data-lucide="sparkles" class="text-teal-500 mx-auto"></i></div>
+                        <p class="text-sm text-gray-700">3. JS 自动替换为 SVG</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 基础图标 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">基础图标</h2>
+            <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-4">
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="home" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">home</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="search" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">search</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="user" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">user</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="mail" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">mail</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="heart" class="text-red-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">heart</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="star" class="text-yellow-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">star</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="settings" class="text-gray-600 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">settings</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="camera" class="text-purple-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">camera</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="lock" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">lock</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-xl p-4 text-center shadow-md">
+                    <i data-lucide="bell" class="text-orange-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-2">bell</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图标颜色控制 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">CSS 颜色控制</h2>
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <p class="text-gray-600 mb-6">SVG 图标可以通过 CSS 直接控制颜色，这是 SVG 图标相比字体图标的一大优势：</p>
+                <div class="flex flex-wrap gap-8 justify-center items-center">
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-red-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-red-500</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-blue-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-blue-500</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-green-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-green-500</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-purple-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-purple-500</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-pink-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-pink-500</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="heart" class="text-indigo-500 mx-auto" style="width:48px;height:48px"></i>
+                        <p class="text-xs text-gray-500 mt-2">text-indigo-500</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图标描边宽度 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">描边宽度</h2>
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <div class="flex flex-wrap gap-10 justify-center items-center">
+                    <div class="text-center">
+                        <i data-lucide="star" class="text-teal-500 mx-auto" style="width:48px;height:48px;stroke-width:1"></i>
+                        <p class="text-xs text-gray-500 mt-2">stroke-width: 1</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="star" class="text-teal-500 mx-auto" style="width:48px;height:48px;stroke-width:1.5"></i>
+                        <p class="text-xs text-gray-500 mt-2">stroke-width: 1.5</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="star" class="text-teal-500 mx-auto" style="width:48px;height:48px;stroke-width:2"></i>
+                        <p class="text-xs text-gray-500 mt-2">stroke-width: 2</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="star" class="text-teal-500 mx-auto" style="width:48px;height:48px;stroke-width:2.5"></i>
+                        <p class="text-xs text-gray-500 mt-2">stroke-width: 2.5</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="star" class="text-teal-500 mx-auto" style="width:48px;height:48px;stroke-width:3"></i>
+                        <p class="text-xs text-gray-500 mt-2">stroke-width: 3</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常用功能图标 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">常用功能图标</h2>
+            <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="home" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">home</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="search" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">search</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="user" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">user</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="users" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">users</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="mail" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">mail</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="bell" class="text-orange-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">bell</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="calendar" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">calendar</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="clock" class="text-purple-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">clock</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="star" class="text-yellow-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">star</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="heart" class="text-red-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">heart</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="lock" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">lock</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="unlock" class="text-yellow-600 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">unlock</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="eye" class="text-blue-400 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">eye</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="eye-off" class="text-gray-400 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">eye-off</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="trash-2" class="text-red-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">trash-2</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="edit" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">edit</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="plus" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">plus</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="minus" class="text-red-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">minus</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="x" class="text-gray-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">x</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="check" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">check</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="download" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">download</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="upload" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">upload</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="share" class="text-purple-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">share</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="bookmark" class="text-yellow-600 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">bookmark</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="flag" class="text-red-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">flag</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="map-pin" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">map-pin</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="compass" class="text-blue-600 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">compass</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="globe" class="text-teal-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">globe</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="wifi" class="text-blue-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">wifi</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="battery" class="text-green-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">battery</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="sun" class="text-yellow-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">sun</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="moon" class="text-indigo-500 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">moon</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="cloud" class="text-gray-400 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">cloud</p>
+                </div>
+                <div class="zhang_lucide-card bg-white rounded-lg p-3 text-center shadow-md">
+                    <i data-lucide="cloud-rain" class="text-blue-400 mx-auto"></i>
+                    <p class="text-xs text-gray-500 mt-1">cloud-rain</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图标按钮应用 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">图标按钮应用</h2>
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <button class="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="download" class="w-5 h-5"></i> 下载
+                    </button>
+                    <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="check" class="w-5 h-5"></i> 确认
+                    </button>
+                    <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i> 删除
+                    </button>
+                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="star" class="w-5 h-5"></i> 收藏
+                    </button>
+                    <button class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="share" class="w-5 h-5"></i> 分享
+                    </button>
+                    <button class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition">
+                        <i data-lucide="heart" class="w-5 h-5"></i> 喜欢
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 对比总结 -->
+        <section class="mb-12">
+            <h2 class="text-white text-3xl font-bold mb-6 pl-4 border-l-4 border-yellow-400">Font Awesome vs Lucide 对比</h2>
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b-2 border-gray-200">
+                                <th class="text-left py-3 px-4 text-gray-600 font-semibold">特性</th>
+                                <th class="text-center py-3 px-4 text-blue-600 font-semibold">Font Awesome</th>
+                                <th class="text-center py-3 px-4 text-teal-600 font-semibold">Lucide</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">图标形式</td>
+                                <td class="py-3 px-4 text-center">字体图标</td>
+                                <td class="py-3 px-4 text-center">SVG 矢量图形</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">渲染方式</td>
+                                <td class="py-3 px-4 text-center">CSS :before 伪元素</td>
+                                <td class="py-3 px-4 text-center">内联 SVG 元素</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">颜色控制</td>
+                                <td class="py-3 px-4 text-center">color 属性</td>
+                                <td class="py-3 px-4 text-center">color / stroke 属性</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">动画支持</td>
+                                <td class="py-3 px-4 text-center">内置 fa-spin 等</td>
+                                <td class="py-3 px-4 text-center">CSS / SMIL / JS</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">清晰度</td>
+                                <td class="py-3 px-4 text-center">高（矢量字体）</td>
+                                <td class="py-3 px-4 text-center">极高（原生 SVG）</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">图标数量</td>
+                                <td class="py-3 px-4 text-center">675+</td>
+                                <td class="py-3 px-4 text-center">1500+</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-700">开源协议</td>
+                                <td class="py-3 px-4 text-center">CC BY 4.0</td>
+                                <td class="py-3 px-4 text-center">ISC License</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="text-center text-white py-8 opacity-90 text-sm">
+        <p>© 2026 Lucide SVG 图标展示 · 使用 Lucide 图标库</p>
+        <a href="index.html" class="inline-block mt-3 px-5 py-2 bg-white/20 rounded-full hover:bg-white/35 transition">返回首页</a>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>
