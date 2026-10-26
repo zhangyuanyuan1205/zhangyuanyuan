@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-26，功能名称：数7游戏盒子演示 -->
+    <title>15-1 数7游戏 · 100个盒子</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .zyy_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .zyy_title {
+            color: #fff;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .zyy_intro {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .zyy_card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 图例说明 */
+        .zyy_legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .zyy_legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zyy_demo-box {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .zyy_demo-num {
+            border: 2px solid #667eea;
+            color: #4a00e0;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 22px;
+        }
+
+        .zyy_demo-empty {
+            border: 2px dashed #bbb;
+            background: #f7f7f7;
+        }
+
+        /* 盒子网格 */
+        .zyy_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+        }
+
+        .zyy_box {
+            aspect-ratio: 1 / 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        /* 不满足规则：盒子内部是数字 */
+        .zyy_num {
+            border: 2px solid #667eea;
+            background: #fff;
+            color: #4a00e0;
+        }
+
+        .zyy_num:hover {
+            transform: scale(1.1);
+            background: #f5f7ff;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 满足规则：输出空盒子 */
+        .zyy_empty {
+            border: 2px dashed #ccc;
+            background: #f7f7f7;
+        }
+
+        .zyy_empty:hover {
+            border-color: #ffb300;
+            background: #fff8e1;
+        }
+
+        .zyy_stat {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .zyy_stat b {
+            color: #4a00e0;
+        }
+
+        .zyy_back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .zyy_back:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy_container">
+        <h1 class="zyy_title">数7游戏 · 100个盒子</h1>
+        <p class="zyy_intro">张圆圆 的数7规则演示：逢 7 的倍数、末尾是 7 的数，都要"过"——输出空盒子，其余盒子显示数字</p>
+
+        <div class="zyy_card">
+            <div class="zyy_legend">
+                <span><i class="zyy_demo-box zyy_demo-num">3</i> 普通数字（显示数字）</span>
+                <span><i class="zyy_demo-box zyy_demo-empty"></i> 满足数7规则（空盒子）</span>
+            </div>
+            <div class="zyy_grid" id="zyy_grid"></div>
+            <p class="zyy_stat" id="zyy_stat"></p>
+        </div>
+
+        <a class="zyy_back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // 数7规则判断：7 的倍数 或 末尾是 7 的数需要"过"
+        function zyy_isPass(zyy_n) {
+            return zyy_n % 7 === 0 || zyy_n % 10 === 7;
+        }
+
+        // 生成 100 个盒子
+        function zyy_createBoxes() {
+            var zyy_grid = document.getElementById("zyy_grid");
+            var zyy_html = "";
+            var zyy_passCount = 0;
+
+            for (var zyy_i = 1; zyy_i <= 100; zyy_i++) {
+                if (zyy_isPass(zyy_i)) {
+                    // 满足规则：输出空盒子
+                    zyy_html += '<div class="zyy_box zyy_empty" title="' + zyy_i + '：过"></div>';
+                    zyy_passCount++;
+                } else {
+                    // 不满足规则：盒子内部显示数字
+                    zyy_html += '<div class="zyy_box zyy_num">' + zyy_i + '</div>';
+                }
+            }
+
+            zyy_grid.innerHTML = zyy_html;
+            document.getElementById("zyy_stat").innerHTML =
+                "共 <b>100</b> 个盒子，其中 <b>" + zyy_passCount + "</b> 个满足数7规则（空盒子），<b>"
+                + (100 - zyy_passCount) + "</b> 个显示数字";
+        }
+
+        zyy_createBoxes();
+    </script>
+</body>
+</html>
