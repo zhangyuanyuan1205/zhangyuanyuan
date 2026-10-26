@@ -10,9 +10,10 @@ description: 提交并推送当前项目到 GitHub 远程仓库。当用户说"�
 ## 远程仓库地址（SSH，已配置公钥）
 
 ```
-git@github.com:zhangyuanyuan1205/zhangyuanyuan.git
+ssh://git@ssh.github.com:443/zhangyuanyuan1205/zhangyuanyuan.git
 ```
 
+- 使用 GitHub 官方 443 端口 SSH 通道（等效于 `git@github.com:zhangyuanyuan1205/zhangyuanyuan.git`），因为当前环境可能屏蔽 22 端口
 - 远程名称使用 `github`（`origin` 已被 Gitee 仓库占用，不要覆盖 `origin`）
 - 仓库主页：`https://github.com/zhangyuanyuan1205/zhangyuanyuan`
 
@@ -60,7 +61,13 @@ git remote -v
 如果没有，则添加：
 
 ```bash
-git remote add github git@github.com:zhangyuanyuan1205/zhangyuanyuan.git
+git remote add github ssh://git@ssh.github.com:443/zhangyuanyuan1205/zhangyuanyuan.git
+```
+
+如果已存在但地址不是 443 端口通道，则更新：
+
+```bash
+git remote set-url github ssh://git@ssh.github.com:443/zhangyuanyuan1205/zhangyuanyuan.git
 ```
 
 ### 5. 推送到 GitHub
@@ -74,6 +81,15 @@ git push github master
 ```bash
 git push -u github master
 ```
+
+#### 推送失败排查
+
+- 报 `Connection refused`（22 端口被屏蔽）：确认远程地址使用的是 `ssh://git@ssh.github.com:443/...`
+- 报 `Host key verification failed`：先执行一次以下命令接受主机密钥（需能写 `~/.ssh/known_hosts`）：
+  ```bash
+  ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new -p 443 git@ssh.github.com
+  ```
+- 认证成功标志是输出 `Hi zhangyuanyuan1205!`
 
 ### 6. 确认结果
 
