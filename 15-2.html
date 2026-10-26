@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-26，功能名称：JavaScript程序结构演示（条件与循环） -->
+    <title>15-2 JavaScript程序结构 · 条件与循环</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .zyy_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .zyy_title {
+            color: #fff;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .zyy_intro {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .zyy_card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .zyy_card h2 {
+            color: #4a00e0;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .zyy_card .zyy_desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .zyy_code {
+            font-family: Consolas, Monaco, monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #c7254e;
+        }
+
+        .zyy_btn {
+            display: inline-block;
+            padding: 8px 22px;
+            margin: 4px 8px 4px 0;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .zyy_btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.45);
+        }
+
+        .zyy_input {
+            padding: 8px 12px;
+            border: 2px solid #d5d9f0;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 120px;
+            outline: none;
+        }
+
+        .zyy_input:focus {
+            border-color: #667eea;
+        }
+
+        .zyy_output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            min-height: 20px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .zyy_output p::before {
+            content: "> ";
+            color: #8be9a8;
+        }
+
+        .zyy_back {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .zyy_back:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy_container">
+        <h1 class="zyy_title">JavaScript 程序结构：条件与循环</h1>
+        <p class="zyy_intro">张圆圆 的 JavaScript 程序结构演示 —— 三大结构之条件分支与循环，点击按钮查看运行结果</p>
+
+        <!-- 条件结构：if...else -->
+        <div class="zyy_card">
+            <h2>1. if...else 条件语句</h2>
+            <p class="zyy_desc">输入一个分数，按 <span class="zyy_code">if...else if...else</span> 判断成绩等级（≥90 优秀，≥80 良好，≥60 及格，否则不及格）</p>
+            <input type="number" class="zyy_input" id="zyy_scoreInput" value="85">
+            <button class="zyy_btn" onclick="zyy_runIf()">判断等级</button>
+            <div class="zyy_output" id="zyy_ifOut"></div>
+        </div>
+
+        <!-- 条件结构：switch -->
+        <div class="zyy_card">
+            <h2>2. switch 条件语句</h2>
+            <p class="zyy_desc">用 <span class="zyy_code">switch...case</span> 把数字 1~7 转换为星期，<span class="zyy_code">default</span> 处理无效值</p>
+            <button class="zyy_btn" onclick="zyy_runSwitch()">运行 switch 演示</button>
+            <div class="zyy_output" id="zyy_switchOut"></div>
+        </div>
+
+        <!-- 循环结构：for -->
+        <div class="zyy_card">
+            <h2>3. for 循环</h2>
+            <p class="zyy_desc">用 <span class="zyy_code">for</span> 循环计算 1+2+…+100 的累加和，并输出前 5 次累加过程</p>
+            <button class="zyy_btn" onclick="zyy_runFor()">运行 for 演示</button>
+            <div class="zyy_output" id="zyy_forOut"></div>
+        </div>
+
+        <!-- 循环结构：while -->
+        <div class="zyy_card">
+            <h2>4. while 循环</h2>
+            <p class="zyy_desc">用 <span class="zyy_code">while</span> 循环计算 5 的阶乘（5! = 5×4×3×2×1）</p>
+            <button class="zyy_btn" onclick="zyy_runWhile()">运行 while 演示</button>
+            <div class="zyy_output" id="zyy_whileOut"></div>
+        </div>
+
+        <!-- 循环结构：do...while -->
+        <div class="zyy_card">
+            <h2>5. do...while 循环</h2>
+            <p class="zyy_desc"><span class="zyy_code">do...while</span> 先执行再判断，即使条件不成立也至少执行一次（这里条件初始就为假）</p>
+            <button class="zyy_btn" onclick="zyy_runDoWhile()">运行 do...while 演示</button>
+            <div class="zyy_output" id="zyy_doWhileOut"></div>
+        </div>
+
+        <!-- break 与 continue -->
+        <div class="zyy_card">
+            <h2>6. break 与 continue</h2>
+            <p class="zyy_desc">数7游戏：<span class="zyy_code">continue</span> 跳过 7 的倍数和末尾是 7 的数，<span class="zyy_code">break</span> 在超过 20 时结束循环</p>
+            <button class="zyy_btn" onclick="zyy_runBreakContinue()">运行 break/continue 演示</button>
+            <div class="zyy_output" id="zyy_bcOut"></div>
+        </div>
+
+        <a class="zyy_back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // 向指定输出区追加一行结果
+        function zyy_log(zyy_boxId, zyy_text) {
+            document.getElementById(zyy_boxId).innerHTML += "<p>" + zyy_text + "</p>";
+        }
+
+        // 清空输出区
+        function zyy_clear(zyy_boxId) {
+            document.getElementById(zyy_boxId).innerHTML = "";
+        }
+
+        // 1. if...else 条件语句：判断成绩等级
+        function zyy_runIf() {
+            var zyy_score = Number(document.getElementById("zyy_scoreInput").value);
+            zyy_clear("zyy_ifOut");
+            var zyy_grade;
+            if (zyy_score >= 90) {
+                zyy_grade = "优秀";
+            } else if (zyy_score >= 80) {
+                zyy_grade = "良好";
+            } else if (zyy_score >= 60) {
+                zyy_grade = "及格";
+            } else {
+                zyy_grade = "不及格";
+            }
+            zyy_log("zyy_ifOut", "分数 " + zyy_score + " 的等级是：" + zyy_grade);
+        }
+
+        // 2. switch 条件语句：数字转星期
+        function zyy_runSwitch() {
+            zyy_clear("zyy_switchOut");
+            var zyy_days = [1, 3, 6, 8];
+            for (var zyy_i = 0; zyy_i < zyy_days.length; zyy_i++) {
+                var zyy_day = zyy_days[zyy_i];
+                switch (zyy_day) {
+                    case 1:
+                        zyy_log("zyy_switchOut", "switch(" + zyy_day + ") → 星期一");
+                        break;
+                    case 3:
+                        zyy_log("zyy_switchOut", "switch(" + zyy_day + ") → 星期三");
+                        break;
+                    case 6:
+                        zyy_log("zyy_switchOut", "switch(" + zyy_day + ") → 星期六");
+                        break;
+                    default:
+                        zyy_log("zyy_switchOut", "switch(" + zyy_day + ") → 无效的星期数字");
+                }
+            }
+        }
+
+        // 3. for 循环：1~100 累加和
+        function zyy_runFor() {
+            zyy_clear("zyy_forOut");
+            var zyy_sum = 0;
+            for (var zyy_i = 1; zyy_i <= 100; zyy_i++) {
+                zyy_sum += zyy_i;
+                if (zyy_i <= 5) {
+                    zyy_log("zyy_forOut", "前 " + zyy_i + " 项累加和 = " + zyy_sum);
+                }
+            }
+            zyy_log("zyy_forOut", "1+2+…+100 = " + zyy_sum);
+        }
+
+        // 4. while 循环：5 的阶乘
+        function zyy_runWhile() {
+            zyy_clear("zyy_whileOut");
+            var zyy_n = 5;
+            var zyy_result = 1;
+            while (zyy_n >= 1) {
+                zyy_result *= zyy_n;
+                zyy_log("zyy_whileOut", "乘到 " + zyy_n + "，当前结果 = " + zyy_result);
+                zyy_n--;
+            }
+            zyy_log("zyy_whileOut", "5! = " + zyy_result);
+        }
+
+        // 5. do...while 循环：条件不成立也至少执行一次
+        function zyy_runDoWhile() {
+            zyy_clear("zyy_doWhileOut");
+            var zyy_count = 10;
+            do {
+                zyy_log("zyy_doWhileOut", "do...while 执行了一次，zyy_count = " + zyy_count + "（条件 zyy_count < 5 不成立也执行了）");
+                zyy_count++;
+            } while (zyy_count < 5);
+            zyy_log("zyy_doWhileOut", "循环结束，共执行 1 次");
+        }
+
+        // 6. break 与 continue：数7游戏
+        function zyy_runBreakContinue() {
+            zyy_clear("zyy_bcOut");
+            var zyy_skipped = [];
+            var zyy_kept = [];
+            for (var zyy_i = 1; zyy_i <= 30; zyy_i++) {
+                if (zyy_i > 20) {
+                    zyy_log("zyy_bcOut", "zyy_i = " + zyy_i + " 超过 20，break 跳出循环");
+                    break; // 超过 20 结束循环
+                }
+                if (zyy_i % 7 === 0 || zyy_i % 10 === 7) {
+                    zyy_skipped.push(zyy_i);
+                    continue; // 跳过数7规则命中的数字
+                }
+                zyy_kept.push(zyy_i);
+            }
+            zyy_log("zyy_bcOut", "数出来的数：" + zyy_kept.join("、"));
+            zyy_log("zyy_bcOut", "continue 跳过的数：" + zyy_skipped.join("、"));
+        }
+
+        // 页面加载后自动运行全部演示
+        zyy_runIf();
+        zyy_runSwitch();
+        zyy_runFor();
+        zyy_runWhile();
+        zyy_runDoWhile();
+        zyy_runBreakContinue();
+    </script>
+</body>
+</html>
