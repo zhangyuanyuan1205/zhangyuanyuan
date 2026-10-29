@@ -1,0 +1,149 @@
+{
+    "zyy_title": "水果工坊",
+    "zyy_subtitle": "JavaScript 数组方法 · 传送带上的视觉实验",
+    "zyy_fruits": [
+        { "emoji": "🍎", "name": "苹果", "size": 8 },
+        { "emoji": "🍌", "name": "香蕉", "size": 7 },
+        { "emoji": "🍊", "name": "橘子", "size": 6 },
+        { "emoji": "🍇", "name": "葡萄", "size": 5 },
+        { "emoji": "🍉", "name": "西瓜", "size": 9 },
+        { "emoji": "🍓", "name": "草莓", "size": 3 }
+    ],
+    "zyy_methods": [
+        {
+            "name": "push",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.push(\"🍓\")",
+            "visual": "add",
+            "metaphor": "传送带末端伸出机械手，把一颗新水果稳稳放上去",
+            "note": "push 在数组末尾追加元素，返回添加后的新长度。",
+            "returns": "新数组长度"
+        },
+        {
+            "name": "pop",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.pop()",
+            "visual": "removeEnd",
+            "metaphor": "传送带末端把最后一颗水果抓走带走",
+            "note": "pop 删除并返回数组最后一个元素，数组长度减 1。",
+            "returns": "被删除的元素"
+        },
+        {
+            "name": "unshift",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.unshift(\"🥝\")",
+            "visual": "addStart",
+            "metaphor": "传送带起点插入新水果，原有水果集体向后挪一格",
+            "note": "unshift 在数组开头插入元素，后面的元素整体后移。",
+            "returns": "新数组长度"
+        },
+        {
+            "name": "shift",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.shift()",
+            "visual": "removeStart",
+            "metaphor": "传送带起点抓走第一颗水果，其余水果向前补位",
+            "note": "shift 删除并返回数组第一个元素，后面的元素整体前移。",
+            "returns": "被删除的元素"
+        },
+        {
+            "name": "splice",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.splice(2, 1, \"🥭\")",
+            "visual": "replace",
+            "metaphor": "传送带中段动手术：挖掉一颗，换上一颗新的",
+            "note": "splice 最强大：第 1 个参数是起始索引，第 2 个是删除个数，后面全是插入的新元素。",
+            "returns": "被删除元素组成的数组"
+        },
+        {
+            "name": "sort",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.sort()",
+            "visual": "reorder",
+            "metaphor": "整条传送带重新排队，按名字的拼音顺序站好",
+            "note": "sort 默认按字符串 Unicode 码位排序（中文按拼音），也可以传比较函数自定义规则。",
+            "returns": "排序后的数组本身"
+        },
+        {
+            "name": "reverse",
+            "group": "① 增删改 · 会修改原数组",
+            "code": "zyy_fruits.reverse()",
+            "visual": "reverse",
+            "metaphor": "传送带掉头，水果顺序完全颠倒",
+            "note": "reverse 把数组元素顺序完全颠倒，原地修改。",
+            "returns": "反转后的数组本身"
+        },
+        {
+            "name": "slice",
+            "group": "② 查询与转换 · 不修改原数组",
+            "code": "zyy_fruits.slice(1, 4)",
+            "visual": "cut",
+            "metaphor": "用剪刀从传送带上剪下一段，传送带本身完好无损",
+            "note": "slice 截取索引 [start, end) 的元素，含头不含尾，返回新数组。",
+            "returns": "截取出来的新数组"
+        },
+        {
+            "name": "concat",
+            "group": "② 查询与转换 · 不修改原数组",
+            "code": "zyy_fruits.concat([\"🍑\", \"🍒\"])",
+            "visual": "merge",
+            "metaphor": "第二条传送带靠过来对接，水果首尾相连排成一条长龙",
+            "note": "concat 把数组合并成一个新数组，原数组完全不受影响。",
+            "returns": "合并后的新数组"
+        },
+        {
+            "name": "join",
+            "group": "② 查询与转换 · 不修改原数组",
+            "code": "zyy_fruits.join(\" - \")",
+            "visual": "stringify",
+            "metaphor": "传送带末端套上一个袋子，把所有水果串成一长串文字",
+            "note": "join 用指定分隔符把数组元素拼接成一个字符串。",
+            "returns": "拼接好的字符串"
+        },
+        {
+            "name": "indexOf",
+            "group": "② 查询与转换 · 不修改原数组",
+            "code": "zyy_fruits.indexOf(\"🍇\")",
+            "visual": "scan",
+            "metaphor": "放大镜沿着传送带一格格扫过去，停在目标水果上",
+            "note": "indexOf 返回元素首次出现的索引，找不到返回 -1。",
+            "returns": "索引值，找不到为 -1"
+        },
+        {
+            "name": "includes",
+            "group": "② 查询与转换 · 不修改原数组",
+            "code": "zyy_fruits.includes(\"🍉\")",
+            "visual": "scan",
+            "metaphor": "探照灯扫过整条传送带，命中目标时水果发亮",
+            "note": "includes 判断数组是否包含某个元素，返回 true 或 false。",
+            "returns": "true 或 false"
+        },
+        {
+            "name": "map",
+            "group": "③ 迭代三剑客 · 不修改原数组",
+            "code": "zyy_fruits.map(function (f, i) {\n    return f.name + \"·\" + f.size + \"号\";\n})",
+            "visual": "stamp",
+            "metaphor": "传送带上方落下印章，每颗水果都被盖上一个新标签",
+            "note": "map 对每个元素执行同样的加工，返回一个长度相同的新数组。",
+            "returns": "长度相同的新数组"
+        },
+        {
+            "name": "filter",
+            "group": "③ 迭代三剑客 · 不修改原数组",
+            "code": "zyy_fruits.filter(function (f) {\n    return f.size <= 5;\n})",
+            "visual": "sieve",
+            "metaphor": "传送带中间架起筛网，太大的水果被挡在上面，小的漏下去",
+            "note": "filter 只保留让条件返回 true 的元素，像漏勺一样筛出新数组。",
+            "returns": "筛选出的新数组"
+        },
+        {
+            "name": "reduce",
+            "group": "③ 迭代三剑客 · 不修改原数组",
+            "code": "zyy_fruits.reduce(function (sum, f) {\n    return sum + f.size;\n}, 0)",
+            "visual": "juice",
+            "metaphor": "水果逐颗落进榨汁机，最后压出一杯汇总后的果汁",
+            "note": "reduce 从左到右累计处理，把整个数组归约成一个值。",
+            "returns": "累计计算出的结果"
+        }
+    ]
+}

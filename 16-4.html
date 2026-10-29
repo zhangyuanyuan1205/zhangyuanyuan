@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-29，功能名称：股票榜单标签页切换（沪涨/沪跌/深涨/深跌） -->
+    <title>16-4 股票榜单 · 标签页切换</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #eef0f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .zyy_title {
+            font-size: 26px;
+            color: #2d2a45;
+            margin-bottom: 6px;
+        }
+
+        .zyy_sub {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* 榜单卡片 */
+        .zyy_board {
+            width: 100%;
+            max-width: 460px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* 标签栏 */
+        .zyy_tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .zyy_tab {
+            flex: 1;
+            padding: 11px 0;
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            background: #fff;
+            border: none;
+            border-left: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .zyy_tab:first-child {
+            border-left: none;
+        }
+
+        .zyy_tab:hover {
+            color: #e0342c;
+        }
+
+        .zyy_tab.zyy_active {
+            background: #fdecec;
+            color: #e0342c;
+            font-weight: bold;
+        }
+
+        /* 榜单表格 */
+        .zyy_list {
+            padding: 4px 0;
+        }
+
+        .zyy_row {
+            display: flex;
+            align-items: center;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f2f2f2;
+            font-size: 14px;
+        }
+
+        .zyy_row:last-child {
+            border-bottom: none;
+        }
+
+        .zyy_row:hover {
+            background: #fafafa;
+        }
+
+        .zyy_rank {
+            width: 28px;
+            color: #b0b0b0;
+        }
+
+        .zyy_name {
+            flex: 1;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .zyy_price {
+            width: 76px;
+            text-align: right;
+            margin-right: 18px;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        .zyy_change {
+            width: 72px;
+            text-align: right;
+            margin-right: 18px;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        .zyy_percent {
+            width: 78px;
+            text-align: right;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        /* 涨红跌绿 */
+        .zyy_up {
+            color: #e0342c;
+        }
+
+        .zyy_down {
+            color: #0f9d58;
+        }
+
+        .zyy_back {
+            margin-top: 26px;
+            padding: 8px 22px;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 20px;
+            color: #666;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .zyy_back:hover {
+            color: #e0342c;
+            border-color: #e0342c;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="zyy_title">股票涨跌榜单</h1>
+    <p class="zyy_sub">点击标签切换沪深两市涨跌排行（数据为教学演示）</p>
+
+    <div class="zyy_board">
+        <div class="zyy_tabs" id="zyy_tabs"></div>
+        <div class="zyy_list" id="zyy_list"></div>
+    </div>
+
+    <a class="zyy_back" href="index.html">← 返回首页</a>
+
+    <script>
+        // 榜单数据：沪涨、深涨来自截图，沪跌、深跌为补充演示数据
+        var zyy_data = {
+            zyy_shUp: [
+                { zyy_name: "断研能", zyy_price: "8.88", zyy_change: "+3.35", zyy_percent: "60.58%" },
+                { zyy_name: "天津松江", zyy_price: "8.16", zyy_change: "+0.65", zyy_percent: "8.66%" },
+                { zyy_name: "金瑞科技", zyy_price: "8.79", zyy_change: "+0.42", zyy_percent: "5.02%" },
+                { zyy_name: "宏发股份", zyy_price: "17.22", zyy_change: "+0.82", zyy_percent: "5.00%" },
+                { zyy_name: "杭齿前进", zyy_price: "7.23", zyy_change: "+0.34", zyy_percent: "4.93%" }
+            ],
+            zyy_shDown: [
+                { zyy_name: "华远地产", zyy_price: "3.12", zyy_change: "-0.35", zyy_percent: "-10.08%" },
+                { zyy_name: "上海建科", zyy_price: "12.45", zyy_change: "-1.36", zyy_percent: "-9.85%" },
+                { zyy_name: "浦东金桥", zyy_price: "14.02", zyy_change: "-1.52", zyy_percent: "-9.78%" },
+                { zyy_name: "光明地产", zyy_price: "5.36", zyy_change: "-0.55", zyy_percent: "-9.30%" },
+                { zyy_name: "陆家嘴", zyy_price: "25.18", zyy_change: "-2.21", zyy_percent: "-8.07%" }
+            ],
+            zyy_szUp: [
+                { zyy_name: "天顺风能", zyy_price: "10.52", zyy_change: "+0.96", zyy_percent: "10.04%" },
+                { zyy_name: "兴源过滤", zyy_price: "16.02", zyy_change: "+1.46", zyy_percent: "10.03%" },
+                { zyy_name: "北京君正", zyy_price: "36.92", zyy_change: "+3.36", zyy_percent: "10.01%" },
+                { zyy_name: "美盛文化", zyy_price: "32.87", zyy_change: "+2.99", zyy_percent: "10.01%" },
+                { zyy_name: "骅威股份", zyy_price: "15.16", zyy_change: "+1.38", zyy_percent: "10.01%" }
+            ],
+            zyy_szDown: [
+                { zyy_name: "深圳新星", zyy_price: "18.66", zyy_change: "-2.07", zyy_percent: "-9.99%" },
+                { zyy_name: "捷荣技术", zyy_price: "22.31", zyy_change: "-2.42", zyy_percent: "-9.79%" },
+                { zyy_name: "惠伦晶体", zyy_price: "15.88", zyy_change: "-1.71", zyy_percent: "-9.72%" },
+                { zyy_name: "同兴达", zyy_price: "11.24", zyy_change: "-1.13", zyy_percent: "-9.13%" },
+                { zyy_name: "英飞拓", zyy_price: "6.58", zyy_change: "-0.62", zyy_percent: "-8.61%" }
+            ]
+        };
+
+        // 标签定义：名称对应数据键
+        var zyy_tabs = [
+            { zyy_label: "沪涨", zyy_key: "zyy_shUp" },
+            { zyy_label: "沪跌", zyy_key: "zyy_shDown" },
+            { zyy_label: "深涨", zyy_key: "zyy_szUp" },
+            { zyy_label: "深跌", zyy_key: "zyy_szDown" }
+        ];
+
+        var zyy_current = "zyy_shUp"; // 默认显示沪涨
+
+        // 渲染标签栏
+        function zyy_renderTabs() {
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_tabs.length; zyy_i++) {
+                var zyy_t = zyy_tabs[zyy_i];
+                var zyy_cls = zyy_t.zyy_key === zyy_current ? "zyy_tab zyy_active" : "zyy_tab";
+                zyy_html += '<button class="' + zyy_cls + '" onclick="zyy_switch(\'' + zyy_t.zyy_key + '\')">' + zyy_t.zyy_label + '</button>';
+            }
+            document.getElementById("zyy_tabs").innerHTML = zyy_html;
+        }
+
+        // 渲染榜单
+        function zyy_renderList() {
+            var zyy_rows = zyy_data[zyy_current];
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_rows.length; zyy_i++) {
+                var zyy_r = zyy_rows[zyy_i];
+                var zyy_colorCls = zyy_r.zyy_change.charAt(0) === "-" ? "zyy_down" : "zyy_up";
+                zyy_html += '<div class="zyy_row">'
+                    + '<span class="zyy_rank">' + (zyy_i + 1) + '.</span>'
+                    + '<span class="zyy_name">' + zyy_r.zyy_name + '</span>'
+                    + '<span class="zyy_price">' + zyy_r.zyy_price + '</span>'
+                    + '<span class="zyy_change ' + zyy_colorCls + '">' + zyy_r.zyy_change + '</span>'
+                    + '<span class="zyy_percent ' + zyy_colorCls + '">' + zyy_r.zyy_percent + '</span>'
+                    + '</div>';
+            }
+            document.getElementById("zyy_list").innerHTML = zyy_html;
+        }
+
+        // 切换标签
+        function zyy_switch(zyy_key) {
+            zyy_current = zyy_key;
+            zyy_renderTabs();
+            zyy_renderList();
+        }
+
+        // 初始化
+        zyy_renderTabs();
+        zyy_renderList();
+    </script>
+</body>
+</html>

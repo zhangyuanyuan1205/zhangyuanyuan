@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-29，功能名称：四级项目·在线色彩无障碍模拟工具（色盲模拟预览）网页元素设计 -->
+    <title>色彩视界 ColorView · 在线色彩无障碍模拟工具</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            color: #2d2a45;
+            background: #f7f8fc;
+            line-height: 1.7;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .zyy-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .zyy-section-title {
+            font-size: 28px;
+            text-align: center;
+            color: #2d2a45;
+            margin-bottom: 8px;
+        }
+
+        .zyy-section-sub {
+            text-align: center;
+            color: #7a7699;
+            font-size: 15px;
+            margin-bottom: 36px;
+        }
+
+        /* ===== 顶部导航（典型部分一：导航） ===== */
+        .zyy-header {
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(45, 42, 69, 0.08);
+            position: sticky;
+            top: 0;
+        }
+
+        .zyy-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .zyy-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .zyy-logo-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: conic-gradient(#e74c3c, #f39c12, #f1c40f, #2ecc71, #3498db, #9b59b6, #e74c3c);
+        }
+
+        .zyy-nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        .zyy-nav a {
+            font-size: 15px;
+            color: #55516e;
+            padding: 6px 2px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .zyy-nav a:hover {
+            color: #5b4ee0;
+            border-bottom-color: #5b4ee0;
+        }
+
+        /* ===== 首屏（典型部分二：一左一右） ===== */
+        .zyy-hero {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            padding: 72px 0;
+        }
+
+        .zyy-hero-text {
+            flex: 1 1 52%;
+        }
+
+        .zyy-hero-text h1 {
+            font-size: 38px;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .zyy-hero-text h1 span {
+            color: #5b4ee0;
+        }
+
+        .zyy-hero-text > p {
+            color: #7a7699;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .zyy-feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .zyy-feature-icon {
+            flex: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e9f7ef;
+            color: #27a05f;
+            font-size: 13px;
+            text-align: center;
+            line-height: 22px;
+        }
+
+        .zyy-btn-group {
+            margin-top: 28px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .zyy-btn {
+            display: inline-block;
+            padding: 12px 34px;
+            border-radius: 999px;
+            background: #5b4ee0;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .zyy-btn-ghost {
+            background: #fff;
+            color: #5b4ee0;
+            border: 2px solid #5b4ee0;
+            padding: 10px 32px;
+        }
+
+        .zyy-hero-img {
+            flex: 1 1 48%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(91, 78, 224, 0.22);
+        }
+
+        /* ===== 色觉类型（典型部分三：上图下文卡片） ===== */
+        .zyy-types {
+            padding: 64px 0;
+        }
+
+        .zyy-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .zyy-card {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(45, 42, 69, 0.1);
+            transition: box-shadow 0.25s;
+        }
+
+        .zyy-card:hover {
+            box-shadow: 0 12px 32px rgba(91, 78, 224, 0.22);
+        }
+
+        .zyy-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .zyy-card-body {
+            padding: 20px 22px 24px;
+        }
+
+        .zyy-card-body h3 {
+            font-size: 19px;
+            margin-bottom: 6px;
+        }
+
+        .zyy-card-body h3 small {
+            font-size: 13px;
+            color: #9a96b8;
+            font-weight: normal;
+        }
+
+        .zyy-card-body p {
+            font-size: 14px;
+            color: #7a7699;
+            margin-bottom: 14px;
+        }
+
+        .zyy-tag {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 999px;
+            background: #efedff;
+            color: #5b4ee0;
+            font-size: 12px;
+        }
+
+        /* ===== 人群分布图表（附加：CSS柱状图） ===== */
+        .zyy-chart {
+            background: #fff;
+            border-radius: 14px;
+            padding: 40px 32px 32px;
+            box-shadow: 0 6px 20px rgba(45, 42, 69, 0.08);
+            margin-bottom: 64px;
+        }
+
+        .zyy-chart h2 {
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .zyy-chart > p {
+            text-align: center;
+            color: #9a96b8;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .zyy-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 20px;
+            height: 220px;
+            border-bottom: 2px solid #e7e6f2;
+        }
+
+        .zyy-bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
+            height: 100%;
+        }
+
+        .zyy-bar-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d2a45;
+            margin-bottom: 6px;
+        }
+
+        .zyy-bar {
+            width: 46px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .zyy-bar-red    { height: 80%;  background: #e74c3c; }
+        .zyy-bar-green  { height: 55%;  background: #2ecc71; }
+        .zyy-bar-blue   { height: 22%;  background: #3498db; }
+        .zyy-bar-full   { height: 12%;  background: #9b59b6; }
+
+        .zyy-bar-label {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #7a7699;
+            text-align: center;
+        }
+
+        /* ===== 页脚 ===== */
+        .zyy-footer {
+            background: #2d2a45;
+            color: #b7b4d0;
+            text-align: center;
+            padding: 28px 0;
+            font-size: 14px;
+        }
+
+        .zyy-footer b {
+            color: #fff;
+        }
+
+        /* ===== 响应式：多视口适配 ===== */
+        @media (max-width: 860px) {
+            .zyy-hero {
+                flex-direction: column;
+                padding: 48px 0;
+            }
+
+            .zyy-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .zyy-nav {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 典型部分一：顶部导航 -->
+    <header class="zyy-header">
+        <div class="zyy-container zyy-nav-inner">
+            <a class="zyy-logo" href="#">
+                <span class="zyy-logo-dot"></span>
+                色彩视界 ColorView
+            </a>
+            <nav class="zyy-nav">
+                <a href="#zyy-hero">工具介绍</a>
+                <a href="#zyy-types">模拟类型</a>
+                <a href="#zyy-chart">人群分布</a>
+                <a href="#zyy-footer">关于工具</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 典型部分二：一左一右（左文右图） -->
+    <main class="zyy-container">
+        <section class="zyy-hero" id="zyy-hero">
+            <div class="zyy-hero-text">
+                <h1>让每一位用户<br>都<span>看得见</span>色彩</h1>
+                <p>色彩视界 ColorView 是一款在线色彩无障碍模拟工具，可以模拟红绿色盲、蓝黄色盲、全色盲等色觉障碍用户眼中的网页效果，帮助设计师与开发者提前发现配色问题。</p>
+                <ul class="zyy-feature-list">
+                    <li><span class="zyy-feature-icon">✓</span>支持红色盲、绿色盲、蓝黄色盲、全色盲共 5 种模拟类型</li>
+                    <li><span class="zyy-feature-icon">✓</span>上传设计图或输入色值，一键生成色盲视角预览</li>
+                    <li><span class="zyy-feature-icon">✓</span>对比度检测建议，让配色同时满足美观与无障碍</li>
+                </ul>
+                <div class="zyy-btn-group">
+                    <a class="zyy-btn" href="#zyy-types">开始模拟</a>
+                    <a class="zyy-btn-ghost zyy-btn" href="#zyy-chart">了解色觉障碍</a>
+                </div>
+            </div>
+            <div class="zyy-hero-img">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=flat%20vector%20illustration%20of%20color%20accessibility%2C%20human%20eye%20with%20rainbow%20spectrum%2C%20ishihara%20color%20test%20plate%20made%20of%20colorful%20dots%2C%20indigo%20and%20orange%20palette%2C%20modern%20web%20hero%20illustration&image_size=landscape_16_9" alt="色彩无障碍模拟工具主视觉插图">
+            </div>
+        </section>
+
+        <!-- 典型部分三：上图下文卡片 -->
+        <section class="zyy-types" id="zyy-types">
+            <h2 class="zyy-section-title">常见色觉障碍类型</h2>
+            <p class="zyy-section-sub">三种最常见的先天性色觉障碍，点击类型即可在工具中查看模拟效果</p>
+            <div class="zyy-cards">
+                <article class="zyy-card">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20red%20and%20orange%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="红色盲石原色觉检测图示意">
+                    <div class="zyy-card-body">
+                        <h3>红色盲 <small>Protanopia</small></h3>
+                        <p>缺少红色感光细胞，红色变暗，红绿难以区分，常把红色看成深灰或褐色。</p>
+                        <span class="zyy-tag">男性占比约 1%</span>
+                    </div>
+                </article>
+                <article class="zyy-card">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20green%20and%20brown%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="绿色盲石原色觉检测图示意">
+                    <div class="zyy-card-body">
+                        <h3>绿色盲 <small>Deuteranopia</small></h3>
+                        <p>缺少绿色感光细胞，是最常见的色觉障碍，红绿灯与红绿图表在他们眼中几乎一样。</p>
+                        <span class="zyy-tag">男性占比约 6%</span>
+                    </div>
+                </article>
+                <article class="zyy-card">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20blue%20and%20yellow%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="蓝黄色盲石原色觉检测图示意">
+                    <div class="zyy-card-body">
+                        <h3>蓝黄色盲 <small>Tritanopia</small></h3>
+                        <p>缺少蓝色感光细胞，蓝黄难以区分，蓝色偏绿、黄色偏粉紫，较为罕见。</p>
+                        <span class="zyy-tag">占比约 0.01%</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 附加典型部分：CSS 柱状图表 -->
+        <section class="zyy-chart" id="zyy-chart">
+            <h2>色觉障碍人群分布</h2>
+            <p>先天性色觉障碍人群大致占比（数据为示意，主要来源于流行病学统计）</p>
+            <div class="zyy-bars">
+                <div class="zyy-bar-item">
+                    <span class="zyy-bar-value">8%</span>
+                    <div class="zyy-bar zyy-bar-red"></div>
+                    <span class="zyy-bar-label">红绿色盲<br>（男性）</span>
+                </div>
+                <div class="zyy-bar-item">
+                    <span class="zyy-bar-value">0.5%</span>
+                    <div class="zyy-bar zyy-bar-green"></div>
+                    <span class="zyy-bar-label">红绿色盲<br>（女性）</span>
+                </div>
+                <div class="zyy-bar-item">
+                    <span class="zyy-bar-value">0.01%</span>
+                    <div class="zyy-bar zyy-bar-blue"></div>
+                    <span class="zyy-bar-label">蓝黄色盲</span>
+                </div>
+                <div class="zyy-bar-item">
+                    <span class="zyy-bar-value">0.003%</span>
+                    <div class="zyy-bar zyy-bar-full"></div>
+                    <span class="zyy-bar-label">全色盲</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="zyy-footer" id="zyy-footer">
+        <p><b>色彩视界 ColorView</b> · 在线色彩无障碍模拟工具（色盲模拟预览）</p>
+        <p>张圆圆 · 高级网页设计I 四级项目 · 网页元素设计 · 2026</p>
+    </footer>
+</body>
+</html>

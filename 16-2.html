@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-10-29，功能名称：JavaScript对象与字符串形象演示 -->
+    <title>16-2 JavaScript对象与字符串</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .zyy_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .zyy_title {
+            color: #fff;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .zyy_intro {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .zyy_card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .zyy_card h2 {
+            color: #4a00e0;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .zyy_desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .zyy_code {
+            font-family: Consolas, Monaco, monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #c7254e;
+        }
+
+        .zyy_btn {
+            display: inline-block;
+            padding: 8px 20px;
+            margin: 4px 8px 4px 0;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .zyy_btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.45);
+        }
+
+        /* ===== 对象：收纳盒抽屉样式 ===== */
+        .zyy_objbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 18px;
+            background: #f5f7ff;
+            border: 2px solid #d5d9f0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .zyy_drawer {
+            width: 120px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            animation: zyy_pop 0.3s;
+        }
+
+        .zyy_drawer-label {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            text-align: center;
+            font-size: 13px;
+            padding: 4px 0;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        .zyy_drawer-value {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4a00e0;
+            padding: 10px 6px;
+            word-break: break-all;
+        }
+
+        @keyframes zyy_pop {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ===== 字符串：字符格子样式 ===== */
+        .zyy_strrow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 18px;
+            background: #fffdf5;
+            border: 2px solid #f0e6c8;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .zyy_cell {
+            width: 42px;
+            border: 2px solid #ffb300;
+            border-radius: 8px;
+            background: #fff;
+            text-align: center;
+            padding: 6px 0 4px;
+            transition: all 0.25s;
+        }
+
+        .zyy_cell-char {
+            font-size: 18px;
+            font-weight: bold;
+            color: #7a5c00;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        .zyy_cell-index {
+            font-size: 11px;
+            color: #b28900;
+            border-top: 1px dashed #ffd700;
+            margin-top: 4px;
+            padding-top: 2px;
+        }
+
+        .zyy_cell.zyy_hl {
+            background: #ffb300;
+            transform: translateY(-6px);
+            box-shadow: 0 6px 12px rgba(255, 179, 0, 0.45);
+        }
+
+        .zyy_cell.zyy_hl .zyy_cell-char,
+        .zyy_cell.zyy_hl .zyy_cell-index {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 输出区 */
+        .zyy_output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            min-height: 20px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .zyy_output p::before {
+            content: "> ";
+            color: #8be9a8;
+        }
+
+        .zyy_back {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .zyy_back:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy_container">
+        <h1 class="zyy_title">JavaScript 对象与字符串</h1>
+        <p class="zyy_intro">张圆圆 的形象演示 —— 对象像一个收纳盒，字符串像一排带编号的小格子</p>
+
+        <!-- 对象演示 -->
+        <div class="zyy_card">
+            <h2>1. 对象（Object）：一个收纳盒</h2>
+            <p class="zyy_desc">对象 <span class="zyy_code">zyy_student</span> 就是一个收纳盒，每个抽屉贴着标签（属性名），里面放着东西（属性值）。点按钮操作，抽屉会实时变化。</p>
+            <div class="zyy_objbox" id="zyy_objDrawers"></div>
+            <button class="zyy_btn" onclick="zyy_objAccess()">访问属性</button>
+            <button class="zyy_btn" onclick="zyy_objAdd()">新增属性 grade</button>
+            <button class="zyy_btn" onclick="zyy_objDelete()">删除属性 hobby</button>
+            <button class="zyy_btn" onclick="zyy_objLoop()">for...in 遍历</button>
+            <div class="zyy_output" id="zyy_objOut"></div>
+        </div>
+
+        <!-- 字符串演示 -->
+        <div class="zyy_card">
+            <h2>2. 字符串（String）：一排小格子</h2>
+            <p class="zyy_desc">字符串 <span class="zyy_code">zyy_str = "Hello张圆圆"</span> 的每个字符都住在带编号（索引，从 0 开始）的小格子里。点按钮看方法如何选中格子。</p>
+            <div class="zyy_strrow" id="zyy_strCells"></div>
+            <button class="zyy_btn" onclick="zyy_strLength()">length 长度</button>
+            <button class="zyy_btn" onclick="zyy_strCharAt()">charAt(2)</button>
+            <button class="zyy_btn" onclick="zyy_strIndexOf()">indexOf("圆")</button>
+            <button class="zyy_btn" onclick="zyy_strSlice()">slice(5, 8)</button>
+            <button class="zyy_btn" onclick="zyy_strUpper()">toUpperCase()</button>
+            <button class="zyy_btn" onclick="zyy_strReplace()">replace()</button>
+            <button class="zyy_btn" onclick="zyy_strSplit()">split("")</button>
+            <div class="zyy_output" id="zyy_strOut"></div>
+        </div>
+
+        <a class="zyy_back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // 向输出区追加一行
+        function zyy_log(zyy_boxId, zyy_text) {
+            document.getElementById(zyy_boxId).innerHTML += "<p>" + zyy_text + "</p>";
+        }
+
+        // 清空输出区
+        function zyy_clear(zyy_boxId) {
+            document.getElementById(zyy_boxId).innerHTML = "";
+        }
+
+        /* ================= 对象演示 ================= */
+        var zyy_student = { name: "张圆圆", age: 20, major: "网页设计", hobby: "画画" };
+
+        // 把对象渲染成一组抽屉
+        function zyy_renderObject() {
+            var zyy_html = "";
+            for (var zyy_key in zyy_student) {
+                zyy_html += '<div class="zyy_drawer">'
+                    + '<div class="zyy_drawer-label">' + zyy_key + '</div>'
+                    + '<div class="zyy_drawer-value">' + zyy_student[zyy_key] + '</div>'
+                    + '</div>';
+            }
+            document.getElementById("zyy_objDrawers").innerHTML = zyy_html;
+        }
+
+        // 点语法 与 中括号语法 访问属性
+        function zyy_objAccess() {
+            zyy_clear("zyy_objOut");
+            zyy_log("zyy_objOut", "点语法  zyy_student.name = \"" + zyy_student.name + "\"");
+            zyy_log("zyy_objOut", "中括号  zyy_student[\"age\"] = " + zyy_student["age"]);
+        }
+
+        // 新增属性：给收纳盒加一个新抽屉
+        function zyy_objAdd() {
+            zyy_student.grade = "大三";
+            zyy_renderObject();
+            zyy_clear("zyy_objOut");
+            zyy_log("zyy_objOut", "执行 zyy_student.grade = \"大三\"，收纳盒多了一个抽屉");
+        }
+
+        // 删除属性：抽屉被拿走
+        function zyy_objDelete() {
+            delete zyy_student.hobby;
+            zyy_renderObject();
+            zyy_clear("zyy_objOut");
+            zyy_log("zyy_objOut", "执行 delete zyy_student.hobby，hobby 抽屉消失了");
+        }
+
+        // for...in 遍历对象
+        function zyy_objLoop() {
+            zyy_clear("zyy_objOut");
+            for (var zyy_key in zyy_student) {
+                zyy_log("zyy_objOut", "属性 zyy_key = " + zyy_key + "，值 = " + zyy_student[zyy_key]);
+            }
+        }
+
+        /* ================= 字符串演示 ================= */
+        var zyy_str = "Hello张圆圆";
+
+        // 把字符串渲染成一排带索引的格子
+        function zyy_renderString() {
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_str.length; zyy_i++) {
+                zyy_html += '<div class="zyy_cell" id="zyy_cell' + zyy_i + '">'
+                    + '<div class="zyy_cell-char">' + zyy_str.charAt(zyy_i) + '</div>'
+                    + '<div class="zyy_cell-index">' + zyy_i + '</div>'
+                    + '</div>';
+            }
+            document.getElementById("zyy_strCells").innerHTML = zyy_html;
+        }
+
+        // 清除所有格子高亮
+        function zyy_unHl() {
+            zyy_renderString();
+        }
+
+        // 高亮 [zyy_start, zyy_end) 范围的格子
+        function zyy_hl(zyy_start, zyy_end) {
+            for (var zyy_i = zyy_start; zyy_i < zyy_end; zyy_i++) {
+                document.getElementById("zyy_cell" + zyy_i).classList.add("zyy_hl");
+            }
+        }
+
+        function zyy_strLength() {
+            zyy_unHl();
+            zyy_hl(0, zyy_str.length);
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.length = " + zyy_str.length + "（所有格子都被点亮）");
+        }
+
+        function zyy_strCharAt() {
+            zyy_unHl();
+            zyy_hl(2, 3);
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.charAt(2) = \"" + zyy_str.charAt(2) + "\"（索引 2 的格子被点亮）");
+        }
+
+        function zyy_strIndexOf() {
+            zyy_unHl();
+            var zyy_pos = zyy_str.indexOf("圆");
+            zyy_hl(zyy_pos, zyy_pos + 1);
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.indexOf(\"圆\") = " + zyy_pos + "（第一次出现的位置）");
+        }
+
+        function zyy_strSlice() {
+            zyy_unHl();
+            zyy_hl(5, 8);
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.slice(5, 8) = \"" + zyy_str.slice(5, 8) + "\"（截取索引 5 到 7 的格子）");
+        }
+
+        function zyy_strUpper() {
+            zyy_unHl();
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.toUpperCase() = \"" + zyy_str.toUpperCase() + "\"（字母变大写，汉字不变）");
+        }
+
+        function zyy_strReplace() {
+            zyy_unHl();
+            zyy_hl(0, 5);
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.replace(\"Hello\", \"你好\") = \"" + zyy_str.replace("Hello", "你好") + "\"");
+        }
+
+        function zyy_strSplit() {
+            zyy_unHl();
+            zyy_clear("zyy_strOut");
+            zyy_log("zyy_strOut", "zyy_str.split(\"\") = [" + zyy_str.split("").join(", ") + "]（拆成字符数组）");
+        }
+
+        // 页面加载后渲染并演示
+        zyy_renderObject();
+        zyy_renderString();
+        zyy_objAccess();
+        zyy_strLength();
+    </script>
+</body>
+</html>
