@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-02，功能名称：JavaScript两种定时器演示（setTimeout与setInterval） -->
+    <title>17-5 JavaScript 定时器演示</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #faf6ef;
+            color: #3a332a;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #d97706;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .zyy-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            color: #d97706;
+        }
+
+        .zyy-header p {
+            color: #a0927c;
+            font-size: 14px;
+        }
+
+        /* ===== 对比卡片 ===== */
+        .zyy-intro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .zyy-intro-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px 26px;
+            box-shadow: 0 6px 18px rgba(58, 51, 42, 0.08);
+            border-top: 4px solid #d97706;
+        }
+
+        .zyy-intro-card h2 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-intro-card h2 code {
+            background: #f6ecdb;
+            color: #b45309;
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-size: 16px;
+            font-family: Consolas, monospace;
+        }
+
+        .zyy-intro-card p {
+            font-size: 14px;
+            color: #6f6353;
+            margin-bottom: 10px;
+        }
+
+        .zyy-intro-card ul {
+            font-size: 13px;
+            color: #6f6353;
+        }
+
+        .zyy-intro-card li {
+            padding: 2px 0;
+        }
+
+        .zyy-intro-card li::before {
+            content: "◆ ";
+            color: #d97706;
+            font-size: 11px;
+        }
+
+        /* ===== 演示面板 ===== */
+        .zyy-panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px 28px;
+            box-shadow: 0 6px 18px rgba(58, 51, 42, 0.08);
+            margin-bottom: 26px;
+        }
+
+        .zyy-panel > h2 {
+            font-size: 19px;
+            margin-bottom: 6px;
+            border-left: 4px solid #d97706;
+            padding-left: 12px;
+        }
+
+        .zyy-panel > p.zyy-tip {
+            font-size: 13px;
+            color: #a0927c;
+            margin-bottom: 16px;
+            padding-left: 16px;
+        }
+
+        .zyy-btn {
+            background: #d97706;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 26px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .zyy-btn:hover {
+            background: #b45309;
+        }
+
+        .zyy-btn.zyy-ghost {
+            background: #fff;
+            color: #b45309;
+            border: 2px solid #d97706;
+            padding: 8px 24px;
+        }
+
+        .zyy-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .zyy-btn.zyy-stop {
+            background: #c0392b;
+        }
+
+        .zyy-btn.zyy-stop:hover {
+            background: #96281b;
+        }
+
+        /* ===== setTimeout 倒计时演示 ===== */
+        .zyy-count-display {
+            font-size: 44px;
+            font-weight: bold;
+            color: #b45309;
+            font-family: Consolas, monospace;
+            margin: 14px 0;
+        }
+
+        .zyy-count-msg {
+            font-size: 15px;
+            min-height: 26px;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        /* ===== setInterval 秒表 ===== */
+        .zyy-stopwatch {
+            font-size: 52px;
+            font-weight: bold;
+            font-family: Consolas, monospace;
+            color: #3a332a;
+            margin: 14px 0;
+            letter-spacing: 2px;
+        }
+
+        .zyy-stopwatch small {
+            font-size: 22px;
+            color: #a0927c;
+        }
+
+        /* ===== setInterval 进度条 ===== */
+        .zyy-progress-track {
+            height: 26px;
+            background: #f0e8da;
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 14px 0 6px;
+        }
+
+        .zyy-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            border-radius: 999px;
+            transition: width 0.25s linear;
+        }
+
+        .zyy-progress-text {
+            font-size: 13px;
+            color: #6f6353;
+            font-family: Consolas, monospace;
+            margin-bottom: 14px;
+        }
+
+        /* ===== 对比表格 ===== */
+        .zyy-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .zyy-table th,
+        .zyy-table td {
+            border: 1px solid #eee2cf;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .zyy-table th {
+            background: #f6ecdb;
+            color: #92400e;
+        }
+
+        .zyy-table code {
+            background: #f6ecdb;
+            color: #b45309;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .zyy-intro {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>JavaScript <span>两种定时器</span></h1>
+            <p>setTimeout 一次性定时器 · setInterval 循环定时器 · 张圆圆</p>
+        </header>
+
+        <!-- 两种定时器对比简介 -->
+        <section class="zyy-intro">
+            <div class="zyy-intro-card">
+                <h2><code>setTimeout(fn, ms)</code></h2>
+                <p>一次性定时器：延迟指定毫秒后执行一次函数。</p>
+                <ul>
+                    <li>返回定时器编号，用于取消</li>
+                    <li>用 <b>clearTimeout(id)</b> 取消执行</li>
+                    <li>典型用途：延迟提示、防抖</li>
+                </ul>
+            </div>
+            <div class="zyy-intro-card">
+                <h2><code>setInterval(fn, ms)</code></h2>
+                <p>循环定时器：每隔指定毫秒重复执行函数。</p>
+                <ul>
+                    <li>同样返回定时器编号</li>
+                    <li>用 <b>clearInterval(id)</b> 停止循环</li>
+                    <li>典型用途：秒表、轮播图、进度条</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- setTimeout 演示 -->
+        <section class="zyy-panel">
+            <h2>演示一：setTimeout 延时提醒</h2>
+            <p class="zyy-tip">点击开始后 5 秒触发提醒，倒计时期间可随时取消（clearTimeout）。</p>
+            <div>
+                <button class="zyy-btn" id="zyy_startDelay" onclick="zyy_startDelay()">开始（5 秒后提醒）</button>
+                <button class="zyy-btn zyy-ghost" id="zyy_cancelDelay" onclick="zyy_cancelDelay()" disabled>取消定时（clearTimeout）</button>
+            </div>
+            <div class="zyy-count-display" id="zyy_delayDisplay">5</div>
+            <p class="zyy-count-msg" id="zyy_delayMsg">点击"开始"按钮启动一次性定时器</p>
+        </section>
+
+        <!-- setInterval 演示：秒表 -->
+        <section class="zyy-panel">
+            <h2>演示二：setInterval 电子秒表</h2>
+            <p class="zyy-tip">每 50 毫秒刷新一次显示（clearInterval 停止）。</p>
+            <div class="zyy-stopwatch" id="zyy_watchDisplay">00:00<small>.0</small></div>
+            <div>
+                <button class="zyy-btn" id="zyy_watchStart" onclick="zyy_watchStart()">开始计时</button>
+                <button class="zyy-btn zyy-ghost" id="zyy_watchPause" onclick="zyy_watchPause()" disabled>暂停（clearInterval）</button>
+                <button class="zyy-btn zyy-ghost" id="zyy_watchReset" onclick="zyy_watchReset()" disabled>清零</button>
+            </div>
+        </section>
+
+        <!-- setInterval 演示：进度条 -->
+        <section class="zyy-panel">
+            <h2>演示三：setInterval 自动进度条</h2>
+            <p class="zyy-tip">每 200 毫秒进度 +5%，到 100% 自动停止并提示完成。</p>
+            <div class="zyy-progress-track">
+                <div class="zyy-progress-bar" id="zyy_progressBar"></div>
+            </div>
+            <p class="zyy-progress-text" id="zyy_progressText">当前进度：0%</p>
+            <div>
+                <button class="zyy-btn" id="zyy_progStart" onclick="zyy_progStart()">开始加载</button>
+                <button class="zyy-btn zyy-stop" id="zyy_progStop" onclick="zyy_progStop()" disabled>中途停止</button>
+            </div>
+        </section>
+
+        <!-- 对比表格 -->
+        <section class="zyy-panel">
+            <h2>两种定时器对比总结</h2>
+            <table class="zyy-table">
+                <tr>
+                    <th>对比项</th>
+                    <th>setTimeout</th>
+                    <th>setInterval</th>
+                </tr>
+                <tr>
+                    <td>执行次数</td>
+                    <td>延迟后执行 <b>1 次</b></td>
+                    <td>每隔指定时间执行，<b>无限次</b></td>
+                </tr>
+                <tr>
+                    <td>取消方式</td>
+                    <td><code>clearTimeout(id)</code></td>
+                    <td><code>clearInterval(id)</code></td>
+                </tr>
+                <tr>
+                    <td>返回值</td>
+                    <td colspan="2">都是定时器编号（数字），可用变量保存后取消</td>
+                </tr>
+                <tr>
+                    <td>是否阻塞页面</td>
+                    <td colspan="2">都不阻塞——定时器是异步的，回调函数进入任务队列等待执行</td>
+                </tr>
+            </table>
+        </section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ================= 演示一：setTimeout =================
+        var zyy_delayTimer = null;   // setTimeout 返回的定时器编号
+        var zyy_countTimer = null;   // 驱动倒计时显示的循环定时器
+        var zyy_delayLeft = 5;       // 剩余秒数
+
+        // 开始延时提醒
+        function zyy_startDelay() {
+            // 防止重复启动
+            if (zyy_delayTimer !== null) {
+                return;
+            }
+            zyy_delayLeft = 5;
+            document.getElementById("zyy_startDelay").disabled = true;
+            document.getElementById("zyy_cancelDelay").disabled = false;
+            document.getElementById("zyy_delayMsg").textContent = "倒计时进行中，可随时取消……";
+            document.getElementById("zyy_delayDisplay").textContent = zyy_delayLeft;
+
+            // 用循环定时器驱动倒计时数字显示
+            zyy_countTimer = setInterval(function () {
+                zyy_delayLeft = zyy_delayLeft - 1;
+                document.getElementById("zyy_delayDisplay").textContent = zyy_delayLeft;
+            }, 1000);
+
+            // 一次性定时器：5 秒后触发提醒
+            zyy_delayTimer = setTimeout(function () {
+                clearInterval(zyy_countTimer); // 停止倒计时显示
+                zyy_delayTimer = null;
+                document.getElementById("zyy_delayDisplay").textContent = "🔔";
+                document.getElementById("zyy_delayMsg").textContent = "⏰ 时间到！setTimeout 的回调函数执行了（仅执行一次）";
+                document.getElementById("zyy_startDelay").disabled = false;
+                document.getElementById("zyy_cancelDelay").disabled = true;
+            }, 5000);
+        }
+
+        // 取消延时提醒
+        function zyy_cancelDelay() {
+            clearTimeout(zyy_delayTimer);   // 取消一次性定时器
+            clearInterval(zyy_countTimer);  // 停止倒计时显示
+            zyy_delayTimer = null;
+            document.getElementById("zyy_delayDisplay").textContent = "已取消";
+            document.getElementById("zyy_delayMsg").textContent = "❎ 定时器已被 clearTimeout 取消，回调不会执行";
+            document.getElementById("zyy_startDelay").disabled = false;
+            document.getElementById("zyy_cancelDelay").disabled = true;
+        }
+
+        // ================= 演示二：setInterval 秒表 =================
+        var zyy_watchTimer = null;  // 秒表定时器编号
+        var zyy_watchMs = 0;        // 累计毫秒数
+
+        // 把毫秒格式化为 分:秒.十分秒
+        function zyy_formatWatch(zyy_ms) {
+            var zyy_m = Math.floor(zyy_ms / 60000);
+            var zyy_s = Math.floor((zyy_ms % 60000) / 1000);
+            var zyy_ds = Math.floor((zyy_ms % 1000) / 100);
+            var zyy_pad = function (zyy_n) { return zyy_n < 10 ? "0" + zyy_n : "" + zyy_n; };
+            return zyy_pad(zyy_m) + ":" + zyy_pad(zyy_s) + "<small>." + zyy_ds + "</small>";
+        }
+
+        // 开始计时
+        function zyy_watchStart() {
+            if (zyy_watchTimer !== null) {
+                return;
+            }
+            zyy_watchTimer = setInterval(function () {
+                zyy_watchMs = zyy_watchMs + 50;
+                document.getElementById("zyy_watchDisplay").innerHTML = zyy_formatWatch(zyy_watchMs);
+            }, 50);
+            document.getElementById("zyy_watchStart").disabled = true;
+            document.getElementById("zyy_watchPause").disabled = false;
+            document.getElementById("zyy_watchReset").disabled = false;
+        }
+
+        // 暂停计时
+        function zyy_watchPause() {
+            clearInterval(zyy_watchTimer);
+            zyy_watchTimer = null;
+            document.getElementById("zyy_watchStart").disabled = false;
+            document.getElementById("zyy_watchPause").disabled = true;
+        }
+
+        // 清零
+        function zyy_watchReset() {
+            clearInterval(zyy_watchTimer);
+            zyy_watchTimer = null;
+            zyy_watchMs = 0;
+            document.getElementById("zyy_watchDisplay").innerHTML = "00:00<small>.0</small>";
+            document.getElementById("zyy_watchStart").disabled = false;
+            document.getElementById("zyy_watchPause").disabled = true;
+            document.getElementById("zyy_watchReset").disabled = true;
+        }
+
+        // ================= 演示三：setInterval 进度条 =================
+        var zyy_progTimer = null;   // 进度条定时器编号
+        var zyy_progress = 0;       // 当前进度
+
+        // 开始加载
+        function zyy_progStart() {
+            if (zyy_progTimer !== null) {
+                return;
+            }
+            zyy_progTimer = setInterval(function () {
+                zyy_progress = zyy_progress + 5;
+                document.getElementById("zyy_progressBar").style.width = zyy_progress + "%";
+                document.getElementById("zyy_progressText").textContent = "当前进度：" + zyy_progress + "%";
+                // 到达 100% 自动停止
+                if (zyy_progress >= 100) {
+                    clearInterval(zyy_progTimer);
+                    zyy_progTimer = null;
+                    document.getElementById("zyy_progressText").textContent = "✅ 加载完成（进度到 100% 自动 clearInterval）";
+                    document.getElementById("zyy_progStart").disabled = false;
+                    document.getElementById("zyy_progStop").disabled = true;
+                }
+            }, 200);
+            document.getElementById("zyy_progStart").disabled = true;
+            document.getElementById("zyy_progStop").disabled = false;
+        }
+
+        // 中途停止
+        function zyy_progStop() {
+            clearInterval(zyy_progTimer);
+            zyy_progTimer = null;
+            document.getElementById("zyy_progressText").textContent = "⏸ 已在 " + zyy_progress + "% 处中途停止";
+            document.getElementById("zyy_progStart").disabled = false;
+            document.getElementById("zyy_progStop").disabled = true;
+        }
+    </script>
+</body>
+</html>

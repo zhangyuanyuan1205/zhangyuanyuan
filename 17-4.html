@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-02，功能名称：远程数据接口测试工具（GET/POST等） -->
+    <title>17-4 远程数据接口测试工具</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #171b26;
+            color: #dfe4f2;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #7c93ff;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .zyy-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            color: #7c93ff;
+        }
+
+        .zyy-header p {
+            color: #8b91ad;
+            font-size: 14px;
+        }
+
+        /* ===== file:// 提示条 ===== */
+        .zyy-warn-bar {
+            display: none;
+            background: #3d3222;
+            border: 1px solid #6b5a2e;
+            color: #f4c96b;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== 请求构造区 ===== */
+        .zyy-panel {
+            background: #212736;
+            border: 1px solid #303850;
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin-bottom: 22px;
+        }
+
+        .zyy-panel h2 {
+            font-size: 17px;
+            margin-bottom: 14px;
+            color: #aeb9dd;
+        }
+
+        .zyy-request-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .zyy-method {
+            flex: none;
+            width: 120px;
+            background: #171b26;
+            color: #7c93ff;
+            border: 1px solid #3a4460;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 15px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .zyy-url {
+            flex: 1;
+            background: #171b26;
+            color: #dfe4f2;
+            border: 1px solid #3a4460;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: Consolas, monospace;
+            outline: none;
+        }
+
+        .zyy-url:focus {
+            border-color: #7c93ff;
+        }
+
+        .zyy-send {
+            flex: none;
+            background: #4c6ef5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 30px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .zyy-send:hover {
+            background: #3f5be0;
+        }
+
+        .zyy-send:disabled {
+            opacity: 0.5;
+            cursor: wait;
+        }
+
+        .zyy-body-label {
+            font-size: 13px;
+            color: #8b91ad;
+            margin: 14px 0 6px;
+        }
+
+        .zyy-body-input {
+            width: 100%;
+            height: 130px;
+            background: #171b26;
+            color: #d7e7e0;
+            border: 1px solid #3a4460;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-family: Consolas, monospace;
+            line-height: 1.7;
+            resize: vertical;
+            outline: none;
+        }
+
+        .zyy-body-input:focus {
+            border-color: #7c93ff;
+        }
+
+        /* ===== 示例快捷按钮 ===== */
+        .zyy-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .zyy-example-btn {
+            background: #2a3247;
+            color: #aeb9dd;
+            border: 1px solid #3a4460;
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .zyy-example-btn:hover {
+            border-color: #7c93ff;
+            color: #7c93ff;
+        }
+
+        .zyy-example-btn b {
+            color: #6bd6a8;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        /* ===== 响应区 ===== */
+        .zyy-response-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            min-height: 24px;
+        }
+
+        .zyy-status-chip {
+            display: none;
+            border-radius: 6px;
+            padding: 2px 12px;
+            font-weight: bold;
+            font-family: Consolas, monospace;
+        }
+
+        .zyy-status-ok {
+            display: inline-block;
+            background: #1d3a2f;
+            color: #6bd6a8;
+        }
+
+        .zyy-status-bad {
+            display: inline-block;
+            background: #45272b;
+            color: #ff8a8a;
+        }
+
+        .zyy-time {
+            color: #8b91ad;
+        }
+
+        .zyy-response-body {
+            background: #12151f;
+            border: 1px solid #2b3350;
+            border-radius: 10px;
+            padding: 16px 18px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre;
+            overflow-x: auto;
+            min-height: 120px;
+        }
+
+        .zyy-response-body.zyy-err-text {
+            color: #ff9b9b;
+            white-space: normal;
+        }
+
+        /* JSON 语法高亮颜色 */
+        .zyy-key { color: #7dd3c0; }
+        .zyy-str { color: #f4bf75; }
+        .zyy-num { color: #8ab8ff; }
+        .zyy-bool { color: #ef8ba0; }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 640px) {
+            .zyy-request-row {
+                flex-direction: column;
+            }
+
+            .zyy-method,
+            .zyy-send {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>远程数据接口<span>测试工具</span></h1>
+            <p>支持 GET / POST / PUT / DELETE · 示例接口：https://jsonplaceholder.typicode.com · 张圆圆</p>
+        </header>
+
+        <div class="zyy-warn-bar" id="zyy_warnBar">
+            ⚠ 当前通过 file:// 直接打开，浏览器会拦截跨域请求，发送按钮无法发出真实请求（响应区已预置一条演示结果）。请通过本地服务器访问体验完整功能。
+        </div>
+
+        <!-- 请求构造 -->
+        <section class="zyy-panel">
+            <h2>构造请求</h2>
+            <div class="zyy-request-row">
+                <select class="zyy-method" id="zyy_method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input type="text" class="zyy-url" id="zyy_url" value="https://jsonplaceholder.typicode.com/posts/1">
+                <button class="zyy-send" id="zyy_send" onclick="zyy_sendRequest()">发送请求</button>
+            </div>
+            <p class="zyy-body-label">请求体（JSON，POST / PUT 时随请求发送）：</p>
+            <textarea class="zyy-body-input" id="zyy_bodyInput" placeholder='例如：{ "title": "张圆圆的帖子", "body": "这是测试内容", "userId": 1 }'>{
+  "title": "张圆圆的帖子",
+  "body": "这是通过 fetch 发送的测试内容",
+  "userId": 1
+}</textarea>
+        </section>
+
+        <!-- 示例快捷填充 -->
+        <section class="zyy-panel">
+            <h2>示例接口（点击自动填充）</h2>
+            <div class="zyy-examples" id="zyy_examples"></div>
+        </section>
+
+        <!-- 响应结果 -->
+        <section class="zyy-panel">
+            <h2>响应结果</h2>
+            <div class="zyy-response-meta" id="zyy_meta">
+                <span class="zyy-status-chip" id="zyy_statusChip"></span>
+                <span class="zyy-time" id="zyy_time">尚未发送请求</span>
+            </div>
+            <div class="zyy-response-body" id="zyy_responseBody">等待请求…</div>
+        </section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // 示例接口列表
+        var zyy_examples = [
+            { zyy_label: "获取单篇帖子", zyy_method: "GET", zyy_url: "https://jsonplaceholder.typicode.com/posts/1", zyy_body: "" },
+            { zyy_label: "获取全部帖子", zyy_method: "GET", zyy_url: "https://jsonplaceholder.typicode.com/posts", zyy_body: "" },
+            { zyy_label: "获取用户列表", zyy_method: "GET", zyy_url: "https://jsonplaceholder.typicode.com/users", zyy_body: "" },
+            { zyy_label: "新建帖子", zyy_method: "POST", zyy_url: "https://jsonplaceholder.typicode.com/posts", zyy_body: '{\n  "title": "张圆圆的帖子",\n  "body": "这是通过 fetch 发送的测试内容",\n  "userId": 1\n}' },
+            { zyy_label: "修改帖子", zyy_method: "PUT", zyy_url: "https://jsonplaceholder.typicode.com/posts/1", zyy_body: '{\n  "id": 1,\n  "title": "修改后的标题",\n  "body": "修改后的内容",\n  "userId": 1\n}' },
+            { zyy_label: "删除帖子", zyy_method: "DELETE", zyy_url: "https://jsonplaceholder.typicode.com/posts/1", zyy_body: "" },
+            { zyy_label: "错误测试 404", zyy_method: "GET", zyy_url: "https://jsonplaceholder.typicode.com/posts/99999", zyy_body: "" }
+        ];
+
+        // 渲染示例按钮
+        (function zyy_renderExamples() {
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_examples.length; zyy_i++) {
+                var zyy_e = zyy_examples[zyy_i];
+                zyy_html += '<button class="zyy-example-btn" onclick="zyy_fillExample(' + zyy_i + ')"><b>' + zyy_e.zyy_method + '</b>' + zyy_e.zyy_label + '</button>';
+            }
+            document.getElementById("zyy_examples").innerHTML = zyy_html;
+        })();
+
+        // 点击示例填充请求区
+        function zyy_fillExample(zyy_i) {
+            var zyy_e = zyy_examples[zyy_i];
+            document.getElementById("zyy_method").value = zyy_e.zyy_method;
+            document.getElementById("zyy_url").value = zyy_e.zyy_url;
+            document.getElementById("zyy_bodyInput").value = zyy_e.zyy_body;
+        }
+
+        // 简易 JSON 语法高亮
+        function zyy_highlightJson(zyy_text) {
+            var zyy_escaped = zyy_text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            return zyy_escaped.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (zyy_match) {
+                    var zyy_cls = "zyy-num";
+                    if (/^"/.test(zyy_match)) {
+                        zyy_cls = /:$/.test(zyy_match) ? "zyy-key" : "zyy-str";
+                    } else if (/true|false|null/.test(zyy_match)) {
+                        zyy_cls = "zyy-bool";
+                    }
+                    return '<span class="' + zyy_cls + '">' + zyy_match + "</span>";
+                }
+            );
+        }
+
+        // 显示状态徽章与耗时
+        function zyy_showMeta(zyy_status, zyy_ok, zyy_ms) {
+            var zyy_chip = document.getElementById("zyy_statusChip");
+            zyy_chip.textContent = zyy_status;
+            zyy_chip.className = "zyy-status-chip " + (zyy_ok ? "zyy-status-ok" : "zyy-status-bad");
+            document.getElementById("zyy_time").textContent = "耗时 " + zyy_ms + " ms";
+        }
+
+        // ===== 发送请求 =====
+        function zyy_sendRequest() {
+            var zyy_method = document.getElementById("zyy_method").value;
+            var zyy_url = document.getElementById("zyy_url").value.trim();
+            var zyy_bodyText = document.getElementById("zyy_bodyInput").value.trim();
+            var zyy_btn = document.getElementById("zyy_send");
+            var zyy_bodyEl = document.getElementById("zyy_responseBody");
+
+            if (!zyy_url) {
+                zyy_bodyEl.textContent = "✘ 错误提示：请先填写接口地址 URL";
+                zyy_bodyEl.className = "zyy-response-body zyy-err-text";
+                return;
+            }
+
+            // POST / PUT 需要请求体且必须是合法 JSON（fetch 配置项的键名是 API 固定写法，不加前缀）
+            var zyy_options = { method: zyy_method, headers: { "Content-Type": "application/json" } };
+            if (zyy_method === "POST" || zyy_method === "PUT") {
+                if (!zyy_bodyText) {
+                    zyy_bodyEl.textContent = "✘ 错误提示：" + zyy_method + " 请求需要填写请求体 JSON";
+                    zyy_bodyEl.className = "zyy-response-body zyy-err-text";
+                    return;
+                }
+                try {
+                    JSON.parse(zyy_bodyText); // 先校验再发送
+                } catch (zyy_e) {
+                    zyy_bodyEl.textContent = "✘ 错误提示：请求体不是合法 JSON —— " + zyy_e.message;
+                    zyy_bodyEl.className = "zyy-response-body zyy-err-text";
+                    return;
+                }
+                zyy_options.body = zyy_bodyText;
+            }
+
+            zyy_btn.disabled = true;
+            zyy_btn.textContent = "请求中…";
+            document.getElementById("zyy_time").textContent = "正在请求 " + zyy_method + " " + zyy_url;
+            var zyy_startTime = new Date().getTime();
+
+            // file:// 环境浏览器会拦截跨域请求，fetch 不会返回结果
+            if (window.location.protocol === "file:") {
+                zyy_btn.disabled = false;
+                zyy_btn.textContent = "发送请求";
+                zyy_showMeta("201 Created", true, 66);
+                zyy_bodyEl.className = "zyy-response-body";
+                zyy_bodyEl.innerHTML = zyy_highlightJson('{\n  "id": 101,\n  "title": "张圆圆的帖子",\n  "body": "这是通过 fetch 发送的测试内容",\n  "userId": 1\n}\n\n（以上为 file:// 环境的内置演示响应，通过本地服务器访问可发送真实请求）');
+                return;
+            }
+
+            fetch(zyy_url, zyy_options)
+                .then(function (zyy_res) {
+                    var zyy_ms = new Date().getTime() - zyy_startTime;
+                    return zyy_res.text().then(function (zyy_text) {
+                        zyy_showMeta(zyy_res.status + " " + zyy_res.statusText, zyy_res.ok, zyy_ms);
+                        // 尝试按 JSON 格式化输出，失败则原样输出
+                        try {
+                            var zyy_obj = JSON.parse(zyy_text);
+                            zyy_bodyEl.className = "zyy-response-body";
+                            zyy_bodyEl.innerHTML = zyy_highlightJson(JSON.stringify(zyy_obj, null, 2));
+                        } catch (zyy_e) {
+                            zyy_bodyEl.className = "zyy-response-body";
+                            zyy_bodyEl.textContent = zyy_text || "（空响应体）";
+                        }
+                        // 非 2xx 状态码：额外给出错误说明
+                        if (!zyy_res.ok) {
+                            zyy_bodyEl.textContent = "⚠ 错误提示：服务器返回 " + zyy_res.status + " " + zyy_res.statusText +
+                                "（常见原因：资源不存在 404 / 参数错误 400）\n\n" + zyy_bodyEl.textContent;
+                        }
+                    });
+                })
+                .catch(function (zyy_err) {
+                    var zyy_ms = new Date().getTime() - zyy_startTime;
+                    zyy_showMeta("请求失败", false, zyy_ms);
+                    zyy_bodyEl.className = "zyy-response-body zyy-err-text";
+                    zyy_bodyEl.textContent = "✘ 错误提示：" + zyy_err.message +
+                        "\n常见原因：断网、接口地址写错、HTTPS 页面请求 HTTP 接口被拦截、CORS 跨域被拒绝";
+                })
+                .then(function () {
+                    // 无论成功失败都恢复按钮（Promise 链最后的收尾）
+                    zyy_btn.disabled = false;
+                    zyy_btn.textContent = "发送请求";
+                });
+        }
+
+        // 页面初始化：file:// 环境显示提示条并预置演示响应
+        (function zyy_init() {
+            if (window.location.protocol === "file:") {
+                document.getElementById("zyy_warnBar").style.display = "block";
+                zyy_showMeta("201 Created", true, 66);
+                document.getElementById("zyy_responseBody").innerHTML = zyy_highlightJson('{\n  "id": 101,\n  "title": "张圆圆的帖子",\n  "body": "这是通过 fetch 发送的测试内容",\n  "userId": 1\n}\n\n（以上为 file:// 环境的内置演示响应，通过本地服务器访问可发送真实请求）');
+            }
+        })();
+    </script>
+</body>
+</html>
