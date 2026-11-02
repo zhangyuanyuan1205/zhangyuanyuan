@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-02，功能名称：fetch获取跨域接口用户数据并展示 -->
+    <title>17-2 fetch 获取跨域接口用户数据</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #f2f4fb;
+            color: #232a45;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #4c6ef5;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .zyy-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            color: #4c6ef5;
+        }
+
+        .zyy-header p {
+            color: #8b91b0;
+            font-size: 14px;
+        }
+
+        .zyy-header code {
+            background: #e4e8f9;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        /* ===== 状态栏 + 统计 ===== */
+        .zyy-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px 22px;
+            box-shadow: 0 6px 20px rgba(35, 42, 69, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .zyy-status {
+            font-size: 14px;
+            color: #6f7694;
+        }
+
+        .zyy-status.zyy-loading {
+            color: #4c6ef5;
+        }
+
+        .zyy-status.zyy-error {
+            color: #d63031;
+        }
+
+        .zyy-stats {
+            display: flex;
+            gap: 18px;
+            font-size: 14px;
+            color: #4c6ef5;
+            font-weight: bold;
+        }
+
+        .zyy-search {
+            border: 2px solid #dfe4f6;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 14px;
+            width: 240px;
+            outline: none;
+        }
+
+        .zyy-search:focus {
+            border-color: #4c6ef5;
+        }
+
+        /* ===== 用户卡片网格 ===== */
+        .zyy-user-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .zyy-user-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 22px;
+            box-shadow: 0 6px 20px rgba(35, 42, 69, 0.08);
+            border-top: 4px solid #4c6ef5;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .zyy-user-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(76, 110, 245, 0.22);
+        }
+
+        .zyy-user-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .zyy-avatar {
+            flex: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #4c6ef5;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 46px;
+        }
+
+        .zyy-user-top h3 {
+            font-size: 16px;
+        }
+
+        .zyy-user-top p {
+            font-size: 12px;
+            color: #8b91b0;
+        }
+
+        .zyy-user-info {
+            font-size: 13px;
+            color: #565d7d;
+        }
+
+        .zyy-user-info li {
+            display: flex;
+            gap: 8px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #eef0f8;
+        }
+
+        .zyy-user-info li:last-child {
+            border-bottom: none;
+        }
+
+        .zyy-info-icon {
+            flex: none;
+            width: 20px;
+            color: #4c6ef5;
+            text-align: center;
+        }
+
+        .zyy-user-info a {
+            word-break: break-all;
+        }
+
+        /* ===== 展开详情 ===== */
+        .zyy-detail {
+            display: none;
+            margin-top: 12px;
+            border-top: 1px solid #eef0f8;
+            padding-top: 12px;
+            font-size: 12px;
+        }
+
+        .zyy-user-card.zyy-open .zyy-detail {
+            display: block;
+        }
+
+        .zyy-detail h4 {
+            font-size: 13px;
+            color: #4c6ef5;
+            margin-bottom: 4px;
+        }
+
+        .zyy-detail p {
+            color: #6f7694;
+            margin-bottom: 8px;
+        }
+
+        .zyy-detail .zyy-code {
+            background: #1b2140;
+            color: #cdd6f8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.7;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* ===== 加载动画 ===== */
+        .zyy-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #c7d0f5;
+            border-top-color: #4c6ef5;
+            border-radius: 50%;
+            vertical-align: -2px;
+            animation: zyy_spin 0.8s linear infinite;
+        }
+
+        @keyframes zyy_spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 860px) {
+            .zyy-user-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .zyy-user-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .zyy-search {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>fetch 获取<span>跨域接口</span>用户数据</h1>
+            <p>数据来源：<code>http://jsonplaceholder.typicode.com/users</code>（CORS 跨域可访问）· 张圆圆</p>
+        </header>
+
+        <div class="zyy-toolbar">
+            <span class="zyy-status zyy-loading" id="zyy_status">
+                <span class="zyy-spinner"></span> 正在请求接口数据…
+            </span>
+            <span class="zyy-stats" id="zyy_stats" style="display: none;"></span>
+            <input type="text" class="zyy-search" id="zyy_search" placeholder="按姓名 / 用户名 / 城市筛选…" disabled>
+        </div>
+
+        <section class="zyy-user-grid" id="zyy_userGrid"></section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        var zyy_apiUrl = "http://jsonplaceholder.typicode.com/users";
+        var zyy_users = []; // 保存接口返回的用户数组
+
+        // ===== fetch 获取跨域接口数据 =====
+        fetch(zyy_apiUrl)
+            .then(function (zyy_res) {
+                // HTTP 状态码检查：2xx 才继续，否则抛出错误
+                if (!zyy_res.ok) {
+                    throw new Error("HTTP 状态码 " + zyy_res.status);
+                }
+                return zyy_res.json(); // 响应体解析为 JSON
+            })
+            .then(function (zyy_data) {
+                zyy_users = zyy_data;
+                zyy_showStatus("✔ 加载成功，共获取 " + zyy_users.length + " 位用户数据", "");
+                zyy_showStats();
+                zyy_renderUsers(zyy_users);
+                document.getElementById("zyy_search").disabled = false;
+            })
+            .catch(function (zyy_err) {
+                zyy_showStatus("✘ 加载失败：" + zyy_err.message + "（请检查网络后刷新重试）", "zyy-error");
+            });
+
+        // ===== 状态提示 =====
+        function zyy_showStatus(zyy_text, zyy_cls) {
+            var zyy_el = document.getElementById("zyy_status");
+            zyy_el.textContent = zyy_text;
+            zyy_el.className = "zyy-status " + (zyy_cls || "");
+        }
+
+        // ===== 统计信息：人数 + 城市数 =====
+        function zyy_showStats() {
+            var zyy_citySet = {};
+            for (var zyy_i = 0; zyy_i < zyy_users.length; zyy_i++) {
+                zyy_citySet[zyy_users[zyy_i].address.city] = true;
+            }
+            var zyy_cityCount = 0;
+            for (var zyy_city in zyy_citySet) {
+                zyy_cityCount++;
+            }
+            document.getElementById("zyy_stats").style.display = "flex";
+            document.getElementById("zyy_stats").textContent =
+                "用户 " + zyy_users.length + " 位 · 城市 " + zyy_cityCount + " 座";
+        }
+
+        // ===== 渲染用户卡片列表 =====
+        function zyy_renderUsers(zyy_list) {
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_list.length; zyy_i++) {
+                var zyy_u = zyy_list[zyy_i];
+                var zyy_initial = zyy_u.name.charAt(0).toUpperCase();
+                zyy_html += '<article class="zyy-user-card" onclick="zyy_toggleCard(this)">';
+                zyy_html += '<div class="zyy-user-top">';
+                zyy_html += '<span class="zyy-avatar">' + zyy_initial + "</span>";
+                zyy_html += "<div><h3>" + zyy_u.name + "</h3><p>@" + zyy_u.username + " · No." + zyy_u.id + "</p></div>";
+                zyy_html += "</div>";
+                zyy_html += '<ul class="zyy-user-info">';
+                zyy_html += '<li><span class="zyy-info-icon">✉</span><a href="mailto:' + zyy_u.email + '">' + zyy_u.email + "</a></li>";
+                zyy_html += '<li><span class="zyy-info-icon">☎</span><span>' + zyy_u.phone + "</span></li>";
+                zyy_html += '<li><span class="zyy-info-icon">⌂</span><a href="http://' + zyy_u.website + '" target="_blank">' + zyy_u.website + "</a></li>";
+                zyy_html += '<li><span class="zyy-info-icon">⚑</span><span>' + zyy_u.address.city + "</span></li>";
+                zyy_html += '<li><span class="zyy-info-icon">ⓒ</span><span>' + zyy_u.company.name + "</span></li>";
+                zyy_html += "</ul>";
+                // 点击展开：完整地址 + 公司口号 + 原始 JSON
+                zyy_html += '<div class="zyy-detail">';
+                zyy_html += "<h4>完整地址</h4><p>" + zyy_u.address.suite + "，" + zyy_u.address.street +
+                    " 街，邮编 " + zyy_u.address.zipcode +
+                    "（经度 " + zyy_u.address.geo.lng + "，纬度 " + zyy_u.address.geo.lat + "）</p>";
+                zyy_html += "<h4>公司口号</h4><p>" + zyy_u.company.catchPhrase + "（业务：" + zyy_u.company.bs + "）</p>";
+                zyy_html += "<h4>原始 JSON</h4>";
+                zyy_html += '<div class="zyy-code">' + JSON.stringify(zyy_u, null, 2) + "</div>";
+                zyy_html += "</div>";
+                zyy_html += "</article>";
+            }
+            document.getElementById("zyy_userGrid").innerHTML = zyy_html;
+        }
+
+        // ===== 点击卡片展开 / 收起详情 =====
+        function zyy_toggleCard(zyy_card) {
+            zyy_card.className = zyy_card.className === "zyy-user-card" ? "zyy-user-card zyy-open" : "zyy-user-card";
+        }
+
+        // ===== 搜索筛选 =====
+        document.getElementById("zyy_search").addEventListener("input", function () {
+            var zyy_kw = this.value.trim().toLowerCase();
+            var zyy_filtered = [];
+            for (var zyy_i = 0; zyy_i < zyy_users.length; zyy_i++) {
+                var zyy_u = zyy_users[zyy_i];
+                var zyy_text = (zyy_u.name + zyy_u.username + zyy_u.address.city).toLowerCase();
+                if (zyy_text.indexOf(zyy_kw) !== -1) {
+                    zyy_filtered.push(zyy_u);
+                }
+            }
+            zyy_renderUsers(zyy_filtered);
+        });
+    </script>
+</body>
+</html>

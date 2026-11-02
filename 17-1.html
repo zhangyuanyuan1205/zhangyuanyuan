@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-02，功能名称：JSON数据格式展示 -->
+    <title>17-1 JSON 数据格式展示</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #f0f7f4;
+            color: #1f3d33;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #0d9488;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .zyy-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            color: #0d9488;
+        }
+
+        .zyy-header p {
+            color: #6b8a80;
+            font-size: 15px;
+        }
+
+        /* ===== 简介卡片 ===== */
+        .zyy-intro {
+            background: #fff;
+            border-radius: 14px;
+            padding: 26px 30px;
+            box-shadow: 0 6px 20px rgba(31, 61, 51, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .zyy-intro h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            border-left: 4px solid #0d9488;
+            padding-left: 12px;
+        }
+
+        .zyy-rule-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 24px;
+        }
+
+        .zyy-rule-list li {
+            font-size: 14px;
+            color: #41645a;
+        }
+
+        .zyy-rule-list li::before {
+            content: "✔";
+            color: #0d9488;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* ===== 通用面板 ===== */
+        .zyy-panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 26px 30px;
+            box-shadow: 0 6px 20px rgba(31, 61, 51, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .zyy-panel h2 {
+            font-size: 20px;
+            margin-bottom: 14px;
+            border-left: 4px solid #0d9488;
+            padding-left: 12px;
+        }
+
+        /* ===== JS对象 vs JSON 对比 ===== */
+        .zyy-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .zyy-code {
+            background: #14201c;
+            color: #d7e7e0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zyy-compare-label {
+            display: inline-block;
+            background: #d9f2ec;
+            color: #0d7263;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 999px;
+            padding: 2px 14px;
+            margin-bottom: 10px;
+        }
+
+        .zyy-diff {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #a2551f;
+        }
+
+        /* JSON 语法高亮颜色 */
+        .zyy-key { color: #7dd3c0; }
+        .zyy-str { color: #f4bf75; }
+        .zyy-num { color: #8ab8ff; }
+        .zyy-bool { color: #ef8ba0; }
+
+        /* ===== fetch 数据区 ===== */
+        .zyy-fetch-status {
+            font-size: 14px;
+            color: #6b8a80;
+            margin-bottom: 14px;
+        }
+
+        .zyy-fetch-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .zyy-student-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .zyy-student-card {
+            background: #f6fbf9;
+            border: 1px solid #d9ece6;
+            border-radius: 12px;
+            padding: 16px 18px;
+        }
+
+        .zyy-student-card h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .zyy-student-card h3 em {
+            font-style: normal;
+            font-size: 12px;
+            color: #fff;
+            background: #0d9488;
+            border-radius: 999px;
+            padding: 1px 10px;
+            margin-left: 8px;
+            vertical-align: 2px;
+        }
+
+        .zyy-student-card p {
+            font-size: 13px;
+            color: #5c7a70;
+        }
+
+        .zyy-skill {
+            display: inline-block;
+            background: #e0f2ee;
+            color: #0d7263;
+            font-size: 12px;
+            border-radius: 4px;
+            padding: 1px 8px;
+            margin: 4px 6px 0 0;
+        }
+
+        /* ===== 往返演示 ===== */
+        .zyy-btn {
+            display: inline-block;
+            background: #0d9488;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 26px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .zyy-btn:hover {
+            background: #0b7c72;
+        }
+
+        .zyy-round-steps {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .zyy-step-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #0d7263;
+        }
+
+        /* ===== 常见错误演示 ===== */
+        .zyy-err-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .zyy-err-item {
+            border: 1px solid #f3d8c2;
+            background: #fdf8f3;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .zyy-err-item h3 {
+            font-size: 14px;
+            color: #b05a1d;
+            margin-bottom: 8px;
+        }
+
+        .zyy-err-result {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #c0392b;
+            font-family: Consolas, monospace;
+            word-break: break-all;
+        }
+
+        .zyy-err-ok {
+            color: #1e8e5a;
+        }
+
+        /* ===== 返回首页 ===== */
+        .zyy-back {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .zyy-rule-list,
+            .zyy-compare,
+            .zyy-fetch-cols,
+            .zyy-err-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>JSON <span>数据格式</span>展示</h1>
+            <p>JavaScript Object Notation —— 轻量级的数据交换格式 · 张圆圆</p>
+        </header>
+
+        <!-- 什么是 JSON -->
+        <section class="zyy-intro">
+            <h2>什么是 JSON</h2>
+            <ul class="zyy-rule-list">
+                <li>JSON 全称 JavaScript Object Notation（JS 对象表示法）</li>
+                <li>键名必须用双引号包裹，值支持六种类型</li>
+                <li>数据由键值对组成，用逗号分隔</li>
+                <li>不支持注释、不支持函数与 undefined</li>
+                <li>数组用方括号 [ ]，对象用花括号 { }</li>
+                <li>独立于语言，是前后端数据交换的事实标准</li>
+            </ul>
+        </section>
+
+        <!-- JS 对象 vs JSON 字符串 -->
+        <section class="zyy-panel">
+            <h2>JS 对象字面量 vs JSON 字符串</h2>
+            <div class="zyy-compare">
+                <div>
+                    <span class="zyy-compare-label">JS 对象字面量</span>
+                    <div class="zyy-code">var zyy_obj = {
+    name: '张圆圆',      // 键可不加引号
+    age: 20,            // 可用单引号
+    hello: function () { // 可以有函数
+        return 'hi';
+    }
+};</div>
+                    <p class="zyy-diff">区别：键可省略引号、可用单引号、可含函数</p>
+                </div>
+                <div>
+                    <span class="zyy-compare-label">JSON 字符串（合法）</span>
+                    <div class="zyy-code">{
+    "name": "张圆圆",
+    "age": 20,
+    "skills": ["HTML", "CSS"]
+}</div>
+                    <p class="zyy-diff">要求：键必须双引号、无函数、无尾逗号</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- fetch 服务器端 JSON -->
+        <section class="zyy-panel">
+            <h2>fetch 获取服务器端 JSON</h2>
+            <p class="zyy-fetch-status" id="zyy_fetchStatus">正在请求 data/zyy_json_demo.json …</p>
+            <div class="zyy-fetch-cols">
+                <div>
+                    <span class="zyy-compare-label">服务器返回的原始 JSON</span>
+                    <div class="zyy-code" id="zyy_rawJson">加载中…</div>
+                </div>
+                <div>
+                    <span class="zyy-compare-label">解析后渲染的学生档案</span>
+                    <div class="zyy-student-list" id="zyy_studentList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- stringify / parse 往返 -->
+        <section class="zyy-panel">
+            <h2>JSON.stringify 与 JSON.parse 往返演示</h2>
+            <div>
+                <button class="zyy-btn" onclick="zyy_runStringify()">1. 对象 → 字符串</button>
+                <button class="zyy-btn" onclick="zyy_runParse()">2. 字符串 → 对象</button>
+            </div>
+            <div class="zyy-round-steps">
+                <div>
+                    <span class="zyy-step-label">JS 对象（typeof: object）</span>
+                    <div class="zyy-code" id="zyy_roundObj">var zyy_score = { "course": "高级网页设计I", "score": 98 };</div>
+                </div>
+                <div>
+                    <span class="zyy-step-label">转换结果</span>
+                    <div class="zyy-code" id="zyy_roundOut">点击上方按钮查看转换过程…</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见解析错误 -->
+        <section class="zyy-panel">
+            <h2>常见 JSON 解析错误（try...catch 捕获）</h2>
+            <div class="zyy-err-grid">
+                <div class="zyy-err-item">
+                    <h3>错误一：使用了单引号</h3>
+                    <div class="zyy-code">{"name": '张圆圆'}</div>
+                    <p class="zyy-err-result" id="zyy_err1"></p>
+                </div>
+                <div class="zyy-err-item">
+                    <h3>错误二：结尾多了逗号</h3>
+                    <div class="zyy-code">{"name": "张圆圆",}</div>
+                    <p class="zyy-err-result" id="zyy_err2"></p>
+                </div>
+                <div class="zyy-err-item">
+                    <h3>对照：合法 JSON</h3>
+                    <div class="zyy-code">{"name": "张圆圆"}</div>
+                    <p class="zyy-err-result zyy-err-ok" id="zyy_err3"></p>
+                </div>
+                <div class="zyy-err-item">
+                    <h3>对照：函数不是合法值</h3>
+                    <div class="zyy-code">{"say": function(){}}</div>
+                    <p class="zyy-err-result" id="zyy_err4"></p>
+                </div>
+            </div>
+        </section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ===== 简易 JSON 语法高亮 =====
+        function zyy_highlightJson(zyy_json) {
+            var zyy_escaped = zyy_json
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            return zyy_escaped.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (zyy_match) {
+                    var zyy_cls = "zyy-num";
+                    if (/^"/.test(zyy_match)) {
+                        zyy_cls = /:$/.test(zyy_match) ? "zyy-key" : "zyy-str";
+                    } else if (/true|false/.test(zyy_match)) {
+                        zyy_cls = "zyy-bool";
+                    } else if (/null/.test(zyy_match)) {
+                        zyy_cls = "zyy-bool";
+                    }
+                    return '<span class="' + zyy_cls + '">' + zyy_match + "</span>";
+                }
+            );
+        }
+
+        // ===== fetch 获取服务器端 JSON 数据 =====
+        fetch("./data/zyy_json_demo.json")
+            .then(function (zyy_res) {
+                return zyy_res.json();
+            })
+            .then(function (zyy_data) {
+                // 1. 显示原始 JSON 文本（高亮）
+                document.getElementById("zyy_rawJson").innerHTML =
+                    zyy_highlightJson(JSON.stringify(zyy_data, null, 2));
+
+                // 2. 解析后的对象渲染成学生档案卡片
+                var zyy_html = "";
+                for (var zyy_i = 0; zyy_i < zyy_data.zyy_studentList.length; zyy_i++) {
+                    var zyy_s = zyy_data.zyy_studentList[zyy_i];
+                    zyy_html += '<div class="zyy-student-card">';
+                    zyy_html += "<h3>" + zyy_s.zyy_name + "<em>" + zyy_s.zyy_major + "</em></h3>";
+                    zyy_html += "<p>年龄：" + zyy_s.zyy_age + " 岁</p>";
+                    for (var zyy_j = 0; zyy_j < zyy_s.zyy_skills.length; zyy_j++) {
+                        zyy_html += '<span class="zyy-skill">' + zyy_s.zyy_skills[zyy_j] + "</span>";
+                    }
+                    zyy_html += "</div>";
+                }
+                document.getElementById("zyy_studentList").innerHTML = zyy_html;
+                document.getElementById("zyy_fetchStatus").textContent =
+                    "✔ fetch 成功：zyy_course = " + zyy_data.zyy_course +
+                    "，zyy_author = " + zyy_data.zyy_author +
+                    "，共 " + zyy_data.zyy_studentList.length + " 名学生";
+            })
+            .catch(function (zyy_err) {
+                document.getElementById("zyy_fetchStatus").textContent =
+                    "✘ 加载失败：" + zyy_err.message + "（请通过本地服务器访问本页面）";
+            });
+
+        // ===== stringify / parse 往返演示 =====
+        var zyy_score = { zyy_course: "高级网页设计I", zyy_score: 98 };
+
+        function zyy_runStringify() {
+            var zyy_str = JSON.stringify(zyy_score);
+            document.getElementById("zyy_roundOut").innerHTML =
+                "JSON.stringify(zyy_score) 结果：\n" +
+                zyy_highlightJson(zyy_str) +
+                "\n\ntypeof 结果：\"" + (typeof zyy_str) + "\" —— 对象变成了字符串";
+        }
+
+        function zyy_runParse() {
+            var zyy_str = JSON.stringify(zyy_score);
+            var zyy_back = JSON.parse(zyy_str);
+            document.getElementById("zyy_roundOut").innerHTML =
+                "JSON.parse(JSON.stringify(zyy_score)) 结果：\n" +
+                zyy_highlightJson(JSON.stringify(zyy_back, null, 2)) +
+                "\n\ntypeof 结果：\"" + (typeof zyy_back) +
+                "\"，zyy_back.zyy_score = " + zyy_back.zyy_score +
+                " —— 字符串还原成了对象";
+        }
+
+        // ===== 常见解析错误演示 =====
+        var zyy_errCases = [
+            { zyy_id: "zyy_err1", zyy_text: "{\"name\": '张圆圆'}" },
+            { zyy_id: "zyy_err2", zyy_text: "{\"name\": \"张圆圆\",}" },
+            { zyy_id: "zyy_err3", zyy_text: "{\"name\": \"张圆圆\"}" },
+            { zyy_id: "zyy_err4", zyy_text: "{\"say\": function(){}}" }
+        ];
+        for (var zyy_k = 0; zyy_k < zyy_errCases.length; zyy_k++) {
+            (function (zyy_case) {
+                var zyy_el = document.getElementById(zyy_case.zyy_id);
+                try {
+                    JSON.parse(zyy_case.zyy_text);
+                    zyy_el.textContent = "✔ 解析成功（合法 JSON）";
+                } catch (zyy_e) {
+                    zyy_el.textContent = "✘ SyntaxError：" + zyy_e.message;
+                }
+            })(zyy_errCases[zyy_k]);
+        }
+    </script>
+</body>
+</html>

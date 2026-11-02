@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-02，功能名称：fetch根据ID获取商品详情 -->
+    <title>17-3 商品详情</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #f7f5f0;
+            color: #2c2a26;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #c2410c;
+            text-decoration: none;
+        }
+
+        .zyy-crumb {
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .zyy-crumb a {
+            color: #948e80;
+        }
+
+        .zyy-crumb a:hover {
+            color: #c2410c;
+        }
+
+        /* ===== 状态提示 ===== */
+        .zyy-status {
+            text-align: center;
+            font-size: 14px;
+            color: #948e80;
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 4px 14px rgba(44, 42, 38, 0.06);
+        }
+
+        .zyy-status.zyy-error {
+            color: #c0392b;
+        }
+
+        .zyy-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #e8ddc9;
+            border-top-color: #c2410c;
+            border-radius: 50%;
+            vertical-align: -2px;
+            animation: zyy_spin 0.8s linear infinite;
+        }
+
+        @keyframes zyy_spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 详情卡片 ===== */
+        .zyy-detail {
+            display: none;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 26px rgba(44, 42, 38, 0.1);
+            overflow: hidden;
+        }
+
+        .zyy-detail-main {
+            display: flex;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .zyy-img-col {
+            flex: 0 0 320px;
+        }
+
+        .zyy-img-col img {
+            width: 100%;
+            border-radius: 12px;
+            background: #f1ede4;
+        }
+
+        .zyy-img-list {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .zyy-img-list img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .zyy-img-list img.zyy-current {
+            border-color: #c2410c;
+        }
+
+        .zyy-info-col {
+            flex: 1;
+        }
+
+        .zyy-category {
+            display: inline-block;
+            background: #efe9df;
+            color: #b08d4f;
+            font-size: 12px;
+            border-radius: 999px;
+            padding: 2px 14px;
+            margin-bottom: 10px;
+        }
+
+        .zyy-info-col h1 {
+            font-size: 26px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .zyy-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .zyy-price {
+            font-size: 32px;
+            font-weight: bold;
+            color: #c2410c;
+        }
+
+        .zyy-price::before {
+            content: "$";
+            font-size: 18px;
+        }
+
+        .zyy-discount {
+            font-size: 14px;
+            color: #c0392b;
+        }
+
+        .zyy-rating-row {
+            font-size: 14px;
+            color: #d99a1b;
+            margin-bottom: 16px;
+        }
+
+        .zyy-rating-row span {
+            color: #948e80;
+            margin-left: 8px;
+        }
+
+        .zyy-desc {
+            font-size: 14px;
+            color: #5c5748;
+            margin-bottom: 18px;
+        }
+
+        .zyy-facts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .zyy-facts li {
+            background: #faf7f1;
+            border: 1px solid #efe9df;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #5c5748;
+        }
+
+        .zyy-facts b {
+            color: #2c2a26;
+        }
+
+        .zyy-tag {
+            display: inline-block;
+            background: #fdeadd;
+            color: #c2410c;
+            font-size: 12px;
+            border-radius: 4px;
+            padding: 2px 10px;
+            margin: 4px 6px 0 0;
+        }
+
+        .zyy-detail-bottom {
+            border-top: 1px solid #f1ede4;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #948e80;
+        }
+
+        .zyy-detail-bottom code {
+            font-family: Consolas, monospace;
+            background: #f1ede4;
+            border-radius: 4px;
+            padding: 1px 8px;
+        }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .zyy-detail-main {
+                flex-direction: column;
+            }
+
+            .zyy-img-col {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <nav class="zyy-crumb">
+            <a href="./17-3.html">商品列表</a> / 商品详情
+        </nav>
+
+        <p class="zyy-status" id="zyy_status">
+            <span class="zyy-spinner"></span> 正在加载商品详情…
+        </p>
+
+        <section class="zyy-detail" id="zyy_detail"></section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ===== 从 URL 查询参数中获取商品 ID =====
+        var zyy_params = new URLSearchParams(window.location.search);
+        var zyy_id = zyy_params.get("id");
+
+        // 无 id 或非法 id 时默认请求 1 号商品
+        if (!zyy_id || !/^\d+$/.test(zyy_id)) {
+            zyy_id = "1";
+        }
+
+        var zyy_apiUrl = "https://dummyjson.com/products/" + zyy_id;
+
+        // ===== fetch 根据 ID 获取单个商品 =====
+        fetch(zyy_apiUrl)
+            .then(function (zyy_res) {
+                if (!zyy_res.ok) {
+                    throw new Error("HTTP 状态码 " + zyy_res.status + "（商品可能不存在）");
+                }
+                return zyy_res.json();
+            })
+            .then(function (zyy_p) {
+                document.getElementById("zyy_status").style.display = "none";
+                document.getElementById("zyy_detail").style.display = "block";
+                zyy_renderDetail(zyy_p);
+            })
+            .catch(function (zyy_err) {
+                var zyy_el = document.getElementById("zyy_status");
+                zyy_el.textContent = "✘ 加载失败：" + zyy_err.message + "（请检查网络后刷新重试）";
+                zyy_el.className = "zyy-status zyy-error";
+            });
+
+        // ===== 渲染商品详情 =====
+        function zyy_renderDetail(zyy_p) {
+            var zyy_html = "";
+            zyy_html += '<div class="zyy-detail-main">';
+            // 左侧：主图 + 缩略图列表（点击切换主图）
+            zyy_html += '<div class="zyy-img-col">';
+            zyy_html += '<img id="zyy_mainImg" src="' + zyy_p.images[0] + '" alt="' + zyy_p.title + '">';
+            zyy_html += '<div class="zyy-img-list" id="zyy_imgList"></div>';
+            zyy_html += "</div>";
+            // 右侧：商品信息
+            zyy_html += '<div class="zyy-info-col">';
+            zyy_html += '<span class="zyy-category">' + zyy_p.category + " / " + (zyy_p.brand || "无品牌") + "</span>";
+            zyy_html += "<h1>" + zyy_p.title + "</h1>";
+            zyy_html += '<div class="zyy-price-row"><span class="zyy-price">' + zyy_p.price + '</span><span class="zyy-discount">限时优惠 -' + zyy_p.discountPercentage.toFixed(1) + "%</span></div>";
+            zyy_html += '<p class="zyy-rating-row">★ ' + zyy_p.rating + "<span>（库存 " + zyy_p.stock + " 件 · SKU：" + zyy_p.sku + "）</span></p>";
+            zyy_html += '<p class="zyy-desc">' + zyy_p.description + "</p>";
+            zyy_html += '<ul class="zyy-facts">';
+            zyy_html += "<li>商品编号：<b>No." + zyy_p.id + "</b></li>";
+            zyy_html += "<li>保修信息：<b>" + zyy_p.warrantyInformation + "</b></li>";
+            zyy_html += "<li>配送信息：<b>" + zyy_p.shippingInformation + "</b></li>";
+            zyy_html += "<li>退换政策：<b>" + zyy_p.returnPolicy + "</b></li>";
+            zyy_html += "</ul>";
+            zyy_html += "<div>";
+            for (var zyy_i = 0; zyy_i < zyy_p.tags.length; zyy_i++) {
+                zyy_html += '<span class="zyy-tag"># ' + zyy_p.tags[zyy_i] + "</span>";
+            }
+            zyy_html += "</div>";
+            zyy_html += "</div>";
+            zyy_html += "</div>";
+            zyy_html += '<div class="zyy-detail-bottom">';
+            zyy_html += "<span>数据来源：<code>https://dummyjson.com/products/" + zyy_p.id + "</code></span>";
+            zyy_html += '<a href="./17-3.html">← 返回商品列表</a>';
+            zyy_html += "</div>";
+            document.getElementById("zyy_detail").innerHTML = zyy_html;
+
+            // 渲染缩略图列表并绑定切换事件
+            var zyy_imgList = document.getElementById("zyy_imgList");
+            var zyy_imgHtml = "";
+            for (var zyy_j = 0; zyy_j < zyy_p.images.length; zyy_j++) {
+                var zyy_cls = zyy_j === 0 ? "zyy-current" : "";
+                zyy_imgHtml += '<img src="' + zyy_p.images[zyy_j] + '" class="' + zyy_cls + '" onclick="zyy_switchImg(this)">';
+            }
+            zyy_imgList.innerHTML = zyy_imgHtml;
+        }
+
+        // ===== 点击缩略图切换主图 =====
+        function zyy_switchImg(zyy_img) {
+            document.getElementById("zyy_mainImg").src = zyy_img.src;
+            var zyy_all = document.getElementById("zyy_imgList").getElementsByTagName("img");
+            for (var zyy_i = 0; zyy_i < zyy_all.length; zyy_i++) {
+                zyy_all[zyy_i].className = "";
+            }
+            zyy_img.className = "zyy-current";
+        }
+    </script>
+</body>
+</html>

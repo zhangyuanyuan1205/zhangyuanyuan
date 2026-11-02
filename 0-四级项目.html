@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 姓名：张圆圆，日期：2026-10-29，功能名称：四级项目·在线色彩无障碍模拟工具（色盲模拟预览）网页元素设计 -->
-    <title>色彩视界 ColorView · 在线色彩无障碍模拟工具</title>
+    <!-- 姓名：张圆圆，学号：24001010526，班级：计算机24005班，日期：2026-10-29，功能名称：四级项目·应急防灾科普交互页面网页元素设计 -->
+    <title>安立方 · 应急防灾科普交互页面</title>
     <style>
         /* ===== 全局公共CSS ===== */
         * {
@@ -15,14 +15,9 @@
 
         body {
             font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
-            color: #2d2a45;
-            background: #f7f8fc;
+            color: #22304a;
+            background: #f6f7fb;
             line-height: 1.7;
-        }
-
-        img {
-            display: block;
-            max-width: 100%;
         }
 
         a {
@@ -43,23 +38,22 @@
         .zyy-section-title {
             font-size: 28px;
             text-align: center;
-            color: #2d2a45;
             margin-bottom: 8px;
         }
 
         .zyy-section-sub {
             text-align: center;
-            color: #7a7699;
+            color: #8a90a5;
             font-size: 15px;
             margin-bottom: 36px;
         }
 
-        /* ===== 顶部导航（典型部分一：导航） ===== */
+        /* ===== 典型部分一：顶部导航 ===== */
         .zyy-header {
-            background: #fff;
-            box-shadow: 0 2px 12px rgba(45, 42, 69, 0.08);
+            background: #22304a;
             position: sticky;
             top: 0;
+            z-index: 10;
         }
 
         .zyy-nav-inner {
@@ -73,40 +67,47 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #fff;
             font-size: 20px;
             font-weight: bold;
         }
 
-        .zyy-logo-dot {
+        .zyy-logo-shield {
             width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: conic-gradient(#e74c3c, #f39c12, #f1c40f, #2ecc71, #3498db, #9b59b6, #e74c3c);
+            height: 32px;
+            background: #ff7043;
+            border-radius: 6px 6px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .zyy-nav {
             display: flex;
-            gap: 32px;
+            gap: 30px;
         }
 
         .zyy-nav a {
+            color: #c3cadb;
             font-size: 15px;
-            color: #55516e;
             padding: 6px 2px;
             border-bottom: 2px solid transparent;
         }
 
         .zyy-nav a:hover {
-            color: #5b4ee0;
-            border-bottom-color: #5b4ee0;
+            color: #fff;
+            border-bottom-color: #ff7043;
         }
 
-        /* ===== 首屏（典型部分二：一左一右） ===== */
+        /* ===== 典型部分二：一左一右首屏 ===== */
         .zyy-hero {
             display: flex;
             align-items: center;
             gap: 48px;
-            padding: 72px 0;
+            padding: 70px 0;
         }
 
         .zyy-hero-text {
@@ -120,37 +121,37 @@
         }
 
         .zyy-hero-text h1 span {
-            color: #5b4ee0;
+            color: #e8590c;
         }
 
         .zyy-hero-text > p {
-            color: #7a7699;
+            color: #6d7488;
             font-size: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
-        .zyy-feature-list li {
+        .zyy-hero-list li {
             display: flex;
-            align-items: flex-start;
             gap: 10px;
+            align-items: flex-start;
             margin-bottom: 12px;
             font-size: 15px;
         }
 
-        .zyy-feature-icon {
+        .zyy-check {
             flex: none;
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: #e9f7ef;
-            color: #27a05f;
+            background: #e7f4ea;
+            color: #2b8a3e;
             font-size: 13px;
             text-align: center;
             line-height: 22px;
         }
 
         .zyy-btn-group {
-            margin-top: 28px;
+            margin-top: 26px;
             display: flex;
             gap: 16px;
         }
@@ -159,91 +160,211 @@
             display: inline-block;
             padding: 12px 34px;
             border-radius: 999px;
-            background: #5b4ee0;
+            background: #ff7043;
             color: #fff;
             font-size: 15px;
         }
 
         .zyy-btn-ghost {
             background: #fff;
-            color: #5b4ee0;
-            border: 2px solid #5b4ee0;
+            color: #e8590c;
+            border: 2px solid #ff7043;
             padding: 10px 32px;
         }
 
         .zyy-hero-img {
             flex: 1 1 48%;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 14px 40px rgba(91, 78, 224, 0.22);
         }
 
-        /* ===== 色觉类型（典型部分三：上图下文卡片） ===== */
+        .zyy-hero-img svg {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 14px 40px rgba(232, 89, 12, 0.2);
+        }
+
+        /* ===== 典型部分三：上图下文灾害卡片 ===== */
         .zyy-types {
-            padding: 64px 0;
+            padding: 20px 0 60px;
         }
 
         .zyy-cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
 
         .zyy-card {
             background: #fff;
             border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(45, 42, 69, 0.1);
+            box-shadow: 0 6px 20px rgba(34, 48, 74, 0.1);
             transition: box-shadow 0.25s;
         }
 
         .zyy-card:hover {
-            box-shadow: 0 12px 32px rgba(91, 78, 224, 0.22);
+            box-shadow: 0 12px 32px rgba(232, 89, 12, 0.24);
         }
 
-        .zyy-card img {
+        .zyy-card svg {
+            display: block;
             width: 100%;
-            height: 180px;
-            object-fit: cover;
+            height: 130px;
         }
 
         .zyy-card-body {
-            padding: 20px 22px 24px;
+            padding: 18px 20px 22px;
         }
 
         .zyy-card-body h3 {
-            font-size: 19px;
+            font-size: 18px;
             margin-bottom: 6px;
         }
 
         .zyy-card-body h3 small {
-            font-size: 13px;
-            color: #9a96b8;
+            font-size: 12px;
+            color: #9aa0b4;
             font-weight: normal;
+            margin-left: 6px;
         }
 
         .zyy-card-body p {
-            font-size: 14px;
-            color: #7a7699;
+            font-size: 13px;
+            color: #6d7488;
             margin-bottom: 14px;
         }
 
         .zyy-tag {
             display: inline-block;
-            padding: 3px 12px;
+            padding: 2px 12px;
             border-radius: 999px;
-            background: #efedff;
-            color: #5b4ee0;
             font-size: 12px;
         }
 
-        /* ===== 人群分布图表（附加：CSS柱状图） ===== */
+        .zyy-tag-red    { background: #fdeceb; color: #d63031; }
+        .zyy-tag-blue   { background: #e8f1fd; color: #1971c2; }
+        .zyy-tag-orange { background: #fff0e5; color: #e8590c; }
+        .zyy-tag-yellow { background: #fff8db; color: #b08d00; }
+
+        /* ===== 交互：应急指南标签页 ===== */
+        .zyy-guide {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(34, 48, 74, 0.1);
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .zyy-guide-tabs {
+            display: flex;
+            border-bottom: 1px solid #eceef4;
+        }
+
+        .zyy-guide-tab {
+            flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 16px;
+            background: #fff;
+            color: #6d7488;
+            border: none;
+            border-left: 1px solid #f2f3f8;
+            cursor: pointer;
+        }
+
+        .zyy-guide-tab:first-child {
+            border-left: none;
+        }
+
+        .zyy-guide-tab:hover {
+            color: #e8590c;
+        }
+
+        .zyy-guide-tab.zyy-active {
+            background: #fff0e5;
+            color: #e8590c;
+            font-weight: bold;
+        }
+
+        .zyy-guide-panel {
+            padding: 26px 34px 30px;
+        }
+
+        .zyy-guide-panel h3 {
+            font-size: 19px;
+            margin-bottom: 14px;
+        }
+
+        .zyy-guide-panel li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 9px 0;
+            border-bottom: 1px dashed #eef0f5;
+            font-size: 15px;
+        }
+
+        .zyy-guide-panel li:last-child {
+            border-bottom: none;
+        }
+
+        .zyy-guide-num {
+            flex: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #22304a;
+            color: #fff;
+            font-size: 13px;
+            text-align: center;
+            line-height: 24px;
+        }
+
+        /* ===== 家庭应急物资清单（列表） ===== */
+        .zyy-supplies {
+            margin-bottom: 60px;
+        }
+
+        .zyy-supply-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .zyy-supply-col {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px 26px;
+            box-shadow: 0 6px 20px rgba(34, 48, 74, 0.08);
+        }
+
+        .zyy-supply-col h3 {
+            font-size: 18px;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #ff7043;
+        }
+
+        .zyy-supply-col li {
+            padding: 7px 0;
+            font-size: 14px;
+            color: #4c5468;
+        }
+
+        .zyy-supply-col li::before {
+            content: "✓";
+            color: #2b8a3e;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* ===== 数据速览（CSS柱状图表） ===== */
         .zyy-chart {
             background: #fff;
             border-radius: 14px;
             padding: 40px 32px 32px;
-            box-shadow: 0 6px 20px rgba(45, 42, 69, 0.08);
-            margin-bottom: 64px;
+            box-shadow: 0 6px 20px rgba(34, 48, 74, 0.08);
+            margin-bottom: 60px;
         }
 
         .zyy-chart h2 {
@@ -254,7 +375,7 @@
 
         .zyy-chart > p {
             text-align: center;
-            color: #9a96b8;
+            color: #9aa0b4;
             font-size: 13px;
             margin-bottom: 28px;
         }
@@ -263,9 +384,9 @@
             display: flex;
             align-items: flex-end;
             justify-content: space-around;
-            gap: 20px;
+            gap: 18px;
             height: 220px;
-            border-bottom: 2px solid #e7e6f2;
+            border-bottom: 2px solid #eceef4;
         }
 
         .zyy-bar-item {
@@ -280,31 +401,32 @@
         .zyy-bar-value {
             font-size: 14px;
             font-weight: bold;
-            color: #2d2a45;
             margin-bottom: 6px;
+            color: #22304a;
         }
 
         .zyy-bar {
-            width: 46px;
+            width: 48px;
             border-radius: 8px 8px 0 0;
         }
 
-        .zyy-bar-red    { height: 80%;  background: #e74c3c; }
-        .zyy-bar-green  { height: 55%;  background: #2ecc71; }
-        .zyy-bar-blue   { height: 22%;  background: #3498db; }
-        .zyy-bar-full   { height: 12%;  background: #9b59b6; }
+        .zyy-bar-1 { height: 92%; background: #1971c2; }
+        .zyy-bar-2 { height: 52%; background: #e8590c; }
+        .zyy-bar-3 { height: 34%; background: #f59f00; }
+        .zyy-bar-4 { height: 18%; background: #2b8a3e; }
+        .zyy-bar-5 { height: 10%; background: #9b59b6; }
 
         .zyy-bar-label {
             margin-top: 12px;
             font-size: 13px;
-            color: #7a7699;
+            color: #6d7488;
             text-align: center;
         }
 
         /* ===== 页脚 ===== */
         .zyy-footer {
-            background: #2d2a45;
-            color: #b7b4d0;
+            background: #22304a;
+            color: #aeb6c9;
             text-align: center;
             padding: 28px 0;
             font-size: 14px;
@@ -314,19 +436,24 @@
             color: #fff;
         }
 
+        .zyy-footer .zyy-warn {
+            color: #ff9b73;
+        }
+
         /* ===== 响应式：多视口适配 ===== */
         @media (max-width: 860px) {
             .zyy-hero {
                 flex-direction: column;
-                padding: 48px 0;
+                padding: 44px 0;
             }
 
-            .zyy-cards {
+            .zyy-cards,
+            .zyy-supply-grid {
                 grid-template-columns: 1fr;
             }
 
             .zyy-nav {
-                gap: 18px;
+                gap: 16px;
             }
         }
     </style>
@@ -336,95 +463,208 @@
     <header class="zyy-header">
         <div class="zyy-container zyy-nav-inner">
             <a class="zyy-logo" href="#">
-                <span class="zyy-logo-dot"></span>
-                色彩视界 ColorView
+                <span class="zyy-logo-shield">安</span>
+                安立方 · 应急防灾科普
             </a>
             <nav class="zyy-nav">
-                <a href="#zyy-hero">工具介绍</a>
-                <a href="#zyy-types">模拟类型</a>
-                <a href="#zyy-chart">人群分布</a>
-                <a href="#zyy-footer">关于工具</a>
+                <a href="#zyy-hero">首页</a>
+                <a href="#zyy-types">灾害类型</a>
+                <a href="#zyy-guide">应急指南</a>
+                <a href="#zyy-supplies">物资清单</a>
+                <a href="#zyy-chart">数据速览</a>
             </nav>
         </div>
     </header>
 
-    <!-- 典型部分二：一左一右（左文右图） -->
     <main class="zyy-container">
+        <!-- 典型部分二：一左一右（左文右图） -->
         <section class="zyy-hero" id="zyy-hero">
             <div class="zyy-hero-text">
-                <h1>让每一位用户<br>都<span>看得见</span>色彩</h1>
-                <p>色彩视界 ColorView 是一款在线色彩无障碍模拟工具，可以模拟红绿色盲、蓝黄色盲、全色盲等色觉障碍用户眼中的网页效果，帮助设计师与开发者提前发现配色问题。</p>
-                <ul class="zyy-feature-list">
-                    <li><span class="zyy-feature-icon">✓</span>支持红色盲、绿色盲、蓝黄色盲、全色盲共 5 种模拟类型</li>
-                    <li><span class="zyy-feature-icon">✓</span>上传设计图或输入色值，一键生成色盲视角预览</li>
-                    <li><span class="zyy-feature-icon">✓</span>对比度检测建议，让配色同时满足美观与无障碍</li>
+                <h1>防灾于未然<br>让安全成为<span>习惯</span></h1>
+                <p>安立方是面向家庭和学校的应急防灾科普平台，用通俗的图解与交互指南，帮助每个人掌握地震、洪水、台风、火灾四大灾害的科学应对方法。</p>
+                <ul class="zyy-hero-list">
+                    <li><span class="zyy-check">✓</span>四大常见灾害的图解知识与避险要点</li>
+                    <li><span class="zyy-check">✓</span>交互式应急指南，点击灾害即查即用</li>
+                    <li><span class="zyy-check">✓</span>家庭应急物资清单，一键对照备齐</li>
                 </ul>
                 <div class="zyy-btn-group">
-                    <a class="zyy-btn" href="#zyy-types">开始模拟</a>
-                    <a class="zyy-btn-ghost zyy-btn" href="#zyy-chart">了解色觉障碍</a>
+                    <a class="zyy-btn" href="#zyy-guide">查看应急指南</a>
+                    <a class="zyy-btn-ghost zyy-btn" href="#zyy-types">认识灾害</a>
                 </div>
             </div>
             <div class="zyy-hero-img">
-                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=flat%20vector%20illustration%20of%20color%20accessibility%2C%20human%20eye%20with%20rainbow%20spectrum%2C%20ishihara%20color%20test%20plate%20made%20of%20colorful%20dots%2C%20indigo%20and%20orange%20palette%2C%20modern%20web%20hero%20illustration&image_size=landscape_16_9" alt="色彩无障碍模拟工具主视觉插图">
+                <!-- 内联SVG插画：安全盾牌守护房屋 -->
+                <svg viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="安全盾牌守护房屋插画">
+                    <rect width="480" height="340" rx="16" fill="#fdf1e7"/>
+                    <circle cx="392" cy="70" r="34" fill="#f59f00" opacity="0.85"/>
+                    <path d="M60 300 Q120 280 180 300 T300 300 T420 300" stroke="#c9b8a5" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <!-- 盾牌 -->
+                    <path d="M240 40 L340 76 V170 C340 234 296 274 240 296 C184 274 140 234 140 170 V76 Z" fill="#ff7043"/>
+                    <path d="M240 62 L318 90 V168 C318 220 282 252 240 270 C198 252 162 220 162 168 V90 Z" fill="#fff" opacity="0.94"/>
+                    <!-- 房屋 -->
+                    <rect x="212" y="150" width="56" height="46" fill="#22304a"/>
+                    <path d="M204 152 L240 118 L276 152 Z" fill="#e8590c"/>
+                    <rect x="230" y="168" width="20" height="28" fill="#ff9b73"/>
+                    <!-- 爱心 -->
+                    <path d="M240 214 c-8-8 -20-4 -20 6 c0 8 12 14 20 20 c8-6 20-12 20-20 c0-10 -12-14 -20-6 Z" fill="#e03131"/>
+                    <!-- 环绕警示色点 -->
+                    <circle cx="96" cy="120" r="10" fill="#1971c2"/>
+                    <circle cx="410" cy="220" r="10" fill="#2b8a3e"/>
+                    <circle cx="118" cy="230" r="8" fill="#f59f00"/>
+                </svg>
             </div>
         </section>
 
-        <!-- 典型部分三：上图下文卡片 -->
+        <!-- 典型部分三：上图下文灾害卡片 -->
         <section class="zyy-types" id="zyy-types">
-            <h2 class="zyy-section-title">常见色觉障碍类型</h2>
-            <p class="zyy-section-sub">三种最常见的先天性色觉障碍，点击类型即可在工具中查看模拟效果</p>
+            <h2 class="zyy-section-title">认识四大常见灾害</h2>
+            <p class="zyy-section-sub">了解灾害特点，是科学避险的第一步</p>
             <div class="zyy-cards">
                 <article class="zyy-card">
-                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20red%20and%20orange%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="红色盲石原色觉检测图示意">
+                    <!-- SVG插画：地震 -->
+                    <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="地震插画">
+                        <rect width="300" height="130" fill="#fdeceb"/>
+                        <path d="M0 96 L60 96 L74 84 L96 108 L128 92 L150 104 L186 90 L214 104 L246 94 L300 102 L300 130 L0 130 Z" fill="#d69a6a"/>
+                        <path d="M60 96 L74 84 L96 108 L88 130 L70 130 Z" fill="#8c5a2b"/>
+                        <rect x="196" y="52" width="52" height="40" fill="#22304a"/>
+                        <path d="M188 54 L222 24 L256 54 Z" fill="#e8590c"/>
+                        <rect x="214" y="66" width="16" height="26" fill="#ff9b73"/>
+                        <path d="M40 40 l14 10 M52 34 l10 14 M240 40 l-14 10 M252 34 l-10 14" stroke="#e03131" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
                     <div class="zyy-card-body">
-                        <h3>红色盲 <small>Protanopia</small></h3>
-                        <p>缺少红色感光细胞，红色变暗，红绿难以区分，常把红色看成深灰或褐色。</p>
-                        <span class="zyy-tag">男性占比约 1%</span>
+                        <h3>地震<small>Earthquake</small></h3>
+                        <p>突发性强、破坏面广，室内先躲避、震后快撤离。</p>
+                        <span class="zyy-tag zyy-tag-red">黄金12秒自救</span>
                     </div>
                 </article>
                 <article class="zyy-card">
-                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20green%20and%20brown%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="绿色盲石原色觉检测图示意">
+                    <!-- SVG插画：洪水 -->
+                    <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="洪水插画">
+                        <rect width="300" height="130" fill="#e8f1fd"/>
+                        <path d="M0 92 Q30 78 60 92 T120 92 T180 92 T240 92 T300 92 V130 H0 Z" fill="#1971c2" opacity="0.9"/>
+                        <path d="M0 104 Q30 92 60 104 T120 104 T180 104 T240 104 T300 104 V130 H0 Z" fill="#1c5fa8"/>
+                        <rect x="204" y="30" width="56" height="42" fill="#f6f7fb" stroke="#22304a" stroke-width="3"/>
+                        <path d="M196 32 L232 4 L268 32 Z" fill="#e8590c"/>
+                        <rect x="224" y="46" width="16" height="26" fill="#1971c2"/>
+                        <circle cx="60" cy="34" r="6" fill="#5c7cfa"/>
+                        <circle cx="84" cy="26" r="5" fill="#5c7cfa"/>
+                        <circle cx="108" cy="36" r="6" fill="#5c7cfa"/>
+                        <path d="M52 52 l8 14 M76 44 l8 14 M100 54 l8 14" stroke="#5c7cfa" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
                     <div class="zyy-card-body">
-                        <h3>绿色盲 <small>Deuteranopia</small></h3>
-                        <p>缺少绿色感光细胞，是最常见的色觉障碍，红绿灯与红绿图表在他们眼中几乎一样。</p>
-                        <span class="zyy-tag">男性占比约 6%</span>
+                        <h3>洪水<small>Flood</small></h3>
+                        <p>涨水快、危害大，向高处转移，远离积水与电线。</p>
+                        <span class="zyy-tag zyy-tag-blue">蓝色预警高发</span>
                     </div>
                 </article>
                 <article class="zyy-card">
-                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ishihara%20color%20blindness%20test%20plate%20with%20blue%20and%20yellow%20dots%20pattern%2C%20flat%20design%2C%20simple%20circle%2C%20minimal%20illustration&image_size=square" alt="蓝黄色盲石原色觉检测图示意">
+                    <!-- SVG插画：台风 -->
+                    <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="台风插画">
+                        <rect width="300" height="130" fill="#fff0e5"/>
+                        <path d="M40 54 a28 20 0 1 1 56 0 a20 14 0 1 1 -40 0" fill="none" stroke="#868e96" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="96" cy="50" r="10" fill="#868e96"/>
+                        <path d="M20 84 q22 -10 44 0 t44 0" stroke="#5c7cfa" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <path d="M30 102 q22 -10 44 0 t44 0" stroke="#5c7cfa" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <rect x="206" y="44" width="50" height="46" fill="#fff" stroke="#22304a" stroke-width="3"/>
+                        <path d="M198 46 L231 16 L264 46 Z" fill="#e8590c"/>
+                        <path d="M282 30 l12 -8 M282 52 l16 -4 M282 74 l12 8" stroke="#868e96" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
                     <div class="zyy-card-body">
-                        <h3>蓝黄色盲 <small>Tritanopia</small></h3>
-                        <p>缺少蓝色感光细胞，蓝黄难以区分，蓝色偏绿、黄色偏粉紫，较为罕见。</p>
-                        <span class="zyy-tag">占比约 0.01%</span>
+                        <h3>台风<small>Typhoon</small></h3>
+                        <p>伴随狂风暴雨，加固门窗，远离广告牌与临时建筑。</p>
+                        <span class="zyy-tag zyy-tag-orange">橙色预警常客</span>
+                    </div>
+                </article>
+                <article class="zyy-card">
+                    <!-- SVG插画：火灾 -->
+                    <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="火灾插画">
+                        <rect width="300" height="130" fill="#fff8db"/>
+                        <path d="M96 118 C70 100 76 78 90 62 C88 78 98 84 100 78 C102 68 96 54 108 40 C106 58 120 60 122 74 C130 60 128 50 124 40 C142 52 150 78 142 100 C138 112 124 120 112 122 Z" fill="#e8590c"/>
+                        <path d="M114 118 C102 108 104 96 112 88 C112 96 120 96 122 102 C128 96 126 90 124 86 C132 94 130 110 122 118 Z" fill="#f59f00"/>
+                        <rect x="196" y="56" width="54" height="48" fill="#fff" stroke="#22304a" stroke-width="3"/>
+                        <path d="M188 58 L223 28 L258 58 Z" fill="#22304a"/>
+                        <path d="M282 26 q10 10 0 20 t0 20" stroke="#adb5bd" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <div class="zyy-card-body">
+                        <h3>火灾<small>Fire</small></h3>
+                        <p>蔓延迅速、烟雾致命，低姿捂鼻撤离，不乘电梯。</p>
+                        <span class="zyy-tag zyy-tag-yellow">日常最高频</span>
                     </div>
                 </article>
             </div>
         </section>
 
-        <!-- 附加典型部分：CSS 柱状图表 -->
-        <section class="zyy-chart" id="zyy-chart">
-            <h2>色觉障碍人群分布</h2>
-            <p>先天性色觉障碍人群大致占比（数据为示意，主要来源于流行病学统计）</p>
+        <!-- 交互：应急指南标签页 -->
+        <section class="zyy-container" id="zyy-guide" style="padding: 0 0 60px;">
+            <h2 class="zyy-section-title">应急避险指南</h2>
+            <p class="zyy-section-sub">点击灾害标签，查看对应的黄金避险要点</p>
+            <div class="zyy-guide">
+                <div class="zyy-guide-tabs" id="zyy_guideTabs"></div>
+                <div class="zyy-guide-panel" id="zyy_guidePanel"></div>
+            </div>
+        </section>
+
+        <!-- 家庭应急物资清单（列表） -->
+        <section class="zyy-container zyy-supplies" id="zyy-supplies">
+            <h2 class="zyy-section-title">家庭应急物资清单</h2>
+            <p class="zyy-section-sub">建议每个家庭按三备齐，定期检查更换</p>
+            <div class="zyy-supply-grid">
+                <div class="zyy-supply-col">
+                    <h3>食品与饮水</h3>
+                    <ul>
+                        <li>瓶装饮用水（3 天量）</li>
+                        <li>压缩饼干 / 方便食品</li>
+                        <li>罐头与巧克力等高热量食品</li>
+                    </ul>
+                </div>
+                <div class="zyy-supply-col">
+                    <h3>救援与工具</h3>
+                    <ul>
+                        <li>手电筒与备用电池</li>
+                        <li>高频口哨与多功能刀具</li>
+                        <li>充电宝、收音机、保温毯</li>
+                    </ul>
+                </div>
+                <div class="zyy-supply-col">
+                    <h3>医疗与证件</h3>
+                    <ul>
+                        <li>急救包与家庭常用药品</li>
+                        <li>身份证复印件与保险单</li>
+                        <li>紧急联系人卡片</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据速览（CSS柱状图表） -->
+        <section class="zyy-container zyy-chart" id="zyy-chart">
+            <h2>自然灾害损失构成速览</h2>
+            <p>各类灾害造成直接经济损失占比（数据为教学示意比例）</p>
             <div class="zyy-bars">
                 <div class="zyy-bar-item">
-                    <span class="zyy-bar-value">8%</span>
-                    <div class="zyy-bar zyy-bar-red"></div>
-                    <span class="zyy-bar-label">红绿色盲<br>（男性）</span>
+                    <span class="zyy-bar-value">55%</span>
+                    <div class="zyy-bar zyy-bar-1"></div>
+                    <span class="zyy-bar-label">洪涝及地质</span>
                 </div>
                 <div class="zyy-bar-item">
-                    <span class="zyy-bar-value">0.5%</span>
-                    <div class="zyy-bar zyy-bar-green"></div>
-                    <span class="zyy-bar-label">红绿色盲<br>（女性）</span>
+                    <span class="zyy-bar-value">22%</span>
+                    <div class="zyy-bar zyy-bar-2"></div>
+                    <span class="zyy-bar-label">台风</span>
                 </div>
                 <div class="zyy-bar-item">
-                    <span class="zyy-bar-value">0.01%</span>
-                    <div class="zyy-bar zyy-bar-blue"></div>
-                    <span class="zyy-bar-label">蓝黄色盲</span>
+                    <span class="zyy-bar-value">12%</span>
+                    <div class="zyy-bar zyy-bar-3"></div>
+                    <span class="zyy-bar-label">风雹</span>
                 </div>
                 <div class="zyy-bar-item">
-                    <span class="zyy-bar-value">0.003%</span>
-                    <div class="zyy-bar zyy-bar-full"></div>
-                    <span class="zyy-bar-label">全色盲</span>
+                    <span class="zyy-bar-value">6%</span>
+                    <div class="zyy-bar zyy-bar-4"></div>
+                    <span class="zyy-bar-label">低温冷冻</span>
+                </div>
+                <div class="zyy-bar-item">
+                    <span class="zyy-bar-value">3%</span>
+                    <div class="zyy-bar zyy-bar-5"></div>
+                    <span class="zyy-bar-label">地震及其他</span>
                 </div>
             </div>
         </section>
@@ -432,8 +672,94 @@
 
     <!-- 页脚 -->
     <footer class="zyy-footer" id="zyy-footer">
-        <p><b>色彩视界 ColorView</b> · 在线色彩无障碍模拟工具（色盲模拟预览）</p>
+        <p><b>安立方 · 应急防灾科普</b> —— 防灾减灾，从了解开始</p>
+        <p>紧急电话：<span class="zyy-warn">报警 110 · 火警 119 · 急救 120 · 救援 12395</span></p>
         <p>张圆圆 · 高级网页设计I 四级项目 · 网页元素设计 · 2026</p>
     </footer>
+
+    <script>
+        // 应急指南数据：四大灾害的避险要点
+        var zyy_guides = {
+            zyy_eq: {
+                zyy_title: "地震避险要点",
+                zyy_items: [
+                    "室内立即\"伏地、遮挡、手抓牢\"，躲入坚固桌下或承重墙角",
+                    "远离窗户、吊灯、衣柜等易坠落物品，不乘电梯",
+                    "震动停止后，有序撤离到开阔地带，警惕余震",
+                    "被困时保存体力，用敲击声代替呼喊求救"
+                ]
+            },
+            zyy_fl: {
+                zyy_title: "洪水避险要点",
+                zyy_items: [
+                    "收到预警立即向高处转移，关闭电源与燃气",
+                    "不涉水行走，积水超过脚踝即可能有危险",
+                    "随身携带口哨、手电等漂浮与求救物品",
+                    "被围困时登上屋顶等高处，挥动鲜艳衣物求救"
+                ]
+            },
+            zyy_ty: {
+                zyy_title: "台风避险要点",
+                zyy_items: [
+                    "提前加固门窗，玻璃贴米字形胶带防碎裂",
+                    "储备 3 天以上的食品、饮水和照明物资",
+                    "台风期间不外出，远离广告牌、临时建筑与大树",
+                    "警惕风雨突然变小的\"台风眼\"，勿急于出门"
+                ]
+            },
+            zyy_fi: {
+                zyy_title: "火灾避险要点",
+                zyy_items: [
+                    "发现火情立即拨打 119，说清地址与火势",
+                    "湿毛巾捂住口鼻，低姿沿疏散通道撤离",
+                    "不乘电梯，开门前先触摸门把手判断火情",
+                    "身上着火就地打滚压灭，切勿奔跑扇风"
+                ]
+            }
+        };
+
+        // 标签定义
+        var zyy_guideTabs = [
+            { zyy_label: "地震避险", zyy_key: "zyy_eq" },
+            { zyy_label: "洪水避险", zyy_key: "zyy_fl" },
+            { zyy_label: "台风避险", zyy_key: "zyy_ty" },
+            { zyy_label: "火灾避险", zyy_key: "zyy_fi" }
+        ];
+
+        var zyy_currentGuide = "zyy_eq"; // 默认显示地震
+
+        // 渲染指南标签栏
+        function zyy_renderGuideTabs() {
+            var zyy_html = "";
+            for (var zyy_i = 0; zyy_i < zyy_guideTabs.length; zyy_i++) {
+                var zyy_t = zyy_guideTabs[zyy_i];
+                var zyy_cls = zyy_t.zyy_key === zyy_currentGuide ? "zyy-guide-tab zyy-active" : "zyy-guide-tab";
+                zyy_html += '<button class="' + zyy_cls + '" onclick="zyy_switchGuide(\'' + zyy_t.zyy_key + '\')">' + zyy_t.zyy_label + '</button>';
+            }
+            document.getElementById("zyy_guideTabs").innerHTML = zyy_html;
+        }
+
+        // 渲染指南面板
+        function zyy_renderGuidePanel() {
+            var zyy_g = zyy_guides[zyy_currentGuide];
+            var zyy_html = "<h3>" + zyy_g.zyy_title + "</h3><ul>";
+            for (var zyy_i = 0; zyy_i < zyy_g.zyy_items.length; zyy_i++) {
+                zyy_html += '<li><span class="zyy-guide-num">' + (zyy_i + 1) + '</span><span>' + zyy_g.zyy_items[zyy_i] + '</span></li>';
+            }
+            zyy_html += "</ul>";
+            document.getElementById("zyy_guidePanel").innerHTML = zyy_html;
+        }
+
+        // 切换指南标签
+        function zyy_switchGuide(zyy_key) {
+            zyy_currentGuide = zyy_key;
+            zyy_renderGuideTabs();
+            zyy_renderGuidePanel();
+        }
+
+        // 初始化
+        zyy_renderGuideTabs();
+        zyy_renderGuidePanel();
+    </script>
 </body>
 </html>

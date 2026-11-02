@@ -77,6 +77,38 @@
 提示词：
 提交到github
 
+2026-10-29-16-47
+模型：GLM-5.3-Flash
+提示词：
+修改0-四级项目.html，修改主题为应急防灾科普交互页面，从新做一个网页
+
+2026-10-29-16-54
+模型：GLM-5.3-Flash
+提示词：
+24001010526 张圆圆 计算机24005班，帮我完成报告
+
+2026-11-02-15-37
+模型：GLM-5.3-Flash
+提示词：
+完成17-1.html，展示json。
+
+2026-11-02-15-43
+模型：GLM-5.3-Flash
+提示词：
+完成17-2.html 获取`http://jsonplaceholder.typicode.com/users`的数据并展示。接口可以跨域访问。使用fetch和原生代码实现。
+
+2026-11-02-15-46
+模型：GLM-5.3-Flash
+提示词：
+完成17-3.html 和17-3-detail.html,显示列表和列表详情，数据来源于接口，使用fetch
+列表: `https://dummyjson.com/products?limit=8`，默认商品列表。
+详情: `https://dummyjson.com/products/1`，根据ID获取单个商品。
+
+2026-11-02-15-50
+模型：GLM-5.3-Flash
+提示词：
+提交项目
+
 2026-10-29-15-39
 模型：GLM-5.3-Flash
 提示词：

@@ -1,0 +1,11 @@
+{
+  "zyy_course": "高级网页设计I",
+  "zyy_author": "张圆圆",
+  "zyy_studentList": [
+    { "zyy_name": "张圆圆", "zyy_age": 20, "zyy_major": "计算机", "zyy_skills": ["HTML", "CSS", "JavaScript"] },
+    { "zyy_name": "李雷", "zyy_age": 21, "zyy_major": "软件工程", "zyy_skills": ["Java", "MySQL"] },
+    { "zyy_name": "韩梅梅", "zyy_age": 19, "zyy_major": "大数据", "zyy_skills": ["Python", "SQL", "Excel"] }
+  ],
+  "zyy_isOpen": true,
+  "zyy_score": null
+}
