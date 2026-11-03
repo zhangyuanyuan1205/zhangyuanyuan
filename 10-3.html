@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-03，功能名称：响应式全屏CSS动画页面（元素随窗口自适应） -->
+    <title>10-3 响应式全屏动画 · 张圆圆</title>
+    <style>
+        /* ===== 全屏响应式布局：尺寸全部使用 vw / vh / % / clamp()，随窗口缩放而动画表现不变 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            overflow: hidden; /* 全屏无滚动 */
+            background: radial-gradient(circle at 50% 42%, #221a3e 0%, #101020 58%, #0a0a14 100%);
+            color: #eceafd;
+            -webkit-font-smoothing: antialiased; /* 文字渲染更清晰 */
+        }
+
+        a {
+            color: #8f9bff;
+            text-decoration: none;
+        }
+
+        /* ===== 全屏舞台 ===== */
+        .zyy_stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            /* 背景色呼吸渐变 */
+            animation: zyy_bgGlow 10s ease-in-out infinite;
+        }
+
+        @keyframes zyy_bgGlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50%      { filter: hue-rotate(28deg); }
+        }
+
+        /* ===== 中央主角：张圆圆 三个大字 ===== */
+        .zyy_name {
+            position: absolute;
+            left: 50%;
+            top: 44%;
+            transform: translate(-50%, -50%);
+            /* 字号随视口宽度伸缩：最小 56px、理想 15vw、最大 200px */
+            font-size: clamp(56px, 15vw, 200px);
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            background: linear-gradient(120deg, #ff7eb3, #ff9d5c 35%, #feff9c 65%, #7afcff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            /* 组合动画：渐变流动 + 上下浮动 */
+            animation:
+                zyy_flow 6s ease-in-out infinite,
+                zyy_bob 3.4s ease-in-out infinite;
+            filter: drop-shadow(0 0 2.2vw rgba(255, 158, 92, 0.5));
+        }
+
+        @keyframes zyy_flow {
+            0%, 100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
+        }
+
+        @keyframes zyy_bob {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50%      { transform: translate(-50%, calc(-50% - 2.2vh)); }
+        }
+
+        .zyy_slogan {
+            position: absolute;
+            left: 50%;
+            top: 63%;
+            transform: translateX(-50%);
+            font-size: clamp(13px, 2.4vw, 22px);
+            letter-spacing: 0.5em;
+            color: #b8b3dd;
+            white-space: nowrap;
+            text-shadow: 0 1px 10px rgba(10, 10, 20, 0.85); /* 保证任何背景下都清晰可读 */
+        }
+
+        /* ===== 漂浮装饰元素：尺寸用 vw，位置用 %，缩放窗口动画照常 ===== */
+        .zyy_bubble {
+            position: absolute;
+            border-radius: 50%;
+            animation: zyy_rise linear infinite;
+        }
+
+        /* 六个气泡，各自大小 / 位置 / 时长 / 延迟不同 */
+        .zyy_bubble:nth-child(1) { left: 8%;  bottom: -8vh; width: 3vw;  height: 3vw;  background: rgba(122, 252, 255, 0.30); animation-duration: 11s; }
+        .zyy_bubble:nth-child(2) { left: 22%; bottom: -8vh; width: 1.8vw; height: 1.8vw; background: rgba(255, 126, 179, 0.32); animation-duration: 14s; animation-delay: 2s; }
+        .zyy_bubble:nth-child(3) { left: 68%; bottom: -8vh; width: 2.4vw; height: 2.4vw; background: rgba(254, 255, 156, 0.28); animation-duration: 12s; animation-delay: 5s; }
+        .zyy_bubble:nth-child(4) { left: 84%; bottom: -8vh; width: 3.4vw; height: 3.4vw; background: rgba(138, 255, 193, 0.26); animation-duration: 16s; animation-delay: 1s; }
+        .zyy_bubble:nth-child(5) { left: 45%; bottom: -8vh; width: 1.2vw; height: 1.2vw; background: rgba(157, 140, 255, 0.35); animation-duration: 9s;  animation-delay: 7s; }
+        .zyy_bubble:nth-child(6) { left: 92%; bottom: -8vh; width: 1.6vw; height: 1.6vw; background: rgba(255, 157, 92, 0.30);  animation-duration: 13s; animation-delay: 4s; }
+
+        @keyframes zyy_rise {
+            0%   { transform: translateY(0)      scale(1);    opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 0.6; }
+            100% { transform: translateY(-108vh) scale(1.25); opacity: 0; }
+        }
+
+        /* ===== 双色旋转光环 ===== */
+        .zyy_ring {
+            position: absolute;
+            border-radius: 50%;
+            border-style: solid;
+            border-color: transparent;
+            animation: zyy_spin linear infinite;
+        }
+
+        .zyy_ring:nth-of-type(1) {
+            left: 50%; top: 44%;
+            width: 52vmin; height: 52vmin;
+            margin: -26vmin 0 0 -26vmin;
+            border-width: 0.5vmin;
+            border-top-color: #7afcff;
+            border-right-color: #7afcff;
+            animation-duration: 9s;
+            opacity: 0.55;
+        }
+
+        .zyy_ring:nth-of-type(2) {
+            left: 50%; top: 44%;
+            width: 70vmin; height: 70vmin;
+            margin: -35vmin 0 0 -35vmin;
+            border-width: 0.2vmin;
+            border-bottom-color: #ff7eb3;
+            border-left-color: #ff7eb3;
+            animation-duration: 14s;
+            animation-direction: reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes zyy_spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ===== 四角发光球：呼吸光晕 ===== */
+        .zyy_orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 34% 30%, #cfc6ff, #6f5bd6 72%);
+            animation: zyy_glowPulse 2.6s ease-in-out infinite;
+        }
+
+        .zyy_orb:nth-of-type(1) { left: 6%;  top: 12%;  width: 4.6vw; height: 4.6vw; }
+        .zyy_orb:nth-of-type(2) { right: 8%; top: 16%;  width: 3.4vw; height: 3.4vw; animation-delay: 0.9s; }
+        .zyy_orb:nth-of-type(3) { left: 12%; bottom: 14%; width: 3vw; height: 3vw; animation-delay: 1.6s; }
+        .zyy_orb:nth-of-type(4) { right: 12%; bottom: 18%; width: 5vw; height: 5vw; animation-delay: 0.4s; }
+
+        @keyframes zyy_glowPulse {
+            0%, 100% { box-shadow: 0 0 1vw 0.3vw rgba(157, 140, 255, 0.35); transform: scale(1); }
+            50%      { box-shadow: 0 0 4vw 1.4vw rgba(157, 140, 255, 0.75); transform: scale(1.12); }
+        }
+
+        /* ===== 底部波浪条：横向循环移动 ===== */
+        .zyy_wave {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 200vw;
+            height: 9vh;
+            background: repeating-linear-gradient(90deg,
+                rgba(122, 252, 255, 0.14) 0 4vw, transparent 4vw 8vw);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            animation: zyy_waveMove 8s linear infinite;
+        }
+
+        .zyy_wave:nth-of-type(2) {
+            height: 6vh;
+            background: repeating-linear-gradient(90deg,
+                rgba(255, 126, 179, 0.12) 0 5vw, transparent 5vw 10vw);
+            animation-duration: 13s;
+            animation-direction: reverse;
+            opacity: 0.8;
+        }
+
+        @keyframes zyy_waveMove {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ===== 响应式断点：视口变化时背景随之切换，文字同步适配 ===== */
+
+        /* 中屏（平板/小窗口）：靛蓝星空背景 */
+        @media (max-width: 1024px) {
+            body {
+                background: radial-gradient(circle at 50% 40%, #16324a 0%, #0e1a2b 58%, #080f18 100%);
+            }
+        }
+
+        /* 窄屏（手机）：暖夜色背景，主字占比加大、间距收紧，阅读更舒适 */
+        @media (max-width: 640px) {
+            body {
+                background: radial-gradient(circle at 50% 36%, #3e2233 0%, #201321 58%, #120a14 100%);
+            }
+
+            .zyy_name {
+                top: 42%;
+                font-size: clamp(52px, 17vw, 96px);
+            }
+
+            .zyy_slogan {
+                top: 58%;
+                font-size: clamp(12px, 3.4vw, 16px);
+            }
+        }
+
+        /* 竖屏：背景改为上下纵深渐变，主字上移为底部动画元素留出空间 */
+        @media (orientation: portrait) {
+            body {
+                background: linear-gradient(180deg, #2a1e4d 0%, #14122b 55%, #0a0a16 100%);
+            }
+
+            .zyy_name {
+                top: 40%;
+            }
+        }
+
+        /* 超宽大屏：更沉静的深蓝背景，主字限住最大值保持舒适视觉 */
+        @media (min-width: 1600px) {
+            body {
+                background: radial-gradient(circle at 50% 44%, #1d2b3f 0%, #101624 58%, #0a0c14 100%);
+            }
+
+            .zyy_name {
+                font-size: 170px;
+            }
+        }
+
+        /* 小屏时简化装饰，主体动画不变 */
+        @media (max-width: 640px) {
+            .zyy_orb:nth-of-type(2),
+            .zyy_orb:nth-of-type(3) {
+                display: none; /* 手机上隐藏两个小球避免拥挤 */
+            }
+
+            .zyy_name {
+                letter-spacing: 0.04em; /* 窄屏收紧字距防换行 */
+            }
+
+            .zyy_slogan {
+                letter-spacing: 0.3em;
+            }
+        }
+
+        @media (max-height: 480px) {
+            .zyy_slogan { display: none; } /* 横屏矮窗口隐藏标语 */
+        }
+
+        /* ===== 返回首页：固定角落，尺寸不随舞台变化 ===== */
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            z-index: 10;
+            font-size: 13px;
+            background: rgba(35, 35, 58, 0.8);
+            border: 1px solid #3a3a5d;
+            border-radius: 999px;
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 全屏动画舞台：中央张圆圆大字 + 光环 + 气泡 + 发光球 + 波浪 -->
+    <div class="zyy_stage">
+        <span class="zyy_ring"></span>
+        <span class="zyy_ring"></span>
+
+        <h1 class="zyy_name">张圆圆</h1>
+        <p class="zyy_slogan">响应式全屏 CSS 动画</p>
+
+        <span class="zyy_orb"></span>
+        <span class="zyy_orb"></span>
+        <span class="zyy_orb"></span>
+        <span class="zyy_orb"></span>
+
+        <span class="zyy_bubble"></span>
+        <span class="zyy_bubble"></span>
+        <span class="zyy_bubble"></span>
+        <span class="zyy_bubble"></span>
+        <span class="zyy_bubble"></span>
+        <span class="zyy_bubble"></span>
+
+        <span class="zyy_wave"></span>
+        <span class="zyy_wave"></span>
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+</body>
+</html>

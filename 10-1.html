@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-03，功能名称：纯CSS动画练习（关键帧组合：颜色渐变、浮动、旋转、发光） -->
+    <title>10-1 纯 CSS 动画练习</title>
+    <style>
+        /* ===== 全局公共CSS（无任何 JavaScript） ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #12121f;
+            color: #e8e8f4;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+            /* 背景本身也做一个缓慢的颜色渐变动画 */
+            animation: zyy_bgShift 16s ease-in-out infinite;
+        }
+
+        @keyframes zyy_bgShift {
+            0%, 100% { background: #12121f; }
+            50%      { background: #1a1030; }
+        }
+
+        .zyy-container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #8f9bff;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .zyy-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            /* 标题文字颜色渐变动画 */
+            animation: zyy_textColor 4s ease-in-out infinite;
+        }
+
+        @keyframes zyy_textColor {
+            0%, 100% { color: #ff7eb3; }
+            33%      { color: #7afcff; }
+            66%      { color: #feff9c; }
+        }
+
+        .zyy-header p {
+            color: #9090b8;
+            font-size: 14px;
+        }
+
+        /* ===== 效果展示区（四个单效动画） ===== */
+        .zyy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .zyy-demo {
+            border-radius: 14px;
+            padding: 22px 18px 18px;
+            text-align: center;
+            border: 1px solid #2c2c4a;
+        }
+
+        .zyy-demo h2 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .zyy-demo p {
+            font-size: 12px;
+            color: #9090b8;
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- ① 颜色渐变方块 --- */
+        .zyy_color-box {
+            width: 74px;
+            height: 74px;
+            margin: 0 auto;
+            border-radius: 16px;
+            /* 颜色渐变：背景色在三个颜色间循环 */
+            animation: zyy_colorChange 3s ease-in-out infinite;
+        }
+
+        @keyframes zyy_colorChange {
+            0%, 100% { background: #ff7eb3; }
+            33%      { background: #7afcff; }
+            66%      { background: #9d8cff; }
+        }
+
+        /* --- ② 浮动气泡 --- */
+        .zyy_float-box {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at 32% 30%, #a4d8ff, #3f7fd6 70%);
+            box-shadow: inset -6px -8px 14px rgba(0, 0, 0, 0.25);
+            /* 浮动：上下往复 */
+            animation: zyy_float 2.4s ease-in-out infinite;
+        }
+
+        @keyframes zyy_float {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-18px); }
+        }
+
+        /* --- ③ 旋转风车 --- */
+        .zyy_spin-box {
+            width: 74px;
+            height: 74px;
+            margin: 0 auto;
+            /* 旋转：持续转圈 */
+            animation: zyy_spin 3.6s linear infinite;
+        }
+
+        @keyframes zyy_spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        .zyy_spin-box span {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background:
+                linear-gradient(90deg, #ff9d5c 50%, transparent 50%),
+                linear-gradient(#ffd166 50%, transparent 50%);
+            background-size: 100% 50%, 50% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* --- ④ 发光圆球 --- */
+        .zyy_glow-box {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: #4cc9f0;
+            /* 发光：外圈光晕呼吸 */
+            animation: zyy_glow 1.8s ease-in-out infinite;
+        }
+
+        @keyframes zyy_glow {
+            0%, 100% {
+                box-shadow: 0 0 8px 2px rgba(76, 201, 240, 0.45);
+            }
+            50% {
+                box-shadow: 0 0 34px 12px rgba(76, 201, 240, 0.85);
+            }
+        }
+
+        /* ===== 组合动画区：一颗元素同时叠加四种效果 ===== */
+        .zyy-stage {
+            border-radius: 14px;
+            padding: 30px 24px 42px;
+            text-align: center;
+            border: 1px solid #2c2c4a;
+            margin-bottom: 28px;
+        }
+
+        .zyy-stage h2 {
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .zyy-stage > p {
+            font-size: 13px;
+            color: #9090b8;
+            margin-bottom: 30px;
+        }
+
+        .zyy_stage-item {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 46px;
+            border-radius: 22px;
+            /* 关键帧组合：一条 animation 同时挂三个关键帧动画（逗号分隔） */
+            animation:
+                zyy_float 2.6s ease-in-out infinite,
+                zyy_spin 7s linear infinite,
+                zyy_glow 1.6s ease-in-out infinite,
+                zyy_colorChange 4s ease-in-out infinite;
+        }
+
+        /* 组合区一排小元素：相同动画 + 不同延迟，形成波浪节奏 */
+        .zyy_wave-row {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .zyy_wave-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #7afcff;
+            animation:
+                zyy_float 1.8s ease-in-out infinite,
+                zyy_glow 1.8s ease-in-out infinite;
+        }
+
+        /* 每个圆点用 animation-delay 错开相位 */
+        .zyy_wave-dot:nth-child(1) { animation-delay: 0s;    background: #ff7eb3; }
+        .zyy_wave-dot:nth-child(2) { animation-delay: 0.2s;  background: #ffb86c; }
+        .zyy_wave-dot:nth-child(3) { animation-delay: 0.4s;  background: #feff9c; }
+        .zyy_wave-dot:nth-child(4) { animation-delay: 0.6s;  background: #7afcff; }
+        .zyy_wave-dot:nth-child(5) { animation-delay: 0.8s;  background: #9d8cff; }
+        .zyy_wave-dot:nth-child(6) { animation-delay: 1s;    background: #8affc1; }
+        .zyy_wave-dot:nth-child(7) { animation-delay: 1.2s;  background: #ff7eb3; }
+
+        /* ===== 关键帧代码展示 ===== */
+        .zyy-code {
+            background: #1b1b2e;
+            border: 1px solid #2c2c4a;
+            border-radius: 10px;
+            padding: 18px 20px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            white-space: pre;
+            overflow-x: auto;
+            color: #c3c3e5;
+        }
+
+        .zyy-code b { color: #ff9d5c; }
+        .zyy-code i { color: #7afcff; font-style: normal; }
+        .zyy-code em { color: #8affc1; font-style: normal; }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>纯 CSS <span>动画练习</span></h1>
+            <p>关键帧 @keyframes 组合：颜色渐变 · 浮动 · 旋转 · 发光 · 零 JavaScript · 张圆圆</p>
+        </header>
+
+        <!-- 四个单一效果 -->
+        <section class="zyy-grid">
+            <div class="zyy-demo">
+                <h2>① 颜色渐变</h2>
+                <p><span class="zyy_color-box"></span></p>
+            </div>
+            <div class="zyy-demo">
+                <h2>② 浮动</h2>
+                <p><span class="zyy_float-box"></span></p>
+            </div>
+            <div class="zyy-demo">
+                <h2>③ 旋转</h2>
+                <p><span class="zyy_spin-box"><span></span></span></p>
+            </div>
+            <div class="zyy-demo">
+                <h2>④ 发光</h2>
+                <p><span class="zyy_glow-box"></span></p>
+            </div>
+        </section>
+
+        <!-- 关键帧组合 -->
+        <section class="zyy-stage">
+            <h2>⑤ 关键帧组合：四种效果叠加在同一元素上</h2>
+            <p>一条 animation 属性用逗号同时挂载 zyy_float + zyy_spin + zyy_glow + zyy_colorChange 四组关键帧</p>
+            <div class="zyy_stage-item"></div>
+            <div class="zyy_wave-row">
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+                <span class="zyy_wave-dot"></span>
+            </div>
+            <p style="margin-top: 22px;">↑ 相同动画 + animation-delay 依次错开 0.2s，形成波浪节奏</p>
+        </section>
+
+        <!-- 核心代码 -->
+        <section class="zyy-stage">
+            <h2>核心代码</h2>
+            <div class="zyy-code"><b>@keyframes</b> <i>zyy_float</i>  { 0%,100% { transform: translateY(0); }  50% { transform: translateY(-18px); } }
+<b>@keyframes</b> <i>zyy_spin</i>   { from { transform: rotate(0); }         to   { transform: rotate(360deg); } }
+<b>@keyframes</b> <i>zyy_glow</i>    { 50% { box-shadow: 0 0 34px 12px rgba(76,201,240,.85); } }
+<b>@keyframes</b> <i>zyy_colorChange</i> { 33% { background:#7afcff; } 66% { background:#9d8cff; } }
+
+<i>.zyy_stage-item</i> {
+    <em>animation:</em> zyy_float 2.6s ease-in-out infinite,   /* 浮动 */
+                 zyy_spin 7s linear infinite,             /* 旋转 */
+                 zyy_glow 1.6s ease-in-out infinite,      /* 发光 */
+                 zyy_colorChange 4s ease-in-out infinite; /* 颜色渐变 */
+}</div>
+        </section>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+</body>
+</html>

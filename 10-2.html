@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-03，功能名称：CSS动画幻灯片（猫咪骑士淡入淡出自动轮播） -->
+    <title>10-2 CSS 动画幻灯片 · 猫咪骑士</title>
+    <style>
+        /* ===== 全局公共CSS（纯 CSS 轮播，零 JavaScript） ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #191922;
+            color: #efe9e0;
+            line-height: 1.7;
+            padding: 30px 16px 60px;
+        }
+
+        .zyy-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #d3a86a;
+            text-decoration: none;
+        }
+
+        .zyy-header {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .zyy-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .zyy-header h1 span {
+            color: #d3a86a;
+        }
+
+        .zyy-header p {
+            color: #9a93a8;
+            font-size: 14px;
+        }
+
+        /* ===== 幻灯片舞台 ===== */
+        .zyy_slider {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+        }
+
+        /* 三张幻灯片绝对定位叠放，靠关键帧轮流淡入淡出 */
+        .zyy_slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            animation: zyy_fade 15s ease-in-out infinite;
+        }
+
+        .zyy_slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 轮播节奏：每张展示 5 秒，前后各约 1.5 秒交叉淡入淡出 */
+        .zyy_slide:nth-child(1) { animation-delay: 0s; }
+        .zyy_slide:nth-child(2) { animation-delay: 5s; }
+        .zyy_slide:nth-child(3) { animation-delay: 10s; }
+
+        @keyframes zyy_fade {
+            0%   { opacity: 0; }
+            3%   { opacity: 1; }   /* 淡入 */
+            30%  { opacity: 1; }   /* 停留展示 */
+            36%  { opacity: 0; }   /* 淡出 */
+            100% { opacity: 0; }
+        }
+
+        /* 标题与文字浮层：随幻灯片一起淡入淡出 */
+        .zyy_caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 70px 34px 24px;
+            background: linear-gradient(to top, rgba(12, 10, 16, 0.88), rgba(12, 10, 16, 0.45) 60%, transparent);
+        }
+
+        .zyy_caption h2 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .zyy_caption h2 em {
+            font-style: normal;
+            color: #f0c987;
+        }
+
+        .zyy_caption p {
+            font-size: 14px;
+            color: #d8d2c9;
+            max-width: 640px;
+        }
+
+        .zyy_caption .zyy-tag {
+            display: inline-block;
+            font-size: 12px;
+            color: #191922;
+            background: #f0c987;
+            border-radius: 999px;
+            padding: 2px 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* ===== 进度圆点：与轮播同步点亮 ===== */
+        .zyy_dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .zyy_dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3a3a4d;
+            animation: zyy_dot 15s ease-in-out infinite;
+        }
+
+        .zyy_dots span:nth-child(1) { animation-delay: 0s; }
+        .zyy_dots span:nth-child(2) { animation-delay: 5s; }
+        .zyy_dots span:nth-child(3) { animation-delay: 10s; }
+
+        @keyframes zyy_dot {
+            0%, 3%, 30%, 36%, 100% {
+                background: #3a3a4d;
+                transform: scale(1);
+            }
+            8%, 28% {
+                background: #f0c987;
+                transform: scale(1.35);
+            }
+        }
+
+        /* ===== 说明区 ===== */
+        .zyy-info {
+            background: #232330;
+            border: 1px solid #34344a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-top: 26px;
+            font-size: 14px;
+            color: #b8b2c4;
+        }
+
+        .zyy-info h3 {
+            font-size: 16px;
+            color: #efe9e0;
+            margin-bottom: 8px;
+        }
+
+        .zyy-info code {
+            background: #191922;
+            color: #f0c987;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .zyy-author {
+            margin-top: 30px;
+            text-align: center;
+            background: #232330;
+            border: 1px solid #34344a;
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+
+        .zyy-author p {
+            font-size: 13px;
+            color: #9a93a8;
+        }
+
+        .zyy-author b {
+            color: #f0c987;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .zyy-back {
+            display: inline-block;
+            margin-top: 26px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy-container">
+        <header class="zyy-header">
+            <h1>CSS 动画<span>幻灯片</span></h1>
+            <p>猫咪骑士三部曲 · 纯 CSS 淡入淡出自动轮播 · 零 JavaScript · 张圆圆</p>
+        </header>
+
+        <!-- 轮播舞台：三张幻灯片叠放，各延迟 5 秒轮流淡入淡出 -->
+        <div class="zyy_slider">
+            <!-- 第一张：骑士的凝视 -->
+            <figure class="zyy_slide">
+                <img src="./images/zyy_knight1.jpg" alt="身披铠甲的猫咪骑士侧影，手持长剑凝望远方">
+                <figcaption class="zyy_caption">
+                    <span class="zyy-tag">第一幕</span>
+                    <h2>骑士的<em>凝视</em></h2>
+                    <p>粉蝶结下是一双望向战场的眼睛。铠甲淬过雨水，长剑未出鞘——小骑士在暴风雨来临前，静静守望着群山。</p>
+                </figcaption>
+            </figure>
+
+            <!-- 第二张：直面巨龙 -->
+            <figure class="zyy_slide">
+                <img src="./images/zyy_knight2.jpg" alt="小小的猫咪骑士在草地上直面巨大的龙">
+                <figcaption class="zyy_caption">
+                    <span class="zyy-tag">第二幕</span>
+                    <h2>直面<em>巨龙</em></h2>
+                    <p>身量不及龙的一枚鳞甲，却率先拔剑而立。雾漫草原，花朵无言——勇气从来不问体型大小。</p>
+                </figcaption>
+            </figure>
+
+            <!-- 第三张：开赴战场 -->
+            <figure class="zyy_slide">
+                <img src="./images/zyy_knight3.jpg" alt="猫咪骑士披风执剑站在旌旗飘扬的战场上">
+                <figcaption class="zyy_caption">
+                    <span class="zyy-tag">第三幕</span>
+                    <h2>开赴<em>战场</em></h2>
+                    <p>披风扬起，剑指长空。身后是猎猎旌旗，眼前是迷雾中的宿命——小骑士迈出了出征的一步。</p>
+                </figcaption>
+            </figure>
+        </div>
+
+        <!-- 与轮播同步点亮的进度圆点 -->
+        <div class="zyy_dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- 实现说明 -->
+        <div class="zyy-info">
+            <h3>实现要点</h3>
+            三张幻灯片绝对定位叠放，共用同一组 <code>@keyframes zyy_fade</code>（15 秒循环：3% 淡入 → 30% 停留 → 36% 淡出），
+            通过 <code>animation-delay</code> 0s / 5s / 10s 错开相位实现自动轮播；
+            标题文字浮层放在幻灯片内部随之淡入淡出，底部进度圆点用 <code>zyy_dot</code> 关键帧与轮播同步点亮。
+        </div>
+
+        <!-- 作者署名 -->
+        <footer class="zyy-author">
+            <p>网页制作：<b>张圆圆</b></p>
+            <p>CSS 动画幻灯片作业 · 猫咪骑士三部曲</p>
+        </footer>
+
+        <a class="zyy-back" href="./index.html">← 返回首页</a>
+    </div>
+</body>
+</html>

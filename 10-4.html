@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-03，功能名称：响应式布局练习（毛玻璃卡片多断点重排+悬停跳动动画） -->
+    <title>10-4 响应式布局练习 · 张圆圆</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            /* 与参考图不同的配色：紫夜 → 品红渐变 */
+            background: linear-gradient(150deg, #1c0f35 0%, #4a1663 46%, #a12568 100%);
+            color: #fff;
+            line-height: 1.7;
+            padding: 34px 26px 30px;
+        }
+
+        a {
+            color: #ffd9ec;
+            text-decoration: none;
+        }
+
+        /* ===== 标题区：左对齐排版（与参考图的居中不同） ===== */
+        .zyy_header {
+            max-width: 1100px;
+            margin: 0 auto 8px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(30px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        .zyy_header h1 span {
+            background: linear-gradient(90deg, #ffd166, #ff6b9d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zyy_header p {
+            font-size: clamp(13px, 1.8vw, 16px);
+            color: #e7c6f0;
+            margin: 4px 0 26px;
+        }
+
+        .zyy_header .zyy_line {
+            width: 88px;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #ffd166, #ff6b9d);
+        }
+
+        /* ===== 卡片区：桌面 4 列，断点逐级重排 ===== */
+        .zyy_grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* 毛玻璃卡片：大序号水印排版（替代参考图的图标方块） */
+        .zyy_card {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            padding: 20px 20px 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 26px rgba(20, 6, 40, 0.35);
+            cursor: pointer;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        /* 超大半透明序号水印，倾斜放右上角 */
+        .zyy_num {
+            position: absolute;
+            right: 6px;
+            top: -14px;
+            font-size: 64px;
+            font-weight: 800;
+            font-family: Consolas, monospace;
+            color: rgba(255, 255, 255, 0.14);
+            transform: rotate(8deg);
+            line-height: 1.2;
+        }
+
+        /* 每张卡片各自的强调色条 */
+        .zyy_card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--zyy_accent, #ffd166);
+            opacity: 0.9;
+        }
+
+        .zyy_card h2 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .zyy_card p {
+            font-size: 13px;
+            color: #ecd9f5;
+        }
+
+        /* 八张卡片：颜色、大小都有区别 */
+        .zyy_card:nth-child(1) { --zyy_accent: #ffd166; }
+        .zyy_card:nth-child(2) { --zyy_accent: #4ecdc4; padding-top: 30px; }
+        .zyy_card:nth-child(3) { --zyy_accent: #ff6b9d; }
+        .zyy_card:nth-child(4) { --zyy_accent: #a0e548; padding-top: 30px; }
+        .zyy_card:nth-child(5) { --zyy_accent: #5ea0ff; }
+        .zyy_card:nth-child(6) { --zyy_accent: #ff9d5c; padding-top: 30px; }
+        .zyy_card:nth-child(7) { --zyy_accent: #c78bff; }
+        .zyy_card:nth-child(8) { --zyy_accent: #ff5c7a; padding-top: 30px; }
+
+        /* ===== 悬停跳动：四组不同的跳动关键帧，按卡片序号轮换 ===== */
+
+        /* A. 上蹿下落（弹跳） */
+        @keyframes zyy_hop {
+            0%   { transform: translateY(0); }
+            30%  { transform: translateY(-16px) scale(1.03); }
+            55%  { transform: translateY(0) scale(0.99); }
+            75%  { transform: translateY(-7px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* B. 歪头跳（旋转 + 跳起） */
+        @keyframes zyy_tiltHop {
+            0%   { transform: translateY(0) rotate(0deg); }
+            35%  { transform: translateY(-14px) rotate(-3deg); }
+            60%  { transform: translateY(0) rotate(2deg); }
+            80%  { transform: translateY(-5px) rotate(-1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* C. 左右蹦跳 */
+        @keyframes zyy_sideHop {
+            0%   { transform: translate(0, 0); }
+            25%  { transform: translate(-7px, -11px); }
+            50%  { transform: translate(6px, 0); }
+            75%  { transform: translate(-4px, -6px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* D. 果冻抖动 */
+        @keyframes zyy_jelly {
+            0%   { transform: scale(1, 1); }
+            25%  { transform: scale(1.06, 0.92); }
+            45%  { transform: scale(0.95, 1.06); }
+            65%  { transform: scale(1.03, 0.97); }
+            82%  { transform: scale(0.99, 1.01); }
+            100% { transform: scale(1, 1); }
+        }
+
+        /* 悬停触发：八张卡片循环套用四种跳动，且各自时长不同 */
+        .zyy_card:nth-child(4n+1):hover { animation: zyy_hop 0.7s ease-in-out; }
+        .zyy_card:nth-child(4n+2):hover { animation: zyy_tiltHop 0.85s ease-in-out; }
+        .zyy_card:nth-child(4n+3):hover { animation: zyy_sideHop 0.8s ease-in-out; }
+        .zyy_card:nth-child(4n):hover   { animation: zyy_jelly 0.9s ease-in-out; }
+
+        /* 悬停同时提亮卡片与光晕 */
+        .zyy_card:hover {
+            border-color: var(--zyy_accent);
+            box-shadow: 0 14px 34px rgba(20, 6, 40, 0.5), 0 0 22px var(--zyy_accent);
+        }
+
+        /* ===== 底部署名 ===== */
+        .zyy_footer {
+            text-align: center;
+            margin-top: 36px;
+        }
+
+        .zyy_footer b {
+            font-size: clamp(22px, 3.4vw, 30px);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            background: linear-gradient(90deg, #ffd166, #ff6b9d, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zyy_footer small {
+            display: block;
+            font-size: 12px;
+            color: #d9bfe8;
+            margin-top: 4px;
+        }
+
+        /* ===== 返回首页 ===== */
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            z-index: 10;
+            font-size: 13px;
+            background: rgba(30, 10, 50, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 999px;
+            padding: 6px 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        /* ===== 响应式断点一：中屏 4 列 → 2 列 ===== */
+        @media (max-width: 900px) {
+            .zyy_grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== 响应式断点二：窄屏 2 列 → 1 列，卡片改横向紧凑排布 ===== */
+        @media (max-width: 560px) {
+            body {
+                padding: 26px 16px 24px;
+            }
+
+            .zyy_grid {
+                grid-template-columns: 1fr;
+            }
+
+            .zyy_card {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 16px;
+            }
+
+            .zyy_num {
+                position: static;
+                transform: none;
+                font-size: 34px;
+                flex: none;
+                color: var(--zyy_accent);
+            }
+
+            .zyy_card h2 {
+                margin-bottom: 2px;
+            }
+        }
+
+        /* ===== 响应式断点三：超宽屏限宽 ===== */
+        @media (min-width: 1400px) {
+            .zyy_grid {
+                max-width: 1240px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>MEDIA QUERY <span>· 跳动卡片</span></h1>
+        <p>视口变化时布局随之调整，鼠标悬停每张卡片有各自的跳动动画 —— 4 列 → 2 列 → 1 列</p>
+        <div class="zyy_line"></div>
+    </header>
+
+    <main class="zyy_grid">
+        <section class="zyy_card">
+            <span class="zyy_num">01</span>
+            <h2>版块一</h2>
+            <p>响应式布局，适配不同屏幕尺寸。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">02</span>
+            <h2>版块二</h2>
+            <p>灵活分布，舒适阅读体验。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">03</span>
+            <h2>版块三</h2>
+            <p>交互细节增强视觉层次。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">04</span>
+            <h2>版块四</h2>
+            <p>多端显示，自适应更稳定。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">05</span>
+            <h2>版块五</h2>
+            <p>色彩过渡更自然柔和。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">06</span>
+            <h2>版块六</h2>
+            <p>适配移动端和桌面端。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">07</span>
+            <h2>版块七</h2>
+            <p>信息分组清晰更容易浏览。</p>
+        </section>
+        <section class="zyy_card">
+            <span class="zyy_num">08</span>
+            <h2>版块八</h2>
+            <p>整体视觉更高级和统一。</p>
+        </section>
+    </main>
+
+    <footer class="zyy_footer">
+        <b>张圆圆</b>
+        <small>响应式布局练习 · 悬停跳动卡片演示</small>
+    </footer>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+</body>
+</html>
