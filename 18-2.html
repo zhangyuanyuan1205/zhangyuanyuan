@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：Canvas绘制电商系统架构图（分层架构+流动数据线动画） -->
+    <title>18-2 电商系统架构图 · 张圆圆</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #0a0f1e;
+            color: #e8ecff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 14px 40px;
+        }
+
+        a {
+            color: #9fc3ff;
+            text-decoration: none;
+        }
+
+        .zyy_header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            margin-bottom: 6px;
+        }
+
+        .zyy_header p {
+            font-size: 14px;
+            color: #8fa3d9;
+        }
+
+        /* ===== Canvas 舞台 ===== */
+        .zyy_stage {
+            width: min(1060px, 97vw);
+            aspect-ratio: 16 / 12;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(120, 150, 255, 0.25);
+            box-shadow: 0 14px 40px rgba(4, 8, 30, 0.6);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .zyy_info {
+            max-width: 1060px;
+            margin-top: 18px;
+            background: rgba(20, 28, 60, 0.6);
+            border: 1px solid rgba(120, 150, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #b9c6ef;
+            line-height: 1.9;
+        }
+
+        .zyy_info b {
+            color: #ffd166;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: rgba(16, 24, 56, 0.7);
+            border: 1px solid rgba(120, 150, 255, 0.3);
+            border-radius: 999px;
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>电商系统架构图（Canvas 绘制）</h1>
+        <p>用户层 → 网关层 → 业务服务层 → 数据层，虚线流动表示请求/数据链路</p>
+    </header>
+
+    <div class="zyy_stage">
+        <canvas id="zyy_canvas"></canvas>
+    </div>
+
+    <div class="zyy_info">
+        <b>架构说明：</b>整个架构图由 Canvas 2D API 绘制——五个分层容器、17 个服务节点（圆角矩形）与层间连线全部为程序化绘制；
+        层间虚线使用 <b>lineDashOffset 动画</b>模拟"下单 → 支付 → 记账"的请求流动方向；左侧色条与底部图例标识各层职责。
+        窗口缩放时节点坐标按画布比例自动重算，布局始终不变形。
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+
+    <script>
+        // ===== Canvas 电商系统架构图 =====
+        var zyy_canvas = document.getElementById("zyy_canvas");
+        var zyy_ctx = zyy_canvas.getContext("2d");
+        var zyy_dpr = window.devicePixelRatio || 1;
+        var zyy_w = 0;
+        var zyy_h = 0;
+
+        function zyy_resize() {
+            var zyy_rect = zyy_canvas.getBoundingClientRect();
+            zyy_canvas.width = zyy_rect.width * zyy_dpr;
+            zyy_canvas.height = zyy_rect.height * zyy_dpr;
+            zyy_ctx.setTransform(zyy_dpr, 0, 0, zyy_dpr, 0, 0);
+            zyy_w = zyy_rect.width;
+            zyy_h = zyy_rect.height;
+        }
+        window.addEventListener("resize", zyy_resize);
+        zyy_resize();
+
+        // 圆角矩形工具函数
+        function zyy_roundRect(zyy_x, zyy_y, zyy_w2, zyy_h2, zyy_r) {
+            zyy_ctx.beginPath();
+            zyy_ctx.moveTo(zyy_x + zyy_r, zyy_y);
+            zyy_ctx.arcTo(zyy_x + zyy_w2, zyy_y, zyy_x + zyy_w2, zyy_y + zyy_h2, zyy_r);
+            zyy_ctx.arcTo(zyy_x + zyy_w2, zyy_y + zyy_h2, zyy_x, zyy_y + zyy_h2, zyy_r);
+            zyy_ctx.arcTo(zyy_x, zyy_y + zyy_h2, zyy_x, zyy_y, zyy_r);
+            zyy_ctx.arcTo(zyy_x, zyy_y, zyy_x + zyy_w2, zyy_y, zyy_r);
+            zyy_ctx.closePath();
+        }
+
+        // 绘制一个节点（圆角矩形 + 文字）
+        function zyy_node(zyy_x, zyy_y, zyy_w2, zyy_h2, zyy_text, zyy_color) {
+            zyy_roundRect(zyy_x, zyy_y, zyy_w2, zyy_h2, 8);
+            zyy_ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+            zyy_ctx.fill();
+            zyy_ctx.strokeStyle = zyy_color;
+            zyy_ctx.lineWidth = 1.6;
+            zyy_ctx.stroke();
+
+            zyy_ctx.fillStyle = "#eef2ff";
+            zyy_ctx.font = '13px "Microsoft YaHei", sans-serif';
+            zyy_ctx.textAlign = "center";
+            zyy_ctx.textBaseline = "middle";
+            zyy_ctx.fillText(zyy_text, zyy_x + zyy_w2 / 2, zyy_y + zyy_h2 / 2);
+        }
+
+        // 层间流动虚线（从上层底部中心到下层顶部中心）
+        function zyy_flowLine(zyy_x1, zyy_y1, zyy_x2, zyy_y2, zyy_t, zyy_color) {
+            zyy_ctx.save();
+            zyy_ctx.setLineDash([7, 6]);
+            zyy_ctx.lineDashOffset = -(zyy_t * 0.05) % 13; // 虚线流动动画
+            zyy_ctx.beginPath();
+            zyy_ctx.moveTo(zyy_x1, zyy_y1);
+            zyy_ctx.lineTo(zyy_x2, zyy_y2);
+            zyy_ctx.strokeStyle = zyy_color;
+            zyy_ctx.lineWidth = 1.6;
+            zyy_ctx.stroke();
+            zyy_ctx.restore();
+        }
+
+        // 单行节点布局：按数组内容均分画布宽度
+        function zyy_rowNodes(zyy_items, zyy_y, zyy_h2, zyy_colors) {
+            var zyy_gap = 14;
+            var zyy_margin = 90; // 给左侧层名留空间
+            var zyy_each = (zyy_w - zyy_margin - 24 - (zyy_items.length - 1) * zyy_gap) / zyy_items.length;
+            for (var i = 0; i < zyy_items.length; i++) {
+                zyy_node(zyy_margin + 12 + i * (zyy_each + zyy_gap), zyy_y, zyy_each, zyy_h2, zyy_items[i], zyy_colors);
+            }
+            return { y: zyy_y, h: zyy_h2, x1: zyy_margin + 12 + zyy_each / 2, x2: zyy_w - 12 - zyy_each / 2 };
+        }
+
+        // 层容器（左侧层名竖排色条）
+        function zyy_layerBox(zyy_y, zyy_h2, zyy_name, zyy_color) {
+            zyy_roundRect(16, zyy_y - 6, zyy_w - 32, zyy_h2 + 12, 10);
+            zyy_ctx.strokeStyle = zyy_color;
+            zyy_ctx.globalAlpha = 0.35;
+            zyy_ctx.lineWidth = 1.2;
+            zyy_ctx.stroke();
+            zyy_ctx.globalAlpha = 1;
+
+            zyy_ctx.save();
+            zyy_ctx.fillStyle = zyy_color;
+            zyy_ctx.font = 'bold 13px "Microsoft YaHei", sans-serif';
+            zyy_ctx.textAlign = "center";
+            zyy_ctx.textBaseline = "middle";
+            // 左侧竖排层名
+            for (var i = 0; i < zyy_name.length; i++) {
+                zyy_ctx.fillText(zyy_name[i], 34, zyy_y + zyy_h2 / 2 - (zyy_name.length - 1) * 9 + i * 18);
+            }
+            zyy_ctx.restore();
+        }
+
+        // 主绘制
+        function zyy_draw(zyy_t) {
+            zyy_ctx.clearRect(0, 0, zyy_w, zyy_h);
+
+            // 背景
+            var zyy_bg = zyy_ctx.createLinearGradient(0, 0, 0, zyy_h);
+            zyy_bg.addColorStop(0, "#0b1226");
+            zyy_bg.addColorStop(1, "#0e1a38");
+            zyy_ctx.fillStyle = zyy_bg;
+            zyy_ctx.fillRect(0, 0, zyy_w, zyy_h);
+
+            var zyy_rows = [];
+            var zyy_rh = Math.min(46, zyy_h * 0.09);
+            var zyy_top = zyy_h * 0.12;
+            var zyy_step = (zyy_h * 0.82 - zyy_rh * 5) / 4; // 行间距
+
+            // 五层：用户层 / 网关层 / 业务服务层 / 中间件层 / 数据层
+            zyy_layerBox(zyy_top, zyy_rh, "用户层", "#ffd166");
+            zyy_rows[0] = zyy_rowNodes(["Web 前端", "移动 App", "小程序"], zyy_top, zyy_rh, "#ffd166");
+
+            var zyy_y2 = zyy_top + zyy_rh + zyy_step;
+            zyy_layerBox(zyy_y2, zyy_rh, "网关层", "#7ee7cd");
+            zyy_rows[1] = zyy_rowNodes(["负载均衡 Nginx", "API 网关（鉴权·限流）"], zyy_y2, zyy_rh, "#7ee7cd");
+
+            var zyy_y3 = zyy_y2 + zyy_rh + zyy_step;
+            zyy_layerBox(zyy_y3, zyy_rh, "服务层", "#8ab6ff");
+            zyy_rows[2] = zyy_rowNodes(["用户服务", "商品服务", "订单服务", "支付服务", "库存服务"], zyy_y3, zyy_rh, "#8ab6ff");
+
+            var zyy_y4 = zyy_y3 + zyy_rh + zyy_step;
+            zyy_layerBox(zyy_y4, zyy_rh, "中间件", "#c78bff");
+            zyy_rows[3] = zyy_rowNodes(["消息队列 MQ", "缓存 Redis", "搜索 Elasticsearch"], zyy_y4, zyy_rh, "#c78bff");
+
+            var zyy_y5 = zyy_y4 + zyy_rh + zyy_step;
+            zyy_layerBox(zyy_y5, zyy_rh, "数据层", "#ff9d5c");
+            zyy_rows[4] = zyy_rowNodes(["MySQL 主从", "MongoDB", "日志与监控"], zyy_y5, zyy_rh, "#ff9d5c");
+
+            // 层间流动虚线
+            var zyy_mid = zyy_w / 2;
+            zyy_flowLine(zyy_mid, zyy_rows[0].y + zyy_rh, zyy_mid, zyy_rows[1].y, zyy_t, "#ffd166");
+            zyy_flowLine(zyy_mid, zyy_rows[1].y + zyy_rh, zyy_mid, zyy_rows[2].y, zyy_t, "#7ee7cd");
+            zyy_flowLine(zyy_mid, zyy_rows[2].y + zyy_rh, zyy_mid, zyy_rows[3].y, zyy_t, "#8ab6ff");
+            zyy_flowLine(zyy_mid, zyy_rows[3].y + zyy_rh, zyy_mid, zyy_rows[4].y, zyy_t, "#c78bff");
+
+            // 顶部标题
+            zyy_ctx.fillStyle = "rgba(238, 242, 255, 0.9)";
+            zyy_ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
+            zyy_ctx.textAlign = "center";
+            zyy_ctx.fillText("电商系统分层架构（请求自上而下流动）", zyy_w / 2, zyy_h * 0.06);
+        }
+
+        function zyy_loop(zyy_t) {
+            zyy_draw(zyy_t);
+            requestAnimationFrame(zyy_loop);
+        }
+        requestAnimationFrame(zyy_loop);
+    </script>
+</body>
+</html>

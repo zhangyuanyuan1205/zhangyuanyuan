@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：SVG绘制基于知识库智能客服系统架构图（科研方向） -->
+    <title>18-3 智能客服系统架构图 · 张圆圆</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #0b1218;
+            color: #e8f0ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 14px 40px;
+        }
+
+        a {
+            color: #9fd8c3;
+            text-decoration: none;
+        }
+
+        .zyy_header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            margin-bottom: 6px;
+        }
+
+        .zyy_header p {
+            font-size: 14px;
+            color: #8fbfa9;
+        }
+
+        /* ===== SVG 舞台 ===== */
+        .zyy_stage {
+            width: min(1020px, 97vw);
+            background: linear-gradient(160deg, #0d1620 0%, #101f2c 100%);
+            border: 1px solid rgba(120, 220, 190, 0.25);
+            border-radius: 16px;
+            box-shadow: 0 14px 40px rgba(4, 14, 12, 0.6);
+            padding: 10px;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .zyy_info {
+            max-width: 1020px;
+            margin-top: 18px;
+            background: rgba(16, 34, 30, 0.6);
+            border: 1px solid rgba(120, 220, 190, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #b6d8cb;
+            line-height: 1.9;
+        }
+
+        .zyy_info b {
+            color: #ffd166;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: rgba(14, 30, 26, 0.7);
+            border: 1px solid rgba(120, 220, 190, 0.3);
+            border-radius: 999px;
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>基于知识库的智能客服系统架构（SVG）</h1>
+        <p>科研方向：检索增强生成（RAG）· 知识图谱推理 · 多轮上下文建模 · 模型评测</p>
+    </header>
+
+    <div class="zyy_stage">
+        <!-- 整张架构图使用原生 SVG 绘制 -->
+        <svg viewBox="0 0 1000 780" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="基于知识库的智能客服系统架构图">
+            <!-- 箭头标记定义 -->
+            <defs>
+                <marker id="zyy_arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto">
+                    <path d="M0,0 L9,4 L0,8 Z" fill="#9fd8c3"/>
+                </marker>
+                <linearGradient id="zyy_coreGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#14404f"/>
+                    <stop offset="1" stop-color="#1a3a5f"/>
+                </linearGradient>
+            </defs>
+
+            <!-- 标题 -->
+            <text x="500" y="42" text-anchor="middle" fill="#eef7ff" font-size="20" font-weight="bold" font-family="Microsoft YaHei">基于知识库的智能客服系统架构（科研方向）</text>
+
+            <!-- ===== L1 用户交互层 ===== -->
+            <rect x="30" y="70" width="840" height="86" rx="10" fill="none" stroke="#ffd166" stroke-opacity="0.4" stroke-width="1.4"/>
+            <text x="52" y="112" fill="#ffd166" font-size="14" font-weight="bold" font-family="Microsoft YaHei" writing-mode="tb" letter-spacing="2">用户交互层</text>
+            <g font-family="Microsoft YaHei" font-size="13" text-anchor="middle">
+                <rect x="150" y="88" width="180" height="50" rx="8" fill="rgba(255,209,102,0.08)" stroke="#ffd166"/>
+                <text x="240" y="118" fill="#f4e9c8">Web / 移动端</text>
+                <rect x="360" y="88" width="180" height="50" rx="8" fill="rgba(255,209,102,0.08)" stroke="#ffd166"/>
+                <text x="450" y="118" fill="#f4e9c8">微信 / 公众号</text>
+                <rect x="570" y="88" width="180" height="50" rx="8" fill="rgba(255,209,102,0.08)" stroke="#ffd166"/>
+                <text x="660" y="118" fill="#f4e9c8">电话语音入口</text>
+            </g>
+
+            <!-- L1 -> L2 -->
+            <line x1="450" y1="156" x2="450" y2="196" stroke="#9fd8c3" stroke-width="1.8" marker-end="url(#zyy_arrow)"/>
+            <text x="468" y="182" fill="#9fd8c3" font-size="12" font-family="Microsoft YaHei">HTTPS / WebSocket</text>
+
+            <!-- ===== L2 接入层 ===== -->
+            <rect x="30" y="200" width="840" height="86" rx="10" fill="none" stroke="#7ee7cd" stroke-opacity="0.4" stroke-width="1.4"/>
+            <text x="52" y="242" fill="#7ee7cd" font-size="14" font-weight="bold" font-family="Microsoft YaHei" writing-mode="tb" letter-spacing="2">接入层</text>
+            <g font-family="Microsoft YaHei" font-size="13" text-anchor="middle">
+                <rect x="190" y="218" width="240" height="50" rx="8" fill="rgba(126,231,205,0.08)" stroke="#7ee7cd"/>
+                <text x="310" y="248" fill="#cff3e8">API 网关（路由·限流）</text>
+                <rect x="470" y="218" width="240" height="50" rx="8" fill="rgba(126,231,205,0.08)" stroke="#7ee7cd"/>
+                <text x="590" y="248" fill="#cff3e8">会话管理 / 身份鉴权</text>
+            </g>
+
+            <!-- L2 -> L3 -->
+            <line x1="450" y1="286" x2="450" y2="326" stroke="#9fd8c3" stroke-width="1.8" marker-end="url(#zyy_arrow)"/>
+
+            <!-- ===== L3 智能对话核心（科研重点，高亮容器） ===== -->
+            <rect x="30" y="330" width="840" height="220" rx="12" fill="url(#zyy_coreGrad)" fill-opacity="0.55" stroke="#8ab6ff" stroke-width="1.8"/>
+            <text x="52" y="372" fill="#8ab6ff" font-size="14" font-weight="bold" font-family="Microsoft YaHei" writing-mode="tb" letter-spacing="2">对话核心层</text>
+            <text x="500" y="358" text-anchor="middle" fill="#a9c6ff" font-size="12" font-family="Microsoft YaHei">★ 科研重点：理解 → 检索 → 生成 → 决策</text>
+            <g font-family="Microsoft YaHei" font-size="13" text-anchor="middle">
+                <rect x="60" y="380" width="150" height="52" rx="8" fill="rgba(138,182,255,0.10)" stroke="#8ab6ff"/>
+                <text x="135" y="402" fill="#dbe8ff">意图识别 NLU</text>
+                <text x="135" y="422" fill="#9fb4dd" font-size="11">BERT 分类</text>
+
+                <rect x="228" y="380" width="150" height="52" rx="8" fill="rgba(138,182,255,0.10)" stroke="#8ab6ff"/>
+                <text x="303" y="402" fill="#dbe8ff">实体抽取 NER</text>
+                <text x="303" y="422" fill="#9fb4dd" font-size="11">序列标注</text>
+
+                <rect x="396" y="380" width="150" height="52" rx="8" fill="rgba(255,209,102,0.12)" stroke="#ffd166" stroke-width="2"/>
+                <text x="471" y="402" fill="#ffe9b0">向量检索 RAG</text>
+                <text x="471" y="422" fill="#cdb97e" font-size="11">Embedding 召回</text>
+
+                <rect x="564" y="380" width="150" height="52" rx="8" fill="rgba(255,209,102,0.12)" stroke="#ffd166" stroke-width="2"/>
+                <text x="639" y="402" fill="#ffe9b0">LLM 生成回答</text>
+                <text x="639" y="422" fill="#cdb97e" font-size="11">大模型 / 微调</text>
+
+                <rect x="732" y="380" width="110" height="52" rx="8" fill="rgba(138,182,255,0.10)" stroke="#8ab6ff"/>
+                <text x="787" y="402" fill="#dbe8ff">对话管理</text>
+                <text x="787" y="422" fill="#9fb4dd" font-size="11">多轮上下文</text>
+
+                <!-- 核心层内部数据流箭头 -->
+                <line x1="210" y1="406" x2="226" y2="406" stroke="#9fd8c3" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+                <line x1="378" y1="406" x2="394" y2="406" stroke="#9fd8c3" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+                <line x1="546" y1="406" x2="562" y2="406" stroke="#9fd8c3" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+                <line x1="714" y1="406" x2="730" y2="406" stroke="#9fd8c3" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+
+                <!-- 反馈回路：回答 → 用户反馈 → 评测 -->
+                <rect x="60" y="474" width="150" height="52" rx="8" fill="rgba(199,139,255,0.10)" stroke="#c78bff"/>
+                <text x="135" y="496" fill="#e7d4ff">满意度反馈</text>
+                <text x="135" y="516" fill="#a58fc4" font-size="11">人工评价标注</text>
+
+                <rect x="228" y="474" width="150" height="52" rx="8" fill="rgba(199,139,255,0.10)" stroke="#c78bff"/>
+                <text x="303" y="496" fill="#e7d4ff">质量评测体系</text>
+                <text x="303" y="516" fill="#a58fc4" font-size="11">准确率/召回率</text>
+
+                <rect x="396" y="474" width="150" height="52" rx="8" fill="rgba(199,139,255,0.10)" stroke="#c78bff"/>
+                <text x="471" y="496" fill="#e7d4ff">模型迭代训练</text>
+                <text x="471" y="516" fill="#a58fc4" font-size="11">微调 / 蒸馏</text>
+
+                <line x1="210" y1="500" x2="226" y2="500" stroke="#c78bff" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+                <line x1="378" y1="500" x2="394" y2="500" stroke="#c78bff" stroke-width="1.6" marker-end="url(#zyy_arrow)"/>
+                <!-- 迭代回流虚线 -->
+                <path d="M 546 500 C 700 500, 860 480, 860 440 C 860 380, 700 340, 660 330" fill="none" stroke="#c78bff" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#zyy_arrow)"/>
+                <text x="810" y="466" fill="#c78bff" font-size="11" font-family="Microsoft YaHei">持续优化闭环</text>
+            </g>
+
+            <!-- L3 <-> L4 双向检索 -->
+            <line x1="450" y1="550" x2="450" y2="590" stroke="#9fd8c3" stroke-width="1.8" marker-end="url(#zyy_arrow)"/>
+            <line x1="475" y1="590" x2="475" y2="550" stroke="#ffd166" stroke-width="1.8" marker-end="url(#zyy_arrow)"/>
+            <text x="500" y="576" fill="#ffd166" font-size="12" font-family="Microsoft YaHei">检索 / 召回 Top-K</text>
+
+            <!-- ===== L4 知识库层 ===== -->
+            <rect x="30" y="594" width="840" height="92" rx="10" fill="none" stroke="#ff9d5c" stroke-opacity="0.45" stroke-width="1.4"/>
+            <text x="52" y="638" fill="#ff9d5c" font-size="14" font-weight="bold" font-family="Microsoft YaHei" writing-mode="tb" letter-spacing="2">知识库层</text>
+            <g font-family="Microsoft YaHei" font-size="13" text-anchor="middle">
+                <rect x="110" y="614" width="180" height="52" rx="8" fill="rgba(255,157,92,0.10)" stroke="#ff9d5c"/>
+                <text x="200" y="636" fill="#ffe0c2">FAQ 问答对库</text>
+                <text x="200" y="656" fill="#c9a37e" font-size="11">结构化语料</text>
+
+                <rect x="330" y="614" width="180" height="52" rx="8" fill="rgba(255,157,92,0.10)" stroke="#ff9d5c"/>
+                <text x="420" y="636" fill="#ffe0c2">向量数据库</text>
+                <text x="420" y="656" fill="#c9a37e" font-size="11">Milvus / FAISS</text>
+
+                <rect x="550" y="614" width="180" height="52" rx="8" fill="rgba(255,157,92,0.10)" stroke="#ff9d5c"/>
+                <text x="640" y="636" fill="#ffe0c2">知识图谱</text>
+                <text x="640" y="656" fill="#c9a37e" font-size="11">实体关系推理</text>
+
+                <rect x="770" y="614" width="80" height="52" rx="8" fill="rgba(255,157,92,0.10)" stroke="#ff9d5c"/>
+                <text x="810" y="636" fill="#ffe0c2">文档库</text>
+                <text x="810" y="656" fill="#c9a37e" font-size="11">非结构化</text>
+            </g>
+
+            <!-- L4 -> L5 -->
+            <line x1="450" y1="686" x2="450" y2="716" stroke="#9fd8c3" stroke-width="1.8" marker-end="url(#zyy_arrow)"/>
+
+            <!-- ===== L5 支撑层 ===== -->
+            <rect x="30" y="720" width="840" height="46" rx="10" fill="none" stroke="#8a9bb8" stroke-opacity="0.4" stroke-width="1.2"/>
+            <text x="52" y="748" fill="#8a9bb8" font-size="13" font-weight="bold" font-family="Microsoft YaHei" writing-mode="tb" letter-spacing="1">支撑层</text>
+            <text x="500" y="748" text-anchor="middle" fill="#aeb9d0" font-size="12" font-family="Microsoft YaHei">训练数据管理 · 日志与监控 · GPU 算力调度 · 数据脱敏与安全合规</text>
+
+            <!-- ===== 右侧科研方向标注 ===== -->
+            <g font-family="Microsoft YaHei">
+                <rect x="880" y="330" width="106" height="220" rx="10" fill="rgba(255,209,102,0.07)" stroke="#ffd166" stroke-dasharray="6 5"/>
+                <text x="933" y="362" text-anchor="middle" fill="#ffd166" font-size="13" font-weight="bold">科研方向</text>
+                <text x="933" y="398" text-anchor="middle" fill="#e8ddba" font-size="11">检索增强</text>
+                <text x="933" y="416" text-anchor="middle" fill="#e8ddba" font-size="11">生成 RAG</text>
+                <text x="933" y="450" text-anchor="middle" fill="#e8ddba" font-size="11">知识图谱</text>
+                <text x="933" y="468" text-anchor="middle" fill="#e8ddba" font-size="11">推理问答</text>
+                <text x="933" y="502" text-anchor="middle" fill="#e8ddba" font-size="11">多轮上下文</text>
+                <text x="933" y="520" text-anchor="middle" fill="#e8ddba" font-size="11">建模</text>
+            </g>
+
+            <!-- 图例 -->
+            <g font-family="Microsoft YaHei" font-size="11">
+                <line x1="60" y1="777" x2="86" y2="777" stroke="#9fd8c3" stroke-width="1.8"/>
+                <text x="92" y="781" fill="#9fd8c3">请求/数据流</text>
+                <line x1="180" y1="777" x2="206" y2="777" stroke="#ffd166" stroke-width="1.8"/>
+                <text x="212" y="781" fill="#ffd166">知识检索流</text>
+                <line x1="300" y1="777" x2="326" y2="777" stroke="#c78bff" stroke-width="1.5" stroke-dasharray="5 5"/>
+                <text x="332" y="781" fill="#c78bff">迭代优化闭环</text>
+            </g>
+        </svg>
+    </div>
+
+    <div class="zyy_info">
+        <b>架构说明：</b>系统共五层——<b>用户交互层</b>提供 Web/微信/语音多渠道入口；<b>接入层</b>负责网关路由、限流、鉴权与会话管理；
+        <b>对话核心层</b>是科研重点，依次完成意图识别（NLU）→ 实体抽取（NER）→ 向量检索（RAG）→ 大模型生成 → 对话管理，
+        下方的"反馈 → 评测 → 迭代训练"回路构成持续优化闭环；<b>知识库层</b>包含 FAQ 库、向量数据库、知识图谱与文档库，
+        为上层提供 Top-K 召回；<b>支撑层</b>提供算力、日志与安全合规保障。整图为原生 SVG 矢量绘制，缩放不失真。
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+</body>
+</html>

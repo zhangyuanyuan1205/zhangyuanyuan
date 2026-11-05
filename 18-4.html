@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：ECharts可视化（3D全球航线图lines3D + 月度销售组合图），库文件本地化到cdn目录 -->
+    <title>18-4 ECharts 可视化 · 张圆圆</title>
+    <!-- ECharts 与 echarts-gl 已下载到本地 cdn 目录，不依赖外网 CDN -->
+    <script src="cdn/echarts.min.js"></script>
+    <script src="cdn/echarts-gl.min.js"></script>
+    <!-- 地图与航线数据同时提供 JS 版本：file:// 双击打开也能直接渲染 -->
+    <script src="cdn/world.js"></script>
+    <script src="cdn/flights.js"></script>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #0a1020;
+            color: #e8ecff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 14px 40px;
+        }
+
+        a {
+            color: #9fc3ff;
+            text-decoration: none;
+        }
+
+        .zyy_header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            margin-bottom: 6px;
+        }
+
+        .zyy_header p {
+            font-size: 14px;
+            color: #8fa3d9;
+        }
+
+        /* ===== 图表容器 ===== */
+        .zyy_chart-box {
+            width: min(1020px, 97vw);
+            background: rgba(16, 24, 52, 0.55);
+            border: 1px solid rgba(120, 150, 255, 0.25);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(4, 8, 30, 0.6);
+            margin-bottom: 22px;
+        }
+
+        .zyy_chart-box h2 {
+            font-size: 16px;
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(120, 150, 255, 0.15);
+            color: #c9d7ff;
+        }
+
+        .zyy_chart-box h2 span {
+            font-size: 12px;
+            color: #8fa3d9;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        #zyy_geo3d {
+            width: 100%;
+            height: 620px;
+        }
+
+        #zyy_sales {
+            width: 100%;
+            height: 430px;
+        }
+
+        .zyy_tip {
+            max-width: 1020px;
+            background: rgba(16, 24, 52, 0.6);
+            border: 1px solid rgba(120, 150, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #b9c6ef;
+            line-height: 1.9;
+        }
+
+        .zyy_tip b {
+            color: #ffd166;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: rgba(16, 24, 56, 0.7);
+            border: 1px solid rgba(120, 150, 255, 0.3);
+            border-radius: 999px;
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>ECharts 可视化演示</h1>
+        <p>图一：3D 全球航线流光图（lines3D on geo3D） · 图二：月度销售柱线组合图</p>
+    </header>
+
+    <div class="zyy_chart-box">
+        <h2>图一 · 全球航线 3D 地球<span>数据：cdn/flights.json，地图：cdn/world.json，按键盘任意键可切换流光效果</span></h2>
+        <div id="zyy_geo3d"></div>
+    </div>
+
+    <div class="zyy_chart-box">
+        <h2>图二 · 电商平台月度销售组合图<span>柱状图：销售额，折线图：订单量（双 Y 轴）</span></h2>
+        <div id="zyy_sales"></div>
+    </div>
+
+    <div class="zyy_tip">
+        <b>实现说明：</b>echarts.min.js 与 echarts-gl.min.js 已下载到本地 <b>cdn/</b> 目录，
+        世界地图 GeoJSON（world.json）与航线数据（flights.json）也一并本地化，通过 fetch 加载，
+        页面不再依赖任何外网 CDN（本地查看请通过 HTTP 服务访问）。
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+
+    <script>
+        // ===== 图一：3D 全球航线流光图（复刻官方 lines3d-flights-on-geo3d 示例） =====
+        // 数据优先使用 script 引入的 JS 变量（file:// 直开可用）；HTTP 环境下回退到 fetch
+        function zyy_loadData(zyy_callback) {
+            if (window.zyy_worldData && window.zyy_flightData) {
+                zyy_callback(window.zyy_worldData, window.zyy_flightData);
+                return;
+            }
+            fetch("cdn/world.json")
+                .then(function (zyy_res) { return zyy_res.json(); })
+                .then(function (zyy_worldJson) {
+                    return fetch("cdn/flights.json").then(function (zyy_res2) {
+                        return zyy_res2.json().then(function (zyy_flights) {
+                            zyy_callback(zyy_worldJson, zyy_flights);
+                        });
+                    });
+                })
+                .catch(function (zyy_err) {
+                    document.getElementById("zyy_geo3d").innerHTML =
+                        '<p style="color:#ff9d9d;padding:20px;">数据加载失败：' + zyy_err.message +
+                        "（请通过本地服务器访问，例如 http://localhost:8765/18-4.html）</p>";
+                });
+        }
+
+        zyy_loadData(function (zyy_worldJson, zyy_data) {
+            echarts.registerMap("world", zyy_worldJson);
+            var zyy_geoChart = echarts.init(document.getElementById("zyy_geo3d"));
+
+                function zyy_getAirportCoord(zyy_idx) {
+                    return [zyy_data.airports[zyy_idx][3], zyy_data.airports[zyy_idx][4]];
+                }
+
+                var zyy_routes = zyy_data.routes.map(function (zyy_airline) {
+                    return [zyy_getAirportCoord(zyy_airline[1]), zyy_getAirportCoord(zyy_airline[2])];
+                });
+
+                zyy_geoChart.setOption({
+                    geo3D: {
+                        map: "world",
+                        shading: "color",
+                        environment: "#060a16", // 星空背景色（本地化，替代外网图片）
+                        silent: true,
+                        groundPlane: { show: false },
+                        light: {
+                            main: { intensity: 0 },
+                            ambient: { intensity: 0 }
+                        },
+                        viewControl: { distance: 50 },
+                        itemStyle: { color: "#111" },
+                        boxHeight: 0.5
+                    },
+                    series: [
+                        {
+                            type: "lines3D",
+                            coordinateSystem: "geo3D",
+                            effect: {
+                                show: true,
+                                trailWidth: 2,
+                                trailLength: 0.2
+                            },
+                            blendMode: "lighter",
+                            lineStyle: {
+                                width: 0,
+                                color: "rgb(50, 50, 150)",
+                                opacity: 0.2
+                            },
+                            data: zyy_routes
+                        }
+                    ]
+                });
+
+                // 按任意键切换流光效果（与官方示例一致）
+                window.addEventListener("keydown", function () {
+                    zyy_geoChart.dispatchAction({
+                        type: "lines3DToggleEffect",
+                        seriesIndex: 0
+                    });
+                });
+
+                // ===== 图二：月度销售柱线组合图 =====
+                var zyy_salesChart = echarts.init(document.getElementById("zyy_sales"));
+                zyy_salesChart.setOption({
+                    tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                    legend: { data: ["销售额（万元）", "订单量（千单）"], textStyle: { color: "#c9d7ff" } },
+                    grid: { left: 60, right: 60, bottom: 40, top: 50 },
+                    xAxis: {
+                        type: "category",
+                        data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                        axisLine: { lineStyle: { color: "#5a6b9d" } },
+                        axisLabel: { color: "#a9b6dd" }
+                    },
+                    yAxis: [
+                        {
+                            type: "value",
+                            name: "销售额",
+                            nameTextStyle: { color: "#a9b6dd" },
+                            axisLabel: { color: "#a9b6dd" },
+                            splitLine: { lineStyle: { color: "rgba(90, 107, 157, 0.3)" } }
+                        },
+                        {
+                            type: "value",
+                            name: "订单量",
+                            nameTextStyle: { color: "#a9b6dd" },
+                            axisLabel: { color: "#a9b6dd" },
+                            splitLine: { show: false }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: "销售额（万元）",
+                            type: "bar",
+                            data: [286, 254, 312, 348, 402, 456, 431, 468, 523, 566, 640, 705],
+                            itemStyle: {
+                                borderRadius: [4, 4, 0, 0],
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: "#5ea0ff" },
+                                    { offset: 1, color: "#1d3a8f" }
+                                ])
+                            }
+                        },
+                        {
+                            name: "订单量（千单）",
+                            type: "line",
+                            yAxisIndex: 1,
+                            smooth: true,
+                            data: [18.6, 16.2, 21.4, 23.8, 27.5, 31.2, 29.6, 32.4, 36.8, 40.1, 46.5, 52.8],
+                            lineStyle: { width: 3, color: "#ffd166" },
+                            itemStyle: { color: "#ffd166" },
+                            symbolSize: 8
+                        }
+                    ]
+                });
+
+                // 窗口缩放时两图自适应
+                window.addEventListener("resize", function () {
+                    zyy_geoChart.resize();
+                    zyy_salesChart.resize();
+                });
+        });
+    </script>
+</body>
+</html>

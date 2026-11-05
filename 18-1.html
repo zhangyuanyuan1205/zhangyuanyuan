@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：Canvas粒子文字动画（像素采样成粒子+弹簧聚合+鼠标排斥+点击炸开） -->
+    <title>18-1 Canvas 粒子文字动画 · 张圆圆</title>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #f5f1e8; /* 米白纸感背景（区别于深色画布） */
+            color: #1f2430;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 26px 16px 44px;
+        }
+
+        a {
+            color: #2a5d8f;
+            text-decoration: none;
+        }
+
+        /* ===== 标题区（左对齐排版） ===== */
+        .zyy_wrap {
+            width: min(960px, 96vw);
+        }
+
+        .zyy_eyebrow {
+            font-size: 13px;
+            letter-spacing: 0.28em;
+            color: #2a5d8f;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .zyy_wrap h1 {
+            font-size: clamp(28px, 4.6vw, 42px);
+            margin-bottom: 10px;
+            color: #10141f;
+        }
+
+        .zyy_desc {
+            font-size: 14px;
+            color: #5b6373;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .zyy_badge {
+            display: inline-block;
+            background: #1d4e79;
+            color: #fff;
+            font-size: 13px;
+            padding: 5px 14px;
+            border-radius: 4px;
+            margin-bottom: 18px;
+        }
+
+        /* ===== Canvas 舞台 ===== */
+        .zyy_stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 8.5;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #10141d;
+            box-shadow: 0 16px 44px rgba(10, 14, 30, 0.35);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        /* 画布左上角状态栏 */
+        .zyy_hud {
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            background: rgba(10, 14, 24, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 12px;
+            color: #d8e0f0;
+            pointer-events: none; /* 不挡鼠标交互 */
+        }
+
+        .zyy_hud .zyy_state {
+            color: #7ee787;
+        }
+
+        .zyy_hud b {
+            color: #ffd166;
+        }
+
+        /* 右下角操作提示 */
+        .zyy_hint {
+            position: absolute;
+            right: 16px;
+            bottom: 12px;
+            font-size: 12px;
+            color: rgba(216, 224, 240, 0.55);
+            pointer-events: none;
+        }
+
+        /* ===== 返回首页 ===== */
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: #fff;
+            border: 1px solid #d8d2c4;
+            border-radius: 999px;
+            padding: 6px 16px;
+            box-shadow: 0 3px 10px rgba(30, 30, 30, 0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="zyy_wrap">
+        <header>
+            <p class="zyy_eyebrow">CANVAS · PARTICLE TEXT</p>
+            <h1>Canvas 粒子文字动画</h1>
+            <p class="zyy_desc">先在离屏画布上写一段文字，再把它的像素拆成数千个粒子；粒子受弹簧力牵引聚合成文字，同时会被鼠标推开。</p>
+            <span class="zyy_badge">张圆圆 · 2026-11-05</span>
+        </header>
+
+        <div class="zyy_stage">
+            <canvas id="zyy_canvas"></canvas>
+            <div class="zyy_hud">
+                <span class="zyy_state" id="zyy_state">● 聚合中</span>
+                <span>粒子 <b id="zyy_count">0</b></span>
+                <span>FPS <b id="zyy_fps">0</b></span>
+            </div>
+            <p class="zyy_hint">移动鼠标推开粒子 · 点击画布炸开重聚</p>
+        </div>
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回作品集目录</a>
+
+    <script>
+        // ===== 粒子文字动画：离屏采样 + 弹簧聚合 + 鼠标排斥 + 点击炸开 =====
+        var zyy_canvas = document.getElementById("zyy_canvas");
+        var zyy_ctx = zyy_canvas.getContext("2d");
+        var zyy_dpr = window.devicePixelRatio || 1;
+        var zyy_w = 0;
+        var zyy_h = 0;
+        var zyy_particles = [];
+        var zyy_mouse = { x: -9999, y: -9999 };
+        var zyy_elState = document.getElementById("zyy_state");
+        var zyy_elCount = document.getElementById("zyy_count");
+        var zyy_elFps = document.getElementById("zyy_fps");
+        var zyy_fpsTime = performance.now();
+        var zyy_fpsFrames = 0;
+
+        // 自适应画布
+        function zyy_resize() {
+            var zyy_rect = zyy_canvas.getBoundingClientRect();
+            zyy_w = zyy_rect.width;
+            zyy_h = zyy_rect.height;
+            zyy_canvas.width = zyy_w * zyy_dpr;
+            zyy_canvas.height = zyy_h * zyy_dpr;
+            zyy_ctx.setTransform(zyy_dpr, 0, 0, zyy_dpr, 0, 0);
+            zyy_buildParticles();
+        }
+
+        // 离屏画布采样文字像素，生成粒子
+        function zyy_buildParticles() {
+            zyy_particles = [];
+
+            // 离屏画布：写"张圆圆"三个大字
+            var zyy_off = document.createElement("canvas");
+            zyy_off.width = zyy_w;
+            zyy_off.height = zyy_h;
+            var zyy_octx = zyy_off.getContext("2d");
+            var zyy_fontSize = Math.min(zyy_w / 3.4, zyy_h / 1.9);
+            zyy_octx.fillStyle = "#fff";
+            zyy_octx.font = 'bold ' + zyy_fontSize + 'px "Microsoft YaHei", sans-serif';
+            zyy_octx.textAlign = "center";
+            zyy_octx.textBaseline = "middle";
+            zyy_octx.fillText("张圆圆", zyy_w / 2, zyy_h / 2);
+
+            // 逐像素扫描，采样命中文字的坐标
+            var zyy_img = zyy_octx.getImageData(0, 0, zyy_w, zyy_h).data;
+            var zyy_step = zyy_w > 700 ? 4 : 3; // 采样间隔：密度自适应
+            var zyy_textLeft = zyy_w / 2 - zyy_fontSize * 1.7;
+            var zyy_textRight = zyy_w / 2 + zyy_fontSize * 1.7;
+            var zyy_span = Math.max(1, zyy_textRight - zyy_textLeft);
+
+            for (var zyy_y = 0; zyy_y < zyy_h; zyy_y += zyy_step) {
+                for (var zyy_x = 0; zyy_x < zyy_w; zyy_x += zyy_step) {
+                    if (zyy_img[(zyy_y * zyy_w + zyy_x) * 4 + 3] > 128) { // alpha 判定
+                        // 按水平位置映射颜色：左银白 → 中金黄 → 右橙红（同参考图）
+                        var zyy_ratio = (zyy_x - zyy_textLeft) / zyy_span;
+                        var zyy_color;
+                        if (zyy_ratio < 0.4) {
+                            zyy_color = "#c9d4e4";
+                        } else if (zyy_ratio < 0.55) {
+                            zyy_color = "#e8c987";
+                        } else if (zyy_ratio < 0.75) {
+                            zyy_color = "#f5a95c";
+                        } else {
+                            zyy_color = "#ef6a3d";
+                        }
+
+                        zyy_particles.push({
+                            hx: zyy_x, hy: zyy_y,                      // 弹簧目标点
+                            x: Math.random() * zyy_w,                  // 当前位置（随机出生）
+                            y: Math.random() * zyy_h,
+                            vx: 0, vy: 0,
+                            r: Math.random() * 1.2 + 1.2,              // 粒子半径
+                            color: zyy_color
+                        });
+                    }
+                }
+            }
+            zyy_elCount.textContent = zyy_particles.length.toLocaleString();
+            zyy_elState.textContent = "● 聚合中";
+            zyy_elState.style.color = "#ffd166";
+        }
+
+        // 鼠标交互
+        zyy_canvas.addEventListener("mousemove", function (zyy_e) {
+            var zyy_rect = zyy_canvas.getBoundingClientRect();
+            zyy_mouse.x = zyy_e.clientX - zyy_rect.left;
+            zyy_mouse.y = zyy_e.clientY - zyy_rect.top;
+        });
+        zyy_canvas.addEventListener("mouseleave", function () {
+            zyy_mouse.x = -9999;
+            zyy_mouse.y = -9999;
+        });
+
+        // 点击炸开：给每个粒子随机速度，随后弹簧力把它们拉回文字
+        zyy_canvas.addEventListener("click", function () {
+            for (var i = 0; i < zyy_particles.length; i++) {
+                var zyy_p = zyy_particles[i];
+                var zyy_angle = Math.random() * Math.PI * 2;
+                var zyy_speed = Math.random() * 14 + 6;
+                zyy_p.vx = Math.cos(zyy_angle) * zyy_speed;
+                zyy_p.vy = Math.sin(zyy_angle) * zyy_speed;
+            }
+            zyy_elState.textContent = "● 已炸开";
+            zyy_elState.style.color = "#ff7a8a";
+        });
+
+        // 主循环
+        function zyy_loop() {
+            // 半透明擦除：形成轻微拖尾
+            zyy_ctx.fillStyle = "rgba(16, 20, 29, 0.36)";
+            zyy_ctx.fillRect(0, 0, zyy_w, zyy_h);
+
+            var zyy_settled = 0;
+
+            for (var i = 0; i < zyy_particles.length; i++) {
+                var zyy_p = zyy_particles[i];
+
+                // 1. 弹簧力：把粒子拉回文字像素位置
+                zyy_p.vx += (zyy_p.hx - zyy_p.x) * 0.012;
+                zyy_p.vy += (zyy_p.hy - zyy_p.y) * 0.012;
+
+                // 2. 鼠标排斥力：半径 90px 内把粒子推开
+                var zyy_dx = zyy_p.x - zyy_mouse.x;
+                var zyy_dy = zyy_p.y - zyy_mouse.y;
+                var zyy_dist2 = zyy_dx * zyy_dx + zyy_dy * zyy_dy;
+                if (zyy_dist2 < 8100) { // 90^2
+                    var zyy_dist = Math.sqrt(zyy_dist2) || 1;
+                    var zyy_force = (90 - zyy_dist) / 90 * 2.4;
+                    zyy_p.vx += zyy_dx / zyy_dist * zyy_force;
+                    zyy_p.vy += zyy_dy / zyy_dist * zyy_force;
+                }
+
+                // 3. 阻尼 + 积分
+                zyy_p.vx *= 0.88;
+                zyy_p.vy *= 0.88;
+                zyy_p.x += zyy_p.vx;
+                zyy_p.y += zyy_p.vy;
+
+                if (Math.abs(zyy_p.vx) + Math.abs(zyy_p.vy) < 0.4) zyy_settled++;
+
+                // 绘制粒子
+                zyy_ctx.beginPath();
+                zyy_ctx.arc(zyy_p.x, zyy_p.y, zyy_p.r, 0, Math.PI * 2);
+                zyy_ctx.fillStyle = zyy_p.color;
+                zyy_ctx.fill();
+            }
+
+            // 状态判断：几乎全部粒子静止则显示"聚合完成"
+            if (zyy_settled > zyy_particles.length * 0.95) {
+                zyy_elState.textContent = "● 聚合完成";
+                zyy_elState.style.color = "#7ee787";
+            }
+
+            // FPS 统计（每秒刷新）
+            zyy_fpsFrames++;
+            var zyy_now = performance.now();
+            if (zyy_now - zyy_fpsTime >= 1000) {
+                zyy_elFps.textContent = Math.round(zyy_fpsFrames * 1000 / (zyy_now - zyy_fpsTime));
+                zyy_fpsFrames = 0;
+                zyy_fpsTime = zyy_now;
+            }
+
+            requestAnimationFrame(zyy_loop);
+        }
+
+        var zyy_resizeTimer = null;
+        window.addEventListener("resize", function () {
+            clearTimeout(zyy_resizeTimer);
+            zyy_resizeTimer = setTimeout(zyy_resize, 150); // 防抖重建粒子
+        });
+
+        zyy_resize();
+        requestAnimationFrame(zyy_loop);
+    </script>
+</body>
+</html>
