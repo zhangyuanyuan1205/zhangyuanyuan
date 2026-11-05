@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：Mermaid图表（智能客服流程图 + 知识库ER图），库文件本地化到cdn目录 -->
+    <title>18-6 Mermaid 图表 · 张圆圆</title>
+    <!-- mermaid 已下载到本地 cdn 目录，不依赖外网 CDN -->
+    <script src="cdn/mermaid.min.js"></script>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #f4f6fb;
+            color: #232936;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 14px 40px;
+        }
+
+        a {
+            color: #2a5d8f;
+            text-decoration: none;
+        }
+
+        .zyy_header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            margin-bottom: 6px;
+        }
+
+        .zyy_header p {
+            font-size: 14px;
+            color: #6a7387;
+        }
+
+        /* ===== 图表容器 ===== */
+        .zyy_box {
+            width: min(980px, 97vw);
+            background: #fff;
+            border: 1px solid #dde3ef;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(40, 55, 95, 0.08);
+            margin-bottom: 22px;
+            padding: 18px 22px 26px;
+        }
+
+        .zyy_box h2 {
+            font-size: 17px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2a5d8f;
+            color: #2a5d8f;
+            margin-bottom: 8px;
+        }
+
+        .zyy_box h2 span {
+            font-size: 12px;
+            color: #8b93a6;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .zyy_diagram {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .zyy_tip {
+            max-width: 980px;
+            background: #eef2fa;
+            border: 1px solid #d5deee;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #4c566d;
+            line-height: 1.9;
+        }
+
+        .zyy_tip b {
+            color: #2a5d8f;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: #fff;
+            border: 1px solid #d5deee;
+            border-radius: 999px;
+            padding: 6px 16px;
+            box-shadow: 0 3px 10px rgba(30, 40, 70, 0.12);
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>Mermaid 图表演示</h1>
+        <p>图一：智能客服系统流程图（flowchart） · 图二：知识库实体关系图（erDiagram）</p>
+    </header>
+
+    <div class="zyy_box">
+        <h2>图一 · 智能客服系统流程图<span>用户提问 → 意图识别 → 知识检索 / 人工兜底 → 回复与质检闭环</span></h2>
+        <div class="zyy_diagram">
+            <pre class="mermaid">
+flowchart TD
+    A[用户提问] --> B{渠道接入}
+    B --> C[Web 网页端]
+    B --> D[微信公众号]
+    B --> E[App 内嵌]
+    C --> F[统一网关]
+    D --> F
+    E --> F
+    F --> G[预处理与敏感词过滤]
+    G --> H{意图识别 NLU}
+    H -- 常见问题 --> I[向量检索知识库 RAG]
+    H -- 业务办理 --> J[调用业务接口 API]
+    H -- 超纲问题 --> K[转接人工坐席]
+    I --> L[LLM 生成回复]
+    J --> M[组装结构化答复]
+    L --> N[回复用户]
+    M --> N
+    K --> N
+    N --> O{满意度评价}
+    O -- 满意 --> P[会话归档]
+    O -- 不满意 --> Q[标注反馈数据]
+    Q --> R[进入评测集]
+    R --> S[模型迭代训练]
+    S -.持续优化.-> H
+    P --> T[数据统计看板]
+            </pre>
+        </div>
+    </div>
+
+    <div class="zyy_box">
+        <h2>图二 · 知识库智能客服 ER 图<span>用户 / 会话 / 消息 / FAQ / 知识文档 / 坐席 六大实体及关系</span></h2>
+        <div class="zyy_diagram">
+            <pre class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ MESSAGE : "包含"
+    AGENT ||--o{ SESSION : "接管"
+    FAQ ||--o{ MESSAGE : "命中回复"
+    DOC ||--o{ FAQ : "来源拆分"
+    USER {
+        int user_id PK
+        string name
+        string channel
+        datetime register_time
+    }
+    SESSION {
+        int session_id PK
+        int user_id FK
+        int agent_id FK
+        datetime start_time
+        string status
+    }
+    MESSAGE {
+        int msg_id PK
+        int session_id FK
+        string role
+        string content
+        int faq_id FK
+        datetime send_time
+    }
+    FAQ {
+        int faq_id PK
+        int doc_id FK
+        string question
+        string answer
+        string category
+        int hit_count
+    }
+    DOC {
+        int doc_id PK
+        string title
+        string vector_id
+        datetime update_time
+    }
+    AGENT {
+        int agent_id PK
+        string agent_name
+        string skill_group
+        int online
+    }
+            </pre>
+        </div>
+    </div>
+
+    <div class="zyy_tip">
+        <b>实现说明：</b>使用 <b>mermaid@10</b>（已本地化到 cdn/mermaid.min.js），
+        在页面中直接书写 <b>flowchart</b> 与 <b>erDiagram</b> 两类 DSL 文本，
+        mermaid 自动解析渲染为 SVG 矢量图；流程图覆盖智能客服"接入 → 识别 → 检索/兜底 → 评价 → 迭代"全链路，
+        ER 图展示 6 个实体及其主外键关系。页面无需网络请求，双击 file:// 直接打开也可渲染。
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+
+    <script>
+        // 初始化 mermaid（主题与配色）
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                primaryColor: "#dceaf8",
+                primaryBorderColor: "#2a5d8f",
+                primaryTextColor: "#1d2c3f",
+                lineColor: "#5f7189",
+                fontSize: "14px"
+            },
+            flowchart: { curve: "basis", useMaxWidth: true }
+        });
+    </script>
+</body>
+</html>

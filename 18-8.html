@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：数据可视化大屏（三列布局，中列上方为中国地图），echarts本地化到cdn目录 -->
+    <title>18-8 电商数据大屏 · 张圆圆</title>
+    <!-- echarts 与中国地图数据已本地化到 cdn 目录，不依赖外网 CDN -->
+    <script src="cdn/echarts.min.js"></script>
+    <script src="cdn/china.js"></script>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 0%, #12224a 0%, #0a1024 55%, #060a18 100%);
+            color: #dfe8ff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            color: #9fc3ff;
+            text-decoration: none;
+        }
+
+        /* ===== 顶部标题栏 ===== */
+        .zyy_topbar {
+            position: relative;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(90, 140, 255, 0.25);
+            background: linear-gradient(rgba(20, 40, 90, 0.55), rgba(10, 18, 44, 0.1));
+            flex: none;
+        }
+
+        .zyy_topbar h1 {
+            font-size: clamp(20px, 2.4vw, 28px);
+            letter-spacing: 0.14em;
+            background: linear-gradient(90deg, #7ee7ff, #c8b3ff, #7ee7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zyy_topbar .zyy_clock {
+            position: absolute;
+            right: 20px;
+            font-size: 13px;
+            color: #9fb6e8;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .zyy_topbar .zyy_author {
+            position: absolute;
+            left: 20px;
+            font-size: 13px;
+            color: #9fb6e8;
+        }
+
+        .zyy_topbar .zyy_author b {
+            color: #ffd166;
+        }
+
+        /* ===== 三列主区 ===== */
+        .zyy_main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 25fr 50fr 25fr;
+            gap: 10px;
+            padding: 10px;
+            min-height: 0;
+        }
+
+        .zyy_col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+        }
+
+        .zyy_panel {
+            flex: 1;
+            min-height: 0;
+            background: rgba(18, 32, 72, 0.5);
+            border: 1px solid rgba(90, 140, 255, 0.22);
+            border-radius: 10px;
+            padding: 10px 12px 6px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zyy_panel::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #35e0ff, transparent 70%);
+        }
+
+        .zyy_panel h3 {
+            font-size: 14px;
+            color: #a9c6ff;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(90, 140, 255, 0.25);
+            margin-bottom: 4px;
+            flex: none;
+        }
+
+        .zyy_panel h3 span {
+            float: right;
+            font-size: 11px;
+            color: #6f83b8;
+            font-weight: normal;
+        }
+
+        .zyy_chart {
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 中列上方地图面板占比更大 */
+        .zyy_map-panel {
+            flex: 1.5;
+        }
+
+        /* KPI 数字卡 */
+        .zyy_kpi {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 6px;
+            flex: none;
+        }
+
+        .zyy_kpi .zyy_num {
+            font-size: clamp(20px, 2.2vw, 30px);
+            font-weight: bold;
+            color: #35e0ff;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 14px rgba(53, 224, 255, 0.5);
+        }
+
+        .zyy_kpi .zyy_unit {
+            font-size: 12px;
+            color: #8fa3d9;
+        }
+
+        .zyy_kpi .zyy_delta {
+            margin-left: auto;
+            font-size: 12px;
+            color: #7ee787;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 12px;
+            bottom: 10px;
+            z-index: 5;
+            font-size: 12px;
+            background: rgba(16, 28, 64, 0.8);
+            border: 1px solid rgba(90, 140, 255, 0.35);
+            border-radius: 999px;
+            padding: 5px 14px;
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_topbar">
+        <span class="zyy_author">制作人：<b>张圆圆</b></span>
+        <h1>电商销售实时监控大屏</h1>
+        <span class="zyy_clock" id="zyy_clock">--:--:--</span>
+    </header>
+
+    <main class="zyy_main">
+        <!-- 左列 -->
+        <div class="zyy_col">
+            <div class="zyy_panel">
+                <h3>今日销售总额 <span>实时</span></h3>
+                <div class="zyy_kpi">
+                    <span class="zyy_num" id="zyy_gmv">12,846,930</span>
+                    <span class="zyy_unit">元</span>
+                    <span class="zyy_delta">▲ 12.6%</span>
+                </div>
+            </div>
+            <div class="zyy_panel">
+                <h3>品类销售 TOP6 <span>万元</span></h3>
+                <div class="zyy_chart" id="zyy_cate"></div>
+            </div>
+            <div class="zyy_panel">
+                <h3>渠道占比 <span>%</span></h3>
+                <div class="zyy_chart" id="zyy_channel"></div>
+            </div>
+        </div>
+
+        <!-- 中列 -->
+        <div class="zyy_col">
+            <div class="zyy_panel zyy_map-panel">
+                <h3>全国订单分布热力图 <span>地理信息 · 中国地图</span></h3>
+                <div class="zyy_chart" id="zyy_map"></div>
+            </div>
+            <div class="zyy_panel">
+                <h3>24 小时订单量趋势 <span>单 / 小时</span></h3>
+                <div class="zyy_chart" id="zyy_line"></div>
+            </div>
+        </div>
+
+        <!-- 右列 -->
+        <div class="zyy_col">
+            <div class="zyy_panel">
+                <h3>城市订单排行 <span>TOP5</span></h3>
+                <div class="zyy_chart" id="zyy_city"></div>
+            </div>
+            <div class="zyy_panel">
+                <h3>目标完成率 <span>%</span></h3>
+                <div class="zyy_chart" id="zyy_gauge"></div>
+            </div>
+            <div class="zyy_panel">
+                <h3>实时预警消息 <span>滚动</span></h3>
+                <div class="zyy_chart" id="zyy_msg"></div>
+            </div>
+        </div>
+    </main>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+
+    <script>
+        // ===== 时钟 =====
+        function zyy_tick() {
+            var zyy_d = new Date();
+            var zyy_pad = function (zyy_n) { return zyy_n < 10 ? "0" + zyy_n : "" + zyy_n; };
+            document.getElementById("zyy_clock").textContent =
+                zyy_d.getFullYear() + "-" + zyy_pad(zyy_d.getMonth() + 1) + "-" + zyy_pad(zyy_d.getDate()) +
+                "  " + zyy_pad(zyy_d.getHours()) + ":" + zyy_pad(zyy_d.getMinutes()) + ":" + zyy_pad(zyy_d.getSeconds());
+        }
+        zyy_tick();
+        setInterval(zyy_tick, 1000);
+
+        // ===== 注册中国地图：优先 script 引入的 china.js（file:// 直开可用），HTTP 下回退 fetch =====
+        var zyy_charts = {};
+
+        function zyy_initAll() {
+            // 左列：品类销售条形图
+            zyy_charts.cate = echarts.init(document.getElementById("zyy_cate"));
+            zyy_charts.cate.setOption({
+                grid: { left: 8, right: 34, top: 8, bottom: 0, containLabel: true },
+                xAxis: { type: "value", show: false },
+                yAxis: {
+                    type: "category",
+                    data: ["家居", "美妆", "食品", "数码", "家电", "服饰"],
+                    axisLine: { show: false }, axisTick: { show: false },
+                    axisLabel: { color: "#a9c6ff", fontSize: 12 }
+                },
+                series: [{
+                    type: "bar",
+                    data: [186, 243, 287, 346, 428, 521],
+                    barWidth: 10,
+                    itemStyle: {
+                        borderRadius: 5,
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                            { offset: 0, color: "#1d5fd6" }, { offset: 1, color: "#35e0ff" }
+                        ])
+                    },
+                    label: { show: true, position: "right", color: "#7ee7ff", fontSize: 11 }
+                }]
+            });
+
+            // 左列：渠道占比环形图
+            zyy_charts.channel = echarts.init(document.getElementById("zyy_channel"));
+            zyy_charts.channel.setOption({
+                color: ["#35e0ff", "#7ee7cd", "#ffd166", "#ff8fa3", "#c8b3ff"],
+                legend: { bottom: 0, textStyle: { color: "#9fb6e8", fontSize: 11 }, itemWidth: 10, itemHeight: 10 },
+                series: [{
+                    type: "pie",
+                    radius: ["52%", "76%"],
+                    center: ["50%", "42%"],
+                    label: { show: false },
+                    data: [
+                        { value: 34, name: "线上商城" }, { value: 26, name: "线下门店" },
+                        { value: 22, name: "直播带货" }, { value: 12, name: "社区团购" }, { value: 6, name: "企业采购" }
+                    ]
+                }]
+            });
+
+            // 中列：中国地图（地理信息）
+            zyy_charts.map = echarts.init(document.getElementById("zyy_map"));
+            zyy_charts.map.setOption({
+                tooltip: { trigger: "item", formatter: "{b}<br/>订单量：{c} 单" },
+                visualMap: {
+                    min: 0, max: 30000,
+                    left: 20, bottom: 16,
+                    text: ["高", "低"],
+                    textStyle: { color: "#9fb6e8", fontSize: 11 },
+                    inRange: { color: ["#12306e", "#2a7ee0", "#35e0ff", "#ffd166"] },
+                    calculable: false
+                },
+                series: [{
+                    type: "map",
+                    map: "china",
+                    roam: true,
+                    itemStyle: { borderColor: "rgba(120,180,255,0.7)", borderWidth: 1 },
+                    emphasis: { label: { color: "#fff" }, itemStyle: { areaColor: "#ff8fa3" } },
+                    data: [
+                        { name: "广东", value: 29860 }, { name: "浙江", value: 26432 },
+                        { name: "江苏", value: 24105 }, { name: "山东", value: 19873 },
+                        { name: "四川", value: 17650 }, { name: "河南", value: 15480 },
+                        { name: "北京", value: 14233 }, { name: "上海", value: 13658 },
+                        { name: "湖北", value: 12040 }, { name: "福建", value: 11275 },
+                        { name: "湖南", value: 10312 }, { name: "陕西", value: 8864 },
+                        { name: "重庆", value: 8210 }, { name: "安徽", value: 7793 }
+                    ]
+                }]
+            });
+
+            // 中列：24 小时趋势
+            zyy_charts.line = echarts.init(document.getElementById("zyy_line"));
+            var zyy_hours = [];
+            var zyy_orders = [];
+            for (var h = 0; h < 24; h++) {
+                zyy_hours.push(h + "时");
+                zyy_orders.push(Math.round(300 + 900 * Math.exp(-Math.pow(h - 21, 2) / 18) + 400 * Math.exp(-Math.pow(h - 11, 2) / 14) + Math.random() * 120));
+            }
+            zyy_charts.line.setOption({
+                grid: { left: 40, right: 16, top: 20, bottom: 26 },
+                xAxis: {
+                    type: "category", data: zyy_hours, boundaryGap: false,
+                    axisLine: { lineStyle: { color: "#3c5490" } },
+                    axisLabel: { color: "#7d92c4", fontSize: 10, interval: 3 }
+                },
+                yAxis: { type: "value", axisLabel: { color: "#7d92c4", fontSize: 10 }, splitLine: { lineStyle: { color: "rgba(60,84,144,0.3)" } } },
+                series: [{
+                    type: "line", data: zyy_orders, smooth: true, symbol: "none",
+                    lineStyle: { width: 2.5, color: "#35e0ff" },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: "rgba(53,224,255,0.45)" }, { offset: 1, color: "rgba(53,224,255,0)" }
+                        ])
+                    }
+                }]
+            });
+
+            // 右列：城市排行
+            zyy_charts.city = echarts.init(document.getElementById("zyy_city"));
+            zyy_charts.city.setOption({
+                grid: { left: 8, right: 40, top: 4, bottom: 0, containLabel: true },
+                xAxis: { type: "value", show: false },
+                yAxis: {
+                    type: "category", data: ["郑州", "武汉", "成都", "上海", "北京"],
+                    axisLine: { show: false }, axisTick: { show: false },
+                    axisLabel: { color: "#a9c6ff", fontSize: 12 }
+                },
+                series: [{
+                    type: "bar", barWidth: 10,
+                    data: [
+                        { value: 7860, itemStyle: { color: "#3c6fe0" } },
+                        { value: 8940, itemStyle: { color: "#3aa8e8" } },
+                        { value: 10230, itemStyle: { color: "#35d0e0" } },
+                        { value: 12860, itemStyle: { color: "#ffd166" } },
+                        { value: 15320, itemStyle: { color: "#ff8fa3" } }
+                    ],
+                    itemStyle: { borderRadius: 5 },
+                    label: { show: true, position: "right", color: "#7ee7ff", fontSize: 11 }
+                }]
+            });
+
+            // 右列：完成率仪表盘
+            zyy_charts.gauge = echarts.init(document.getElementById("zyy_gauge"));
+            zyy_charts.gauge.setOption({
+                series: [{
+                    type: "gauge", startAngle: 210, endAngle: -30, min: 0, max: 100,
+                    center: ["50%", "58%"], radius: "95%",
+                    progress: { show: true, width: 12, roundCap: true, itemStyle: { color: "#35e0ff" } },
+                    pointer: { show: false },
+                    axisLine: { roundCap: true, lineStyle: { width: 12, color: [[1, "rgba(53,120,220,0.2)"]] } },
+                    axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
+                    detail: {
+                        valueAnimation: true, formatter: "{value}%", offsetCenter: [0, 0],
+                        color: "#ffd166", fontSize: 22
+                    },
+                    data: [{ value: 76.4 }]
+                }]
+            });
+
+            // 右列：滚动预警消息
+            zyy_charts.msg = echarts.init(document.getElementById("zyy_msg"));
+            zyy_charts.msg.setOption({
+                grid: { left: 8, right: 8, top: 8, bottom: 0, containLabel: true },
+                xAxis: { show: false },
+                yAxis: {
+                    type: "category", inverse: true,
+                    data: ["⚠ 广东仓库存告急", "✓ 上海站峰值承载正常", "⚠ 双11预案已启动", "✓ 支付成功率 99.6%", "⚠ 华北物流延迟 2h", "✓ 直播间转化率 +8%"],
+                    axisLine: { show: false }, axisTick: { show: false },
+                    axisLabel: { color: "#9fb6e8", fontSize: 12 }
+                },
+                series: [{ type: "bar", barWidth: 1, data: [0, 0, 0, 0, 0, 0] }]
+            });
+            // 滚动动画：每 2.5 秒把首行挪到末尾
+            var zyy_msgs = ["⚠ 广东仓库存告急", "✓ 上海站峰值承载正常", "⚠ 双11预案已启动", "✓ 支付成功率 99.6%", "⚠ 华北物流延迟 2h", "✓ 直播间转化率 +8%"];
+            setInterval(function () {
+                zyy_msgs.push(zyy_msgs.shift());
+                zyy_charts.msg.setOption({ yAxis: { data: zyy_msgs } });
+            }, 2500);
+
+            // GMV 数字每 3 秒上涨
+            var zyy_gmv = 12846930;
+            setInterval(function () {
+                zyy_gmv += Math.round(Math.random() * 9000 + 2000);
+                document.getElementById("zyy_gmv").textContent = zyy_gmv.toLocaleString();
+            }, 3000);
+        }
+
+        if (window.zyy_chinaData) {
+            // file:// 直开：直接用 script 引入的地图数据
+            echarts.registerMap("china", window.zyy_chinaData);
+            zyy_initAll();
+        } else {
+            // HTTP 环境：fetch 加载
+            fetch("cdn/china.json")
+                .then(function (zyy_res) { return zyy_res.json(); })
+                .then(function (zyy_json) {
+                    echarts.registerMap("china", zyy_json);
+                    zyy_initAll();
+                })
+                .catch(function (zyy_err) {
+                    document.getElementById("zyy_map").innerHTML =
+                        '<p style="color:#ff9d9d;padding:16px;">地图数据加载失败：' + zyy_err.message + "</p>";
+                });
+        }
+
+        // 窗口缩放：所有图表自适应
+        window.addEventListener("resize", function () {
+            for (var zyy_k in zyy_charts) zyy_charts[zyy_k].resize();
+        });
+    </script>
+</body>
+</html>

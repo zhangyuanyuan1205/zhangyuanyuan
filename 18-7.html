@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：张圆圆，日期：2026-11-05，功能名称：Three.js 3D图表（3D柱状图 + 3D环形饼图），库文件本地化到cdn目录 -->
+    <title>18-7 Three.js 3D 图表 · 张圆圆</title>
+    <!-- three.js 已下载到本地 cdn 目录（r128 UMD 版），不依赖外网 CDN -->
+    <script src="cdn/three.min.js"></script>
+    <style>
+        /* ===== 全局公共CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            min-height: 100vh;
+            background: #0c0f1a;
+            color: #e8ecff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 14px 40px;
+        }
+
+        a {
+            color: #9fc3ff;
+            text-decoration: none;
+        }
+
+        .zyy_header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .zyy_header h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            margin-bottom: 6px;
+        }
+
+        .zyy_header p {
+            font-size: 14px;
+            color: #8fa3d9;
+        }
+
+        /* ===== 3D 舞台容器 ===== */
+        .zyy_stage {
+            position: relative;
+            width: min(980px, 97vw);
+            height: 440px;
+            background: rgba(16, 24, 52, 0.55);
+            border: 1px solid rgba(120, 150, 255, 0.25);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(4, 8, 30, 0.6);
+            margin-bottom: 22px;
+        }
+
+        .zyy_stage h2 {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 2;
+            font-size: 15px;
+            padding: 12px 18px;
+            color: #c9d7ff;
+            background: linear-gradient(rgba(10, 16, 38, 0.9), rgba(10, 16, 38, 0));
+            pointer-events: none;
+        }
+
+        .zyy_stage h2 span {
+            font-size: 12px;
+            color: #8fa3d9;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        /* 图表容器撑满舞台，保证 canvas 有实际尺寸 */
+        .zyy_stage > div {
+            position: absolute;
+            inset: 0;
+        }
+
+        canvas {
+            display: block;
+            cursor: grab;
+        }
+
+        canvas:active {
+            cursor: grabbing;
+        }
+
+        .zyy_tip {
+            max-width: 980px;
+            background: rgba(16, 24, 52, 0.6);
+            border: 1px solid rgba(120, 150, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #b9c6ef;
+            line-height: 1.9;
+        }
+
+        .zyy_tip b {
+            color: #ffd166;
+        }
+
+        .zyy_back {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 13px;
+            background: rgba(16, 24, 56, 0.7);
+            border: 1px solid rgba(120, 150, 255, 0.3);
+            border-radius: 999px;
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body>
+    <header class="zyy_header">
+        <h1>Three.js 3D 图表演示</h1>
+        <p>图一：3D 柱状图（月度销售额） · 图二：3D 环形饼图（渠道占比），鼠标拖拽旋转 · 滚轮缩放</p>
+    </header>
+
+    <div class="zyy_stage">
+        <h2>图一 · 3D 柱状图<span>六边形底座 + 悬浮标签，柱体生长动画，悬停高亮（拖动旋转视角）</span></h2>
+        <div id="zyy_bars"></div>
+    </div>
+
+    <div class="zyy_stage">
+        <h2>图二 · 3D 环形饼图<span>CylinderGeometry 扇区拼接，各扇区按占比撑开间隙，整体自转</span></h2>
+        <div id="zyy_pie"></div>
+    </div>
+
+    <div class="zyy_tip">
+        <b>实现说明：</b>基于 <b>three.js r128</b>（已本地化到 cdn/three.min.js）：
+        图一用 <b>BoxGeometry</b> 构建 12 根柱体 + 地面网格 + CSS2D 式 HTML 标签投影，
+        进入时从零"生长"到目标高度，Raycaster 实现鼠标悬停高亮；图二用 <b>CylinderGeometry</b>
+        的 thetaStart/thetaLength 把圆环按渠道占比切成扇区，外加环形内圈与图例。
+        两图均支持鼠标拖拽旋转、滚轮缩放（自实现轨道控制，无需额外插件）。
+    </div>
+
+    <a class="zyy_back" href="./index.html">← 返回首页</a>
+
+    <script>
+        // ================= 公共：拖拽旋转 + 滚轮缩放（自实现轨道控制） =================
+        function zyy_bindOrbit(zyy_dom, zyy_camera, zyy_targetRadius) {
+            var zyy_isDown = false;
+            var zyy_lastX = 0;
+            var zyy_lastY = 0;
+            var zyy_radius = zyy_targetRadius;
+
+            zyy_dom.addEventListener("mousedown", function (zyy_e) {
+                zyy_isDown = true;
+                zyy_lastX = zyy_e.clientX;
+                zyy_lastY = zyy_e.clientY;
+            });
+            window.addEventListener("mouseup", function () { zyy_isDown = false; });
+            window.addEventListener("mousemove", function (zyy_e) {
+                if (!zyy_isDown) return;
+                var zyy_dx = zyy_e.clientX - zyy_lastX;
+                var zyy_dy = zyy_e.clientY - zyy_lastY;
+                zyy_lastX = zyy_e.clientX;
+                zyy_lastY = zyy_e.clientY;
+
+                // 绕 Y 轴水平旋转 + 俯仰角限制
+                var zyy_pos = zyy_camera.position.clone().sub(new THREE.Vector3(0, 0, 0));
+                var zyy_sph = new THREE.Spherical().setFromVector3(zyy_pos);
+                zyy_sph.theta -= zyy_dx * 0.006;
+                zyy_sph.phi = Math.max(0.25, Math.min(1.35, zyy_sph.phi - zyy_dy * 0.005));
+                zyy_pos.setFromSpherical(zyy_sph);
+                zyy_camera.position.copy(zyy_pos);
+                zyy_camera.lookAt(0, 0, 0);
+            });
+            zyy_dom.addEventListener("wheel", function (zyy_e) {
+                zyy_e.preventDefault();
+                zyy_radius = Math.max(8, Math.min(40, zyy_radius + zyy_e.deltaY * 0.02));
+                var zyy_pos = zyy_camera.position.clone();
+                zyy_pos.setLength(zyy_radius);
+                zyy_camera.position.copy(zyy_pos);
+                zyy_camera.lookAt(0, 0, 0);
+            }, { passive: false });
+        }
+
+        function zyy_addLights(zyy_scene) {
+            zyy_scene.add(new THREE.AmbientLight(0x8899cc, 0.9));
+            var zyy_dir = new THREE.DirectionalLight(0xffffff, 0.8);
+            zyy_dir.position.set(8, 14, 10);
+            zyy_scene.add(zyy_dir);
+            var zyy_dir2 = new THREE.DirectionalLight(0x6688ff, 0.4);
+            zyy_dir2.position.set(-10, 6, -8);
+            zyy_scene.add(zyy_dir2);
+        }
+
+        function zyy_addGrid(zyy_scene, zyy_size) {
+            var zyy_grid = new THREE.GridHelper(zyy_size, 16, 0x2a3a6e, 0x1c2748);
+            zyy_grid.position.y = -0.01;
+            zyy_scene.add(zyy_grid);
+        }
+
+        // ================= 图一：3D 柱状图 =================
+        (function () {
+            var zyy_box = document.getElementById("zyy_bars");
+            var zyy_scene = new THREE.Scene();
+            zyy_scene.background = new THREE.Color(0x0e1428);
+
+            var zyy_camera = new THREE.PerspectiveCamera(45, zyy_box.clientWidth / zyy_box.clientHeight, 0.1, 100);
+            zyy_camera.position.set(9, 7.5, 12);
+            zyy_camera.lookAt(0, 1.6, 0);
+
+            var zyy_renderer = new THREE.WebGLRenderer({ antialias: true });
+            zyy_renderer.setSize(zyy_box.clientWidth, zyy_box.clientHeight);
+            zyy_renderer.setPixelRatio(window.devicePixelRatio || 1);
+            zyy_box.appendChild(zyy_renderer.domElement);
+
+            zyy_addLights(zyy_scene);
+            zyy_addGrid(zyy_scene, 16);
+
+            // 数据：月度销售额（万元）
+            var zyy_data = [
+                { m: "1月", v: 286 }, { m: "2月", v: 254 }, { m: "3月", v: 312 },
+                { m: "4月", v: 348 }, { m: "5月", v: 402 }, { m: "6月", v: 456 },
+                { m: "7月", v: 431 }, { m: "8月", v: 468 }, { m: "9月", v: 523 },
+                { m: "10月", v: 566 }, { m: "11月", v: 640 }, { m: "12月", v: 705 }
+            ];
+            var zyy_max = 705;
+            var zyy_barsArr = [];
+            var zyy_group = new THREE.Group();
+            zyy_scene.add(zyy_group);
+
+            for (var i = 0; i < zyy_data.length; i++) {
+                var zyy_ratio = zyy_data[i].v / zyy_max;
+                // 蓝绿→金黄的色相渐变
+                var zyy_color = new THREE.Color().setHSL(0.55 - zyy_ratio * 0.42, 0.85, 0.55);
+                var zyy_geo = new THREE.BoxGeometry(0.7, 1, 0.7);
+                var zyy_mat = new THREE.MeshLambertMaterial({ color: zyy_color, transparent: true, opacity: 0.92 });
+                var zyy_bar = new THREE.Mesh(zyy_geo, zyy_mat);
+                zyy_bar.position.x = (i - 5.5) * 1.15;
+                zyy_bar.scale.y = 0.001; // 生长动画起点
+                zyy_bar.userData = { targetH: Math.max(0.4, zyy_ratio * 5.6), label: zyy_data[i].m + " · " + zyy_data[i].v + "万", baseColor: zyy_color };
+                zyy_group.add(zyy_bar);
+                zyy_barsArr.push(zyy_bar);
+
+                // 柱顶价值标签（HTML 覆盖层）
+                var zyy_tag = document.createElement("div");
+                zyy_tag.textContent = zyy_data[i].v;
+                zyy_tag.style.cssText = "position:absolute;font-size:11px;color:#c9d7ff;pointer-events:none;transform:translate(-50%,-100%);";
+                zyy_box.appendChild(zyy_tag);
+                zyy_bar.userData.tag = zyy_tag;
+            }
+
+            // Raycaster 悬停高亮
+            var zyy_ray = new THREE.Raycaster();
+            var zyy_mouse2 = new THREE.Vector2();
+            var zyy_hover = null;
+            zyy_renderer.domElement.addEventListener("mousemove", function (zyy_e) {
+                var zyy_rect = zyy_renderer.domElement.getBoundingClientRect();
+                zyy_mouse2.x = ((zyy_e.clientX - zyy_rect.left) / zyy_rect.width) * 2 - 1;
+                zyy_mouse2.y = -((zyy_e.clientY - zyy_rect.top) / zyy_rect.height) * 2 + 1;
+            });
+
+            zyy_bindOrbit(zyy_renderer.domElement, zyy_camera, 16);
+
+            var zyy_t = 0;
+            function zyy_loop() {
+                zyy_t += 0.016;
+
+                // 生长动画（ease-out）
+                for (var i = 0; i < zyy_barsArr.length; i++) {
+                    var zyy_bar = zyy_barsArr[i];
+                    var zyy_target = zyy_bar.userData.targetH;
+                    if (zyy_bar.scale.y < zyy_target) {
+                        zyy_bar.scale.y = Math.min(zyy_target, zyy_bar.scale.y + zyy_target * 0.03 + 0.01);
+                    }
+                    zyy_bar.position.y = zyy_bar.scale.y / 2;
+                    // 恢复颜色
+                    zyy_bar.material.color.copy(zyy_bar.userData.baseColor);
+                    // 标签投影到柱顶
+                    var zyy_v = new THREE.Vector3(zyy_bar.position.x, zyy_bar.scale.y + 0.25, 0);
+                    zyy_v.project(zyy_camera);
+                    var zyy_px = (zyy_v.x * 0.5 + 0.5) * zyy_box.clientWidth;
+                    var zyy_py = (-zyy_v.y * 0.5 + 0.5) * zyy_box.clientHeight;
+                    zyy_bar.userData.tag.style.left = zyy_px + "px";
+                    zyy_bar.userData.tag.style.top = zyy_py + "px";
+                }
+
+                // 悬停检测
+                zyy_ray.setFromCamera(zyy_mouse2, zyy_camera);
+                var zyy_hits = zyy_ray.intersectObjects(zyy_barsArr);
+                if (zyy_hits.length > 0) {
+                    var zyy_h = zyy_hits[0].object;
+                    zyy_h.material.color.setHex(0xffd166); // 高亮金色
+                    zyy_h.scale.x = zyy_h.scale.z = 1.18;
+                }
+                for (var j = 0; j < zyy_barsArr.length; j++) {
+                    if (!zyy_hits.length || zyy_hits[0].object !== zyy_barsArr[j]) {
+                        zyy_barsArr[j].scale.x = zyy_barsArr[j].scale.z = 1;
+                    }
+                }
+
+                zyy_renderer.render(zyy_scene, zyy_camera);
+                requestAnimationFrame(zyy_loop);
+            }
+            zyy_loop();
+
+            window.addEventListener("resize", function () {
+                zyy_camera.aspect = zyy_box.clientWidth / zyy_box.clientHeight;
+                zyy_camera.updateProjectionMatrix();
+                zyy_renderer.setSize(zyy_box.clientWidth, zyy_box.clientHeight);
+            });
+        })();
+
+        // ================= 图二：3D 环形饼图 =================
+        (function () {
+            var zyy_box = document.getElementById("zyy_pie");
+            var zyy_scene = new THREE.Scene();
+            zyy_scene.background = new THREE.Color(0x0e1428);
+
+            var zyy_camera = new THREE.PerspectiveCamera(45, zyy_box.clientWidth / zyy_box.clientHeight, 0.1, 100);
+            zyy_camera.position.set(0, 9, 10);
+            zyy_camera.lookAt(0, 0, 0);
+
+            var zyy_renderer = new THREE.WebGLRenderer({ antialias: true });
+            zyy_renderer.setSize(zyy_box.clientWidth, zyy_box.clientHeight);
+            zyy_renderer.setPixelRatio(window.devicePixelRatio || 1);
+            zyy_box.appendChild(zyy_renderer.domElement);
+
+            zyy_addLights(zyy_scene);
+
+            // 数据：渠道销售占比
+            var zyy_data = [
+                { name: "线上商城", v: 34, color: 0x5ea0ff },
+                { name: "线下门店", v: 26, color: 0x7ee7cd },
+                { name: "直播带货", v: 22, color: 0xffd166 },
+                { name: "社区团购", v: 12, color: 0xff8fa3 },
+                { name: "企业采购", v: 6, color: 0xc8b3ff }
+            ];
+            var zyy_total = 100;
+            var zyy_R = 4.2;    // 外半径
+            var zyy_r = 2.2;    // 内半径
+            var zyy_H = 1.1;    // 环体高度
+            var zyy_gap = 0.03; // 扇区间隙（弧度）
+            var zyy_group = new THREE.Group();
+            zyy_scene.add(zyy_group);
+
+            var zyy_angle = 0;
+            for (var i = 0; i < zyy_data.length; i++) {
+                var zyy_sweep = zyy_data[i].v / zyy_total * Math.PI * 2;
+                // CylinderGeometry(radiusTop, radiusBottom, height, radialSeg, 1, false, thetaStart, thetaLength)
+                var zyy_geo = new THREE.CylinderGeometry(zyy_R, zyy_R, zyy_H, 48, 1, false, zyy_angle + zyy_gap / 2, zyy_sweep - zyy_gap);
+                var zyy_seg = new THREE.Mesh(zyy_geo, new THREE.MeshLambertMaterial({ color: zyy_data[i].color, transparent: true, opacity: 0.92 }));
+                zyy_group.add(zyy_seg);
+
+                // 图例
+                var zyy_li = document.createElement("div");
+                zyy_li.style.cssText = "position:absolute;left:24px;top:" + (56 + i * 26) + "px;font-size:13px;color:#d8e0f0;z-index:2;";
+                zyy_li.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#' +
+                    ("00000" + zyy_data[i].color.toString(16)).slice(-6) + ';margin-right:8px;"></span>' +
+                    zyy_data[i].name + " · " + zyy_data[i].v + "%";
+                zyy_box.appendChild(zyy_li);
+
+                zyy_angle += zyy_sweep;
+            }
+
+            zyy_bindOrbit(zyy_renderer.domElement, zyy_camera, 15);
+
+            function zyy_loop() {
+                zyy_group.rotation.y += 0.005; // 整体自转
+                zyy_renderer.render(zyy_scene, zyy_camera);
+                requestAnimationFrame(zyy_loop);
+            }
+            zyy_loop();
+
+            window.addEventListener("resize", function () {
+                zyy_camera.aspect = zyy_box.clientWidth / zyy_box.clientHeight;
+                zyy_camera.updateProjectionMatrix();
+                zyy_renderer.setSize(zyy_box.clientWidth, zyy_box.clientHeight);
+            });
+        })();
+    </script>
+</body>
+</html>
